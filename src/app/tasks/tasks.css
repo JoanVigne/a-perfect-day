@@ -1,0 +1,9 @@
+ul li {
+  margin: 5px;
+}
+a {
+  padding: 5px;
+  border-radius: 1px black solid;
+  background-color: black;
+  color: white;
+}
