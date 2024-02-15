@@ -16,6 +16,9 @@ const Footer = () => {
           <li>
             <Link href="/tasks">tasks </Link>
           </li>
+          <li>
+            <Link href="signin">signin </Link>
+          </li>
         </ul>
       </nav>
     </footer>

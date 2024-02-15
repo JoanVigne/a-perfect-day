@@ -11,6 +11,8 @@ footer ul {
   justify-content: space-around;
   padding: 0;
   margin: 0;
+  /*   POUR LINSTANT */
+  flex-wrap: wrap;
 }
 
 footer ul li {

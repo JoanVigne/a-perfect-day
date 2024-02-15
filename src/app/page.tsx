@@ -1,10 +1,11 @@
 "use client";
-import { useTasks } from "@/context/tasksContext";
+
+import { fetchDataDB } from "@/firebase/config";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const data = {
+  /*   const data = {
     Users: [
       {
         pseudo: "user1",
@@ -98,31 +99,35 @@ export default function Home() {
         ],
       },
     ],
-  };
+  }; */
 
-  const { listTasks, setListTasks } = useTasks();
+  /* const [users, setUsers] = useState() || {};
 
   useEffect(() => {
-    async function fetchTasks() {
-      try {
-        const res = await fetch("/tasks.json");
-        if (!res.ok) {
-          throw new Error("Failed to fetch tasks");
-        }
-        const fetchedTasks = await res.json();
-        setListTasks(fetchedTasks.tasks);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
+    if (users) {
+      return;
     }
-    fetchTasks();
-  }, []);
+    const fetchUsers = async () => {
+      try {
+        const fetchedUsers = await fetchDataDB("users");
+        if (fetchedUsers) {
+          setUsers(fetchedUsers);
+        } else {
+          console.error("couldn't get the users");
+        }
+      } catch (error) {
+        console.error("fetched failed : ", error);
+      }
+    };
+    fetchUsers();
+    console.log(users);
+  }, []); */
 
   return (
     <main>
       <h1>Listes des tasks</h1>
       <ul>
-        {listTasks &&
+        {/*  {listTasks &&
           listTasks.map((userData, index) => (
             <li key={index}>
               <strong>user numero : {userData.user_id}</strong>
@@ -134,7 +139,7 @@ export default function Home() {
                 ))}
               </ul>
             </li>
-          ))}
+          ))} */}
       </ul>
     </main>
   );

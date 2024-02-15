@@ -1,6 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { getApps, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -27,3 +27,43 @@ if (!firebase_app) {
 const app = initializeApp(firebaseConfig);
 export default firebase_app;
 const analytics = getAnalytics(app);
+
+// fetch données
+const db = getFirestore();
+
+async function fetchDataDB(collectionName: string) {
+  const colRef = collection(db, collectionName);
+  try {
+    const snapshot = await getDocs(colRef);
+    const data = snapshot.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id };
+    });
+    console.log("Fetched", collectionName);
+    console.log("data: ", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching data from firestore:", error);
+  }
+}
+
+async function fetchDataFromDBToLocalStorage(collectionName: string) {
+  // verification session storage
+  const dansLeLocalStorage = localStorage.getItem(collectionName);
+  if (dansLeLocalStorage) {
+    return JSON.parse(dansLeLocalStorage);
+  }
+  const colRef = collection(db, collectionName);
+  try {
+    const snapshot = await getDocs(colRef);
+    const data = snapshot.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id };
+    });
+    localStorage.setItem(collectionName, JSON.stringify(data));
+    console.log("Fetched :", collectionName);
+    return data;
+  } catch (error) {
+    console.error("Error fetching data from Firestore:", error);
+  }
+}
+
+export { fetchDataFromDBToLocalStorage, fetchDataDB };
