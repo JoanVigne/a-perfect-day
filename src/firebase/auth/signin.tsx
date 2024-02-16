@@ -4,8 +4,8 @@ import { signInWithEmailAndPassword, Auth, getAuth } from "firebase/auth";
 const auth: Auth = getAuth(firebase_app);
 
 interface SignInResult {
-  result: any; // Remplacez 'any' par le type approprié si vous savez quel est le type de résultat renvoyé par votre méthode signInWithEmailAndPassword.
-  error: any; // Remplacez 'any' par le type approprié si vous savez quel est le type d'erreur renvoyé par votre méthode signInWithEmailAndPassword.
+  result: any;
+  error: any;
 }
 
 export default async function signIn(

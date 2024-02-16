@@ -4,6 +4,7 @@ import React from "react";
 import "./tasks.css";
 
 const page = () => {
+  // a garder pour gerer les profiles plus tard
   return (
     <div>
       <h1>listes des tasks</h1>

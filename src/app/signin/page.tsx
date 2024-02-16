@@ -23,7 +23,19 @@ function Page() {
     setMessageErreur("");
     return router.push("/");
   };
-
+  /* function logOut() {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        console.log("LOGGED OUT");
+        sessionStorage.clear();
+      })
+      .catch((error) => {
+        // An error happened.
+        console.error("this error occured :", error);
+      });
+  } */
   return (
     <div className="wrapper">
       <div className="form-wrapper">
