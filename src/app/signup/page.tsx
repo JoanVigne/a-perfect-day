@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 function Page() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [nickname, setNickname] = useState<string>("");
   const router = useRouter();
 
   const handleForm = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const { result, error } = await signUp(email, password);
+    const { result, error } = await signUp(email, password, nickname);
 
     if (error) {
       return console.log(error);
@@ -45,7 +46,16 @@ function Page() {
               type="password"
               name="password"
               id="password"
-              placeholder="password"
+            />
+          </label>
+          <label htmlFor="nickname">
+            <p>Nickname</p>
+            <input
+              onChange={(e) => setNickname(e.target.value)}
+              type="text"
+              name="nickname"
+              id="nickname"
+              required
             />
           </label>
           <button type="submit">Sign up</button>

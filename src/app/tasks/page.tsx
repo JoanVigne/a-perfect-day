@@ -2,15 +2,13 @@
 import Link from "next/link";
 import React from "react";
 import "./tasks.css";
-import { useTasks } from "@/context/tasksContext";
 
 const page = () => {
-  const { listTasks } = useTasks();
   return (
     <div>
       <h1>listes des tasks</h1>
       <ul>
-        {listTasks &&
+        {/*  {listTasks &&
           listTasks.map((userData, index) => (
             <li key={index}>
               <strong>user numero : {userData.user_id}</strong>
@@ -22,7 +20,7 @@ const page = () => {
                 ))}
               </ul>
             </li>
-          ))}
+          ))} */}
       </ul>
     </div>
   );

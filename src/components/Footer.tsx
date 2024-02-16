@@ -17,7 +17,10 @@ const Footer = () => {
             <Link href="/tasks">tasks </Link>
           </li>
           <li>
-            <Link href="signin">signin </Link>
+            <Link href="signin">sign in </Link>
+          </li>
+          <li>
+            <Link href="signup">sign up</Link>
           </li>
         </ul>
       </nav>
