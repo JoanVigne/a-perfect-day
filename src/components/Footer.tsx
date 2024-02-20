@@ -10,8 +10,6 @@ interface UserData {
 }
 const Footer = () => {
   const { user } = useAuthContext() as { user: UserData };
-
-  console.log(user);
   function logOut() {
     const auth = getAuth();
     signOut(auth)
@@ -33,12 +31,7 @@ const Footer = () => {
           <li>
             <Link href="/">home</Link>
           </li>
-          <li>
-            <Link href="/aperfectday">a perfect day</Link>
-          </li>
-          <li>
-            <Link href="/tasks">tasks </Link>
-          </li>
+
           {user ? (
             <button onClick={logOut}>Sign out</button>
           ) : (

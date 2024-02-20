@@ -24,7 +24,6 @@ export default async function signUp(
       const userRef = doc(db, "users", userId);
       const userData = {
         nickname: nickname,
-        "tasks-custom": [],
         "tasks-list": {
           common: [],
           custom: [],
@@ -34,8 +33,13 @@ export default async function signUp(
           tasks: [],
         },
       };
-
+      // les await se font une par une,
+      // plus tard peut etre en parallele avec await Promise.all([setDoc(),setDoc(),])
       await setDoc(userRef, userData);
+      const historicRef = doc(db, "historic", userId);
+      await setDoc(historicRef, {});
+      const customRef = doc(db, "custom", userId);
+      await setDoc(customRef, {});
     }
   } catch (e: any) {
     error = e;

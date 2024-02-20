@@ -2,14 +2,21 @@ import React, { useEffect, useState } from "react";
 import "./commonTasks.css";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/config";
 
-const CommonTasks = () => {
+interface CommonTasksProps {
+  addCommonTask: (task: {
+    name: string;
+    description: string;
+    details: string;
+  }) => void;
+}
+const CommonTasks: React.FC<CommonTasksProps> = ({ addCommonTask }) => {
   const [commonTasks, setCommonTasks] = useState<
     { name: string; description: string; details: string }[]
   >([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetching = await fetchDataFromDBToLocalStorage("common-tasks");
+        const fetching = await fetchDataFromDBToLocalStorage("common");
         setCommonTasks(fetching);
       } catch (error) {
         console.error("Error fetching common tasks:", error);
@@ -26,7 +33,12 @@ const CommonTasks = () => {
       {commonTasks &&
         commonTasks.map((commonTask, index) => (
           <li className="task" key={index}>
-            <div className="name-button">
+            <div
+              className="name-button"
+              onClick={() => {
+                addCommonTask(commonTask);
+              }}
+            >
               {commonTask.name}
               <button>+</button>
             </div>
