@@ -1,0 +1,16 @@
+.today-list {
+  border: 1px black solid;
+  padding: 5px;
+  margin: 5px;
+}
+
+.today-list .item {
+  border: 1px black solid;
+  padding: 5px;
+  margin: 5px;
+}
+
+.today-list .item .title-delete {
+  display: flex;
+  justify-content: space-between;
+}

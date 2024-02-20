@@ -34,7 +34,7 @@ export default function Home() {
     fetchData();
   }, [user]);
 
-  const [todayList, setTodayList] = useState();
+  const [todayList, setTodayList] = useState({});
 
   // if todayList empty => if localstorage empty => fetch
   /*   useEffect(() => {
@@ -42,9 +42,22 @@ export default function Home() {
     setTodayList(JSON.parse(dataLocalStorage));
   }, []); */
 
-  const handleCommonTaskClick = (commonTask) => {
-    console.log("Clicked common task:", commonTask);
-    // Vous pouvez faire ici ce que vous voulez avec les informations de la tâche commune
+  const handleCommonTaskClick = (commonTask: object) => {
+    if (typeof todayList !== "object" || Array.isArray(todayList)) {
+      console.error("todayList is not an object.");
+      return;
+    }
+
+    // Copiez l'objet existant
+    const updatedList = { ...todayList };
+
+    // Ajoutez ou mettez à jour la tâche commune
+    updatedList[commonTask.id] = commonTask;
+
+    setTodayList(updatedList);
+    console.log("Updated list:", updatedList);
+
+    localStorage.setItem("todayList", JSON.stringify(updatedList));
   };
   return (
     <>
