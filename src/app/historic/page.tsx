@@ -21,17 +21,21 @@ const page = () => {
   useEffect(() => {
     const inLocalStorage = localStorage.getItem("historic");
     if (inLocalStorage) {
-      console.log("in local storage : ", inLocalStorage);
       const localData = JSON.parse(inLocalStorage);
-      // verifier toutes les dates
-      localData.forEach((element) => {
-        console.log(element);
-      });
-
-      setDataHistoric(localData);
-      return;
+      // verifier toutes les dates du localData
+      const dates = Object.entries(localData)
+        .filter(([key, value]) => key === "date")
+        .map(([key, value]: [string, any]) => value.slice(0, 10));
+      const today = new Date().toISOString().slice(0, 10);
+      const isTodayInHistoric = dates.includes(today);
+      if (isTodayInHistoric === true) {
+        console.log("historic dans local deja a jour ! ");
+        setDataHistoric(localData);
+        return;
+      }
+      console.log("historic local pas a jour :");
+      fetchHistoric();
     }
-
     // si historic pas a jour fetch
     if (!inLocalStorage) {
       console.log("pas dans local ");
@@ -47,8 +51,8 @@ const page = () => {
       return;
     }
     const historicData = snapShot.data();
-    console.log(historicData);
     setDataHistoric(historicData.data);
+    localStorage.setItem("historic", JSON.stringify(historicData.data));
   }
   return (
     <>
