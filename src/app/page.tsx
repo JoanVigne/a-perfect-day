@@ -47,16 +47,20 @@ export default function Home() {
       console.error("todayList is not an object.");
       return;
     }
-
-    // Copiez l'objet existant
     const updatedList = { ...todayList };
-
-    // Ajoutez ou mettez à jour la tâche commune
     updatedList[commonTask.id] = commonTask;
-
     setTodayList(updatedList);
     console.log("Updated list:", updatedList);
+    localStorage.setItem("todayList", JSON.stringify(updatedList));
+  };
+  const handleRemoveItemFromTodayList = (itemId: string) => {
+    const updatedList = { ...todayList };
 
+    // Supprimez l'élément de la liste
+    delete updatedList[itemId];
+    setTodayList(updatedList);
+
+    // Supprimez également de localStorage si nécessaire
     localStorage.setItem("todayList", JSON.stringify(updatedList));
   };
   return (
@@ -65,7 +69,10 @@ export default function Home() {
         <h1>Welcome {user && user.email} </h1>
         <h2>My list</h2>
         <p>ici la liste des tasks du jour ! </p>
-        <Today list={todayList} />
+        <Today
+          list={todayList}
+          handleRemoveItemFromTodayList={handleRemoveItemFromTodayList}
+        />
         <h2>Common tasks</h2>
         <CommonTasks addCommonTask={handleCommonTaskClick} />
         <h2>CuSTOM tasks</h2>

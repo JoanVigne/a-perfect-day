@@ -1,16 +1,30 @@
 .today-list {
-  border: 1px black solid;
   padding: 5px;
   margin: 5px;
 }
-
+.today-list h2 {
+  text-align: center;
+}
 .today-list .item {
   border: 1px black solid;
   padding: 5px;
   margin: 5px;
 }
 
-.today-list .item .title-delete {
+.today-list .title-count {
   display: flex;
   justify-content: space-between;
+}
+.today-list .title-count .count {
+  display: flex;
+}
+.today-list .title-count .count input {
+  max-width: 40px;
+}
+.today-list .description-button {
+  display: flex;
+  justify-content: space-between;
+}
+.remove {
+  color: red;
 }

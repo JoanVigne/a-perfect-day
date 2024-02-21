@@ -40,7 +40,7 @@ const CommonTasks: React.FC<CommonTasksProps> = ({ addCommonTask }) => {
               }}
             >
               {commonTask.name}
-              <button>+</button>
+              <button>add</button>
             </div>
             <div className="description-button">
               <p className="description">{commonTask.description}</p>
