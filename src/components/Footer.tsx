@@ -16,7 +16,8 @@ const Footer = () => {
       .then(() => {
         // Sign-out successful.
         console.log("LOGGED OUT");
-        sessionStorage.clear();
+
+        localStorage.clear();
       })
       .catch((error) => {
         // An error happened.
@@ -33,7 +34,15 @@ const Footer = () => {
           </li>
 
           {user ? (
-            <button onClick={logOut}>Sign out</button>
+            <>
+              <li>
+                <Link href="/historic">historic</Link>
+              </li>
+              <li>
+                {" "}
+                <button onClick={logOut}>Sign out</button>
+              </li>
+            </>
           ) : (
             <>
               <li>

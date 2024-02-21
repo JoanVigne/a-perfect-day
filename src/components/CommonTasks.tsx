@@ -3,13 +3,15 @@ import "./commonTasks.css";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/config";
 
 interface CommonTasksProps {
-  addCommonTask: (task: {
+  handleAddTaskToTodayList: (task: {
     name: string;
     description: string;
     details: string;
   }) => void;
 }
-const CommonTasks: React.FC<CommonTasksProps> = ({ addCommonTask }) => {
+const CommonTasks: React.FC<CommonTasksProps> = ({
+  handleAddTaskToTodayList,
+}) => {
   const [commonTasks, setCommonTasks] = useState<
     { name: string; description: string; details: string }[]
   >([]);
@@ -36,7 +38,7 @@ const CommonTasks: React.FC<CommonTasksProps> = ({ addCommonTask }) => {
             <div
               className="name-button"
               onClick={() => {
-                addCommonTask(commonTask);
+                handleAddTaskToTodayList(commonTask);
               }}
             >
               {commonTask.name}
