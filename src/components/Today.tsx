@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import "./today.css";
 
 interface TodayProps {
-  list: ListItem;
+  list: { [key: string]: any };
   handleRemoveTaskFromTodayList: any;
 }
-interface ListItem {
+/* interface ListItem {
   id: string;
   count: number;
   name: string;
   unit: string;
   description: string;
   details: string;
-}
+} */
 const Today: React.FC<TodayProps> = ({
   list,
   handleRemoveTaskFromTodayList,

@@ -3,18 +3,20 @@ import "./commonTasks.css";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/config";
 
 interface CommonTasksProps {
-  handleAddTaskToTodayList: (task: {
-    name: string;
-    description: string;
-    details: string;
-  }) => void;
+  handleAddTaskToTodayList: (task: Task) => void;
+}
+interface Task {
+  id: string;
+  name: string;
+  description: string;
+  details: string;
+  count: any;
+  unit: any;
 }
 const CommonTasks: React.FC<CommonTasksProps> = ({
   handleAddTaskToTodayList,
 }) => {
-  const [commonTasks, setCommonTasks] = useState<
-    { name: string; description: string; details: string }[]
-  >([]);
+  const [commonTasks, setCommonTasks] = useState<Task[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {

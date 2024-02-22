@@ -9,7 +9,11 @@ const checkDB = async (dbName: string, userId: string) => {
   return { ref, snapShot };
 };
 
-const sendToHistoric = async (data: object, userId: string) => {
+interface DataObject {
+  date: string;
+  [key: string]: any;
+}
+const sendToHistoric = async (data: DataObject, userId: string) => {
   const { ref, snapShot } = await checkDB("historic", userId);
 
   if (!snapShot.exists()) {
@@ -22,16 +26,23 @@ const sendToHistoric = async (data: object, userId: string) => {
     return;
   }
   // verifie si deja dans historic
-  const historicDataData = historicData.data["date"].substring(0, 10);
+  const historicDataDate = historicData.date?.substring(0, 10);
   const dataDate = data.date.substring(0, 10);
-  if (historicDataData === dataDate) {
+
+  if (historicDataDate === dataDate) {
     console.log("pareil");
     return;
   }
 
-  const newData = { ...historicData, data };
-  await setDoc(ref, newData);
-  localStorage.setItem("historic", JSON.stringify(newData));
+  const updatedData = {
+    ...historicData,
+    [data.date.substring(0, 10)]: {
+      ...data,
+    },
+  };
+  console.log(updatedData);
+  await setDoc(ref, updatedData);
+  localStorage.setItem("historic", JSON.stringify(updatedData));
   console.log("historic est mis a jour");
 };
 

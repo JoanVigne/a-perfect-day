@@ -38,43 +38,55 @@ export default function Home() {
     fetchData();
   }, [user]);
 
-  const [todayList, setTodayList] = useState({});
-  /* 
+  const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
+
   useEffect(() => {
     const localStorageTodayList = localStorage.getItem("todayList");
+    const todayDate = new Date().toISOString();
+
+    if (localStorageTodayList === null) {
+      // il n'y a rien dans le localStorage, donc créer un nouveau ?
+      const newList = {
+        date: todayDate,
+      };
+      localStorage.setItem("todayList", JSON.stringify(newList));
+      setTodayList(newList);
+    }
+    // SI IL Y A DANS LOCAL STORAGE
     if (localStorageTodayList !== null) {
-      const parsed = JSON.parse(localStorageTodayList);
-      if (parsed.date === undefined) {
-        const todayDate = new Date().toISOString();
-        const updatedList = { ...parsed };
-        updatedList.date = todayDate;
-        setTodayList(updatedList);
-        console.log("Updated list:", updatedList);
-        localStorage.setItem("todayList", JSON.stringify(updatedList));
+      let parsed = JSON.parse(localStorageTodayList);
+      if (!parsed.date) {
+        // si il n'y a pas la date
+        const withDate = { ...parsed, date: todayDate };
+        setTodayList(withDate);
+        localStorage.setItem("todayList", JSON.stringify(withDate));
+        return;
       }
-
-      const newDate = new Date().toISOString();
       const compareDateDay = parsed.date.slice(0, 10);
-      const newDateDay = newDate.slice(0, 10);
-
-      if (compareDateDay !== newDateDay) {
-        console.log("Les jours sont différents :");
-        console.log("parsed.date (jour)", compareDateDay);
-        console.log("new Date().toISOString() (jour)", newDateDay);
+      const newDate = todayDate.slice(0, 10);
+      if (compareDateDay !== newDate) {
+        // si pas la date du jour
         sendToHistoric(parsed, user.uid);
-      } else {
-        console.log("C'est le même jour");
+        const withDate = { ...parsed, date: todayDate };
+        setTodayList(withDate);
+        localStorage.setItem("todayList", JSON.stringify(withDate));
+      }
+      if (compareDateDay === newDate) {
+        console.log("C'est le même jour donc ne rien faire");
+        setTodayList(parsed);
       }
     }
-  }, []); */
+  }, []);
 
-  // if todayList empty => if localstorage empty => fetch
-  /*   useEffect(() => {
-    const dataLocalStorage = localStorage.getItem("todayList");
-    setTodayList(JSON.parse(dataLocalStorage));
-  }, []); */
-
-  const handleAddTaskToTodayList = (task: object) => {
+  interface Task {
+    id: string;
+    name: string;
+    description: string;
+    details: string;
+    count: any;
+    unit: any;
+  }
+  const handleAddTaskToTodayList = (task: Task) => {
     if (typeof todayList !== "object" || Array.isArray(todayList)) {
       console.error("todayList is not an object.");
       return;
@@ -101,7 +113,7 @@ export default function Home() {
             const localStorageTodayList = localStorage.getItem("todayList");
             if (localStorageTodayList !== null) {
               const parsed = JSON.parse(localStorageTodayList);
-              sendToHistoric(parsed, user.uid, parsed.date);
+              sendToHistoric(parsed, user.uid);
             }
           }}
         >
