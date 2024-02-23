@@ -91,6 +91,15 @@ export default function Home() {
       console.error("todayList is not an object.");
       return;
     }
+    const isTaskAlreadyExists = Object.values(todayList).some(
+      (existingTask: Task) =>
+        existingTask.name === task.name || existingTask.id === task.id
+    );
+
+    if (isTaskAlreadyExists) {
+      console.log("Task with the same name or ID already exists in the list.");
+      return;
+    }
     const updatedList = { ...todayList };
     updatedList[task.id] = task;
     setTodayList(updatedList);

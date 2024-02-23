@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-between;
 }
-.today-list .title-count .count {
+.today-list .title-count .count .container-count-unit {
   display: flex;
 }
 .today-list .title-count .count input {
@@ -27,4 +27,11 @@
 }
 .remove {
   color: red;
+}
+
+.today-list .task-not-done {
+  background-color: red;
+}
+.today-list .task-done {
+  background-color: green;
 }
