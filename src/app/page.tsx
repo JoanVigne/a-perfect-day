@@ -67,9 +67,23 @@ export default function Home() {
       if (compareDateDay !== newDate) {
         // si pas la date du jour
         sendToHistoric(parsed, user.uid);
-        const withDate = { ...parsed, date: todayDate };
-        setTodayList(withDate);
-        localStorage.setItem("todayList", JSON.stringify(withDate));
+        // on reset les counts:
+        /*  const copyData = { ...parsed };
+        Object.keys(copyData).forEach((key) => {
+          const ele = copyData[key];
+          if (typeof ele.unit === "boolean") {
+            ele.unit === false;
+          }
+          if (typeof ele.unit === "string" || typeof ele.unit === "number") {
+            ele.unit === "0";
+          }
+        }); */
+        /*      const withDate = { ...copyData, date: todayDate }; */
+        const resetedData = resetListToFalseAndZero(parsed);
+
+        // envoyer copyData ici :
+        setTodayList(resetedData);
+        localStorage.setItem("todayList", JSON.stringify(resetedData));
       }
       if (compareDateDay === newDate) {
         console.log(
@@ -113,23 +127,42 @@ export default function Home() {
     setTodayList(updatedList);
     localStorage.setItem("todayList", JSON.stringify(updatedList));
   };
+  function resetListToFalseAndZero(data: any) {
+    const todayDate = new Date().toISOString();
+    let copyData = JSON.parse(JSON.stringify(data)); // Copie profonde de data
+    Object.keys(copyData).forEach((key) => {
+      const ele = copyData[key];
+      if (typeof ele.unit === "boolean") {
+        copyData[key].unit = false; // Mettre à jour copyData[key]
+      }
+      if (typeof ele.unit === "string" || typeof ele.unit === "number") {
+        copyData[key].count = "0"; // Mettre à jour copyData[key]
+      }
+    });
+    copyData.date = todayDate;
+    console.log(copyData);
+    return copyData;
+  }
   return (
     <>
       <main>
         <h1>
           Welcome <br></br> {userInfo?.nickname ?? "Loading..."}
         </h1>
-        {/*         <button
+        {/*  <button
           onClick={() => {
             const localStorageTodayList = localStorage.getItem("todayList");
             if (localStorageTodayList !== null) {
               const parsed = JSON.parse(localStorageTodayList);
-              sendToHistoric(parsed, user.uid);
+              trier(parsed);
+            
+              sendToHistoric(parsed, user.uid); 
             }
           }}
         >
           SEND TO HISTORIC
-        </button> */}
+        </button>
+        */}
         <p></p>
         <Today
           list={todayList}

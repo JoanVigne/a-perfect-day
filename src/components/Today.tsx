@@ -26,12 +26,6 @@ const Today: React.FC<TodayProps> = ({
   //
   const [taskList, setTaskList] = useState<{ [key: string]: Task }>(list);
 
-  const handleClickCount = (itemId: string) => {
-    const unitValue = typeof taskList[itemId]["unit"];
-    console.log("unitValue: type ", unitValue);
-    if (unitValue === "boolean") {
-    }
-  };
   const handleTaskCompletionToggle = (itemId: string) => {
     const updatedList = {
       ...taskList,
@@ -44,18 +38,29 @@ const Today: React.FC<TodayProps> = ({
     localStorage.setItem("todayList", JSON.stringify(updatedList));
   };
 
-  const modifiedCountRef = useRef<HTMLInputElement>(null);
+  const [countInputValues, setCountInputValues] = useState<{
+    [key: string]: string;
+  }>({});
+  const handleCountInputChange = (itemId: string, value: string) => {
+    setCountInputValues((prevValues) => ({
+      ...prevValues,
+      [itemId]: value,
+    }));
+  };
+
   const handleSaveCount = (itemId: string) => {
     const updatedList = {
       ...taskList,
       [itemId]: {
         ...taskList[itemId],
-        count: Number(modifiedCountRef.current?.value || 0),
+        count: countInputValues[itemId] || "0",
       },
     };
     setTaskList(updatedList);
+    console.log(updatedList);
     localStorage.setItem("todayList", JSON.stringify(updatedList));
   };
+
   // ouvrir et fermer la description :
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
@@ -89,7 +94,7 @@ const Today: React.FC<TodayProps> = ({
                       <button
                         onClick={() => {
                           handleTaskCompletionToggle(item.id);
-                          handleClickCount(item.id);
+                          /*      handleClickCount(item.id); */
                         }}
                         className={
                           item.unit === false ? "task-not-done" : "task-done"
@@ -102,9 +107,12 @@ const Today: React.FC<TodayProps> = ({
                         <div className="container-count-unit">
                           <input
                             type="number"
-                            name="count"
-                            id="count"
-                            ref={modifiedCountRef}
+                            name={`count-${item.id}`}
+                            id={`count-${item.id}`}
+                            value={countInputValues[item.id] || ""}
+                            onChange={(e) =>
+                              handleCountInputChange(item.id, e.target.value)
+                            }
                             placeholder={String(item.count)}
                           />
                           {item.unit}
@@ -112,7 +120,6 @@ const Today: React.FC<TodayProps> = ({
                         <button
                           onClick={() => {
                             handleSaveCount(item.id);
-                            handleClickCount(item.id);
                           }}
                         >
                           enregistrer

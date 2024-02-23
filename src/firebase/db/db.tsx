@@ -69,19 +69,30 @@ const sendToHistoric = async (data: DataObject, userId: string) => {
   // verifie si deja dans historic
   const historicDataDate = historicData.date?.substring(0, 10);
   const dataDate = data.date.substring(0, 10);
-
   if (historicDataDate === dataDate) {
     console.log("pareil");
     return;
   }
+  const copieData = { ...data };
+
+  Object.keys(copieData).forEach((key) => {
+    const ele = copieData[key];
+    if (
+      ele.unit === false ||
+      (typeof ele.unit !== "boolean" && (ele.count === "0" || ele.count === 0))
+    ) {
+      delete copieData[key];
+      console.log(ele.name, "est différent de boolean ET est égal à 0 ");
+    }
+  });
 
   const updatedData = {
     ...historicData,
-    [data.date.substring(0, 10)]: {
-      ...data,
+    [copieData.date.substring(0, 10)]: {
+      ...copieData,
     },
   };
-  console.log(updatedData);
+
   await setDoc(ref, updatedData);
   localStorage.setItem("historic", JSON.stringify(updatedData));
   console.log("historic est mis a jour");

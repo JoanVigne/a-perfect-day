@@ -22,7 +22,6 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
   const [loadingTasks, setLoadingTasks] = useState(true);
   useEffect(() => {
-    console.log("user dans custom : ", userId);
     const fetchData = async () => {
       try {
         const fetching = await fetchOnlyThisIdToLocalStorage("custom", userId);
@@ -37,9 +36,6 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("CUSTOM TASKS", customTasks);
-  }, [customTasks]);
   // ouvrir et fermer la description :
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   // ouvrir et fermer le form :

@@ -6,7 +6,7 @@
   text-align: center;
 }
 .today-list .item {
-  border: 1px black solid;
+  border-bottom: 1px white solid;
   padding: 5px;
   margin: 5px;
 }

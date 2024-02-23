@@ -19,7 +19,7 @@ const FormCustomTask: React.FC = () => {
     description: "",
     count: "",
     name: "",
-    id: Math.random().toString(36).substr(2, 9), // Générer un identifiant unique
+    id: Math.random().toString(36),
   });
   const [isBooleanSelected, setIsBooleanSelected] = useState<boolean>(true);
   const [customValue, setCustomValue] = useState<string>("");

@@ -81,12 +81,12 @@ async function fetchOnlyThisIdToLocalStorage(
     console.error("Error fetching data from firestore:", error);
   }
 }
-function inLocalStorage(thisItem: string) {
+/* function inLocalStorage(thisItem: string) {
   const thisLocalStorage = localStorage.getItem(thisItem);
   if (thisLocalStorage) {
     const parsed = JSON.parse(thisLocalStorage);
   }
-}
+} */
 async function userFetchDBtoLStorage(thisID: string) {
   const inLocalStorage = localStorage.getItem("user");
 
