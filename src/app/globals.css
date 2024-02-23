@@ -102,6 +102,9 @@ li {
   padding: 0;
 }
 
+.message-error {
+  color: red;
+}
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

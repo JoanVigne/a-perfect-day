@@ -7,8 +7,8 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/config";
 import Footer from "@/components/Footer";
-import { doc } from "firebase/firestore";
 import { sendToHistoric } from "@/firebase/db/db";
+import CustomTasks from "@/components/CustomTasks";
 
 interface UserData {
   email: string;
@@ -19,17 +19,16 @@ interface UserInfo {
 }
 export default function Home() {
   const { user } = useAuthContext() as { user: UserData };
-
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-
   useEffect(() => {
     if (user == null || user.uid == null || user.uid == undefined) {
       return;
+      // CREER UN MESSAGE D'ERREUR
     }
     const fetchData = async () => {
       try {
         const fetching = await fetchOnlyThisIdToLocalStorage("users", user.uid);
-        setUserInfo(fetching[0]);
+        setUserInfo(fetching);
       } catch (error) {
         console.error("Error fetching common tasks:", error);
       }
@@ -40,6 +39,7 @@ export default function Home() {
 
   const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
 
+  // pour envoyer dans historic ou non :
   useEffect(() => {
     const localStorageTodayList = localStorage.getItem("todayList");
     const todayDate = new Date().toISOString();
@@ -72,7 +72,9 @@ export default function Home() {
         localStorage.setItem("todayList", JSON.stringify(withDate));
       }
       if (compareDateDay === newDate) {
-        console.log("C'est le même jour donc ne rien faire");
+        console.log(
+          "C'est le même jour donc ne pas envoyer a historic et ne pas mettre a 0"
+        );
         setTodayList(parsed);
       }
     }
@@ -115,9 +117,9 @@ export default function Home() {
     <>
       <main>
         <h1>
-          Welcome <br></br> {userInfo && userInfo.nickname}
+          Welcome <br></br> {userInfo?.nickname ?? "Loading..."}
         </h1>
-        <button
+        {/*         <button
           onClick={() => {
             const localStorageTodayList = localStorage.getItem("todayList");
             if (localStorageTodayList !== null) {
@@ -127,7 +129,7 @@ export default function Home() {
           }}
         >
           SEND TO HISTORIC
-        </button>
+        </button> */}
         <p></p>
         <Today
           list={todayList}
@@ -136,7 +138,10 @@ export default function Home() {
         <h2>Common tasks</h2>
         <CommonTasks handleAddTaskToTodayList={handleAddTaskToTodayList} />
         <h2>CuSTOM tasks</h2>
-        <p>ici la liste des tasks que l'utilisateur a créé</p>
+        <CustomTasks
+          handleAddTaskToTodayList={handleAddTaskToTodayList}
+          userId={user.uid}
+        />
         <h2>Listes favorites</h2>
         <h3>titre : semaine</h3>
         <h3>titre : weekend</h3>

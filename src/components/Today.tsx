@@ -73,7 +73,7 @@ const Today: React.FC<TodayProps> = ({
               <li key={item.id} className="item">
                 <div className="title-count">
                   <h3>
-                    {item.name}{" "}
+                    {item.name}
                     <button
                       onClick={() => {
                         setClickedIndex((prevIndex) =>
@@ -123,8 +123,8 @@ const Today: React.FC<TodayProps> = ({
                 </div>
 
                 <p className={clickedIndex === index ? "active" : "hidden"}>
-                  <h3>{item.description}</h3>
-                  <strong>Details:</strong> {item.details}{" "}
+                  <strong>{item.description}</strong>
+                  <br /> {item.details}
                   <span
                     className="remove"
                     onClick={() => {
