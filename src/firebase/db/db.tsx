@@ -82,7 +82,6 @@ const sendToHistoric = async (data: DataObject, userId: string) => {
       (typeof ele.unit !== "boolean" && (ele.count === "0" || ele.count === 0))
     ) {
       delete copieData[key];
-      console.log(ele.name, "est différent de boolean ET est égal à 0 ");
     }
   });
 

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import signIn from "@/firebase/auth/signin";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function Page() {
   const [email, setEmail] = useState<string>("");
@@ -53,6 +54,8 @@ function Page() {
           </label>
           <button type="submit">Sign in</button>
         </form>
+
+        <Link href="/signup"> OR SIGN UP </Link>
       </div>
 
       {erreur && messageErreur}

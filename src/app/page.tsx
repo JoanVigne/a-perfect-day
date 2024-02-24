@@ -9,6 +9,7 @@ import { fetchOnlyThisIdToLocalStorage } from "@/firebase/config";
 import Footer from "@/components/Footer";
 import { sendToHistoric } from "@/firebase/db/db";
 import CustomTasks from "@/components/CustomTasks";
+import { useRouter } from "next/navigation";
 
 interface UserData {
   email: string;
@@ -20,9 +21,11 @@ interface UserInfo {
 export default function Home() {
   const { user } = useAuthContext() as { user: UserData };
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const router = useRouter();
+
   useEffect(() => {
     if (user == null || user.uid == null || user.uid == undefined) {
-      return;
+      return router.push("/");
       // CREER UN MESSAGE D'ERREUR
     }
     const fetchData = async () => {
@@ -68,20 +71,7 @@ export default function Home() {
         // si pas la date du jour
         sendToHistoric(parsed, user.uid);
         // on reset les counts:
-        /*  const copyData = { ...parsed };
-        Object.keys(copyData).forEach((key) => {
-          const ele = copyData[key];
-          if (typeof ele.unit === "boolean") {
-            ele.unit === false;
-          }
-          if (typeof ele.unit === "string" || typeof ele.unit === "number") {
-            ele.unit === "0";
-          }
-        }); */
-        /*      const withDate = { ...copyData, date: todayDate }; */
         const resetedData = resetListToFalseAndZero(parsed);
-
-        // envoyer copyData ici :
         setTodayList(resetedData);
         localStorage.setItem("todayList", JSON.stringify(resetedData));
       }
@@ -140,7 +130,6 @@ export default function Home() {
       }
     });
     copyData.date = todayDate;
-    console.log(copyData);
     return copyData;
   }
   return (
