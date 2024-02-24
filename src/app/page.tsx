@@ -24,7 +24,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (user == null || user.uid == null || user.uid == undefined) {
+    if (user == null || user?.uid == null || user?.uid == undefined) {
       return router.push("/");
       // CREER UN MESSAGE D'ERREUR
     }
@@ -162,7 +162,7 @@ export default function Home() {
         <h2>CuSTOM tasks</h2>
         <CustomTasks
           handleAddTaskToTodayList={handleAddTaskToTodayList}
-          userId={user.uid}
+          userId={user?.uid}
         />
         <h2>Listes favorites</h2>
         <h3>titre : semaine</h3>
