@@ -73,6 +73,12 @@ const FormCustomTask: React.FC = () => {
     }
     console.log("taskname ", task.name);
     sendToCustom(task, user.uid);
+    const newLocalStorage = {
+      ...parsed,
+      task,
+    };
+    console.log(newLocalStorage);
+    localStorage.setItem("custom", JSON.stringify(newLocalStorage));
   };
 
   return (

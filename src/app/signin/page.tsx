@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import signIn from "@/firebase/auth/signin";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 
 function Page() {
   const [email, setEmail] = useState<string>("");
@@ -59,6 +60,7 @@ function Page() {
       </div>
 
       {erreur && messageErreur}
+      <Footer />
     </div>
   );
 }
