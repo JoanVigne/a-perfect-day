@@ -1,6 +1,7 @@
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToCustom } from "@/firebase/db/db";
 import React, { useState } from "react";
+import "./form.css";
 
 interface FormCustomTaskProps {
   updateCustomTasks: (newCustomTasks: Task[]) => void;
@@ -88,85 +89,90 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={task.name}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="description">Description:</label>
-        <textarea
-          id="description"
-          name="description"
-          value={task.description}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="details">Details:</label>
-        <textarea
-          id="details"
-          name="details"
-          value={task.details}
-          onChange={handleChange}
-        />
-      </div>
-      <label htmlFor="unit">Unit (boolean or string):</label>
-      <div>
-        <input
-          type="radio"
-          id="boolean"
-          name="unit"
-          value="false"
-          checked={isBooleanSelected}
-          onChange={handleOptionChange}
-        />
-        <label htmlFor="boolean">Boolean</label>
-      </div>
-      <div>
-        <input
-          type="radio"
-          id="other"
-          name="unit"
-          value=""
-          checked={!isBooleanSelected}
-          onChange={handleOptionChange}
-        />
-        <label htmlFor="other">Other</label>
-        {!isBooleanSelected && (
-          <input
-            type="text"
-            id="custom-value"
-            name="unit"
-            onChange={handleChange}
-            value={isBooleanSelected ? "" : (task.unit as string)}
-            placeholder="Enter custom value"
-          />
-        )}
-      </div>
-
-      {!isBooleanSelected && (
+    <div className="container-form">
+      <form className="add-custom-task" onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="count">start Count:</label>
+          <label htmlFor="name">Name:</label>
           <input
             type="text"
-            id="count"
-            name="count"
-            value={task.count}
+            id="name"
+            name="name"
+            value={task.name}
             onChange={handleChange}
           />
         </div>
-      )}
+        <div>
+          <label htmlFor="description">Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            value={task.description}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="details">Details:</label>
+          <textarea
+            id="details"
+            name="details"
+            value={task.details}
+            onChange={handleChange}
+          />
+        </div>
+        <label htmlFor="unit">Unit (boolean or string):</label>
+        <div>
+          <input
+            type="radio"
+            id="boolean"
+            name="unit"
+            value="false"
+            checked={isBooleanSelected}
+            onChange={handleOptionChange}
+          />
+          <label htmlFor="boolean">Boolean</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="other"
+            name="unit"
+            value=""
+            checked={!isBooleanSelected}
+            onChange={handleOptionChange}
+          />
+          <label htmlFor="other">Other</label>
+          {!isBooleanSelected && (
+            <input
+              type="text"
+              id="custom-value"
+              name="unit"
+              onChange={handleChange}
+              value={isBooleanSelected ? "" : (task.unit as string)}
+              placeholder="Enter custom value"
+            />
+          )}
+        </div>
 
-      <p className="message-error">{message}</p>
-      <button type="submit">Create Task</button>
-    </form>
+        {!isBooleanSelected && (
+          <div>
+            <label htmlFor="count">start Count:</label>
+            <input
+              type="text"
+              id="count"
+              name="count"
+              value={task.count}
+              onChange={handleChange}
+              placeholder="usually start at 0"
+            />
+          </div>
+        )}
+
+        <p className="message-error">{message}</p>
+        <button className="add" type="submit">
+          Create Task
+        </button>
+      </form>
+    </div>
   );
 };
 

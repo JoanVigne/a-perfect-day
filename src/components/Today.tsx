@@ -65,7 +65,7 @@ const Today: React.FC<TodayProps> = ({
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
   return (
-    <div className="today-list">
+    <div className="today-list container">
       <h2>today's list</h2>
       <ul>
         {taskList &&
@@ -80,13 +80,14 @@ const Today: React.FC<TodayProps> = ({
                   <h3>
                     {item.name}
                     <button
+                      className="details"
                       onClick={() => {
                         setClickedIndex((prevIndex) =>
                           prevIndex === index ? null : index
                         );
                       }}
                     >
-                      details
+                      ?
                     </button>
                   </h3>{" "}
                   <div className="count">
@@ -97,10 +98,12 @@ const Today: React.FC<TodayProps> = ({
                           /*      handleClickCount(item.id); */
                         }}
                         className={
-                          item.unit === false ? "task-not-done" : "task-done"
+                          item.unit === false
+                            ? "task-not-done save"
+                            : "task-done remove"
                         }
                       >
-                        {item.unit === false ? "Done?" : "V"}
+                        {item.unit === false ? "Done?" : "undo"}
                       </button>
                     ) : (
                       <>
@@ -115,14 +118,15 @@ const Today: React.FC<TodayProps> = ({
                             }
                             placeholder={String(item.count)}
                           />
-                          {item.unit}
+                          <p className="unit"> {item.unit}</p>
                         </div>
                         <button
+                          className="save"
                           onClick={() => {
                             handleSaveCount(item.id);
                           }}
                         >
-                          enregistrer
+                          save
                         </button>
                       </>
                     )}

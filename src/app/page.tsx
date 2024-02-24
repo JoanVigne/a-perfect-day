@@ -157,17 +157,21 @@ export default function Home() {
           list={todayList}
           handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
         />
-        <h2>Common tasks</h2>
-        <CommonTasks handleAddTaskToTodayList={handleAddTaskToTodayList} />
-        <h2>CuSTOM tasks</h2>
-        <CustomTasks
-          handleAddTaskToTodayList={handleAddTaskToTodayList}
-          userId={user?.uid}
-        />
-        <h2>Listes favorites</h2>
-        <h3>titre : semaine</h3>
-        <h3>titre : weekend</h3>
-        <h3>titre: vacances</h3>
+
+        <div className="container">
+          <h2>Custom tasks</h2>
+          <CustomTasks
+            handleAddTaskToTodayList={handleAddTaskToTodayList}
+            userId={user?.uid}
+          />
+        </div>
+        <div className="container">
+          <h2>Common tasks</h2>
+          <CommonTasks handleAddTaskToTodayList={handleAddTaskToTodayList} />
+        </div>
+        <h2>Comming soon :</h2>
+        <h3>historic and statistic</h3>
+        <h3>favorite list ( week days, weekend, hollidays... )</h3>
       </main>
       <Footer />
     </>

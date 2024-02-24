@@ -1,0 +1,47 @@
+.container-form h2 {
+  text-align: center;
+}
+.container-form form {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.container-form form div {
+  margin-bottom: 10px;
+}
+
+.container-form form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.container-form form input[type="text"],
+.container-form form textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.container-form form textarea {
+  height: 100px;
+}
+
+.container-form form input[type="radio"] {
+  margin-right: 5px;
+}
+
+.container-form form p.message-error {
+  color: red;
+}
+
+.container-form form button.add {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}

@@ -60,7 +60,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
               }}
             >
               {customTask.name}
-              <button>add</button>
+              <button className="add">+</button>
             </div>
             <div className="description-button">
               <p className="description">{customTask.description}</p>
@@ -82,7 +82,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
         ))
       )}
 
-      <button onClick={() => setShowForm(!showForm)}>
+      <button className="add" onClick={() => setShowForm(!showForm)}>
         {showForm ? "Hide Form" : "Create a new task"}
       </button>
       {showForm && <FormCustomTask updateCustomTasks={updateCustomTasks} />}

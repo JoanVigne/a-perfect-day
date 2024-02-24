@@ -105,7 +105,28 @@ li {
   margin: 0;
   padding: 0;
 }
-
+.container {
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.container h2 {
+  text-align: center;
+}
+.task,
+.item {
+  border: 1px solid #ccc;
+  background-color: rgb(70 69 69);
+  border-radius: 5px;
+}
+.add,
+.save {
+  padding: 2px;
+  margin: 1px;
+  border: 2px solid green;
+  border-radius: 2px;
+}
 .message-error {
   color: red;
 }

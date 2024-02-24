@@ -1,10 +1,6 @@
 .today-list {
-  padding: 5px;
-  margin: 5px;
 }
-.today-list h2 {
-  text-align: center;
-}
+
 .today-list .item {
   border-bottom: 1px white solid;
   padding: 5px;
@@ -14,12 +10,42 @@
 .today-list .title-count {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+.today-list .title-count h3 {
+  width: 60%;
+  overflow: hidden;
+}
+.today-list .title-count .count {
+  width: 40%;
+  /* overflow: hidden; */
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.today-list .title-count .details {
+  margin-left: 5px;
+  font-size: 10px;
 }
 .today-list .title-count .count .container-count-unit {
   display: flex;
+  align-items: baseline;
 }
-.today-list .title-count .count input {
+
+.today-list .title-count .count .container-count-unit .unit {
+  width: 25px;
+  overflow: hidden;
+  font-size: 10px;
+}
+.today-list .title-count .count .container-count-unit input {
   max-width: 40px;
+}
+.today-list .title-count .count button {
+  /* display: flex; */
+  margin: 2px;
+  width: 35px;
+  font-size: 10px;
 }
 .today-list .description-button {
   display: flex;
@@ -29,9 +55,9 @@
   color: red;
 }
 
-.today-list .task-not-done {
+/* .today-list .task-not-done {
   background-color: red;
-}
-.today-list .task-done {
+} */
+/* .today-list .task-done {
   background-color: green;
-}
+} */
