@@ -20,6 +20,11 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
   userId,
 }) => {
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
+
+  const updateCustomTasks = (newCustomTasks: Task[]) => {
+    setCustomTasks(newCustomTasks);
+  };
+
   const [loadingTasks, setLoadingTasks] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
@@ -80,7 +85,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
       <button onClick={() => setShowForm(!showForm)}>
         {showForm ? "Hide Form" : "Create a new task"}
       </button>
-      {showForm && <FormCustomTask />}
+      {showForm && <FormCustomTask updateCustomTasks={updateCustomTasks} />}
     </ul>
   );
 };

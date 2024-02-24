@@ -2,6 +2,9 @@ import { useAuthContext } from "@/context/AuthContext";
 import { sendToCustom } from "@/firebase/db/db";
 import React, { useState } from "react";
 
+interface FormCustomTaskProps {
+  updateCustomTasks: (newCustomTasks: Task[]) => void;
+}
 interface Task {
   unit: boolean | string;
   details: string;
@@ -10,7 +13,9 @@ interface Task {
   name: string;
   id: string;
 }
-const FormCustomTask: React.FC = () => {
+const FormCustomTask: React.FC<FormCustomTaskProps> = ({
+  updateCustomTasks,
+}) => {
   const { user } = useAuthContext() as { user: { uid: string } };
   const [message, setMessage] = useState("");
   const [task, setTask] = useState<Task>({
@@ -79,6 +84,7 @@ const FormCustomTask: React.FC = () => {
     };
     console.log(newLocalStorage);
     localStorage.setItem("custom", JSON.stringify(newLocalStorage));
+    updateCustomTasks(newLocalStorage);
   };
 
   return (
