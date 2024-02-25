@@ -1,6 +1,6 @@
-.today-list {
+/* .today-list {
 }
-
+ */
 .today-list .item {
   border-bottom: 1px white solid;
   padding: 5px;
@@ -24,10 +24,6 @@
   align-items: center;
 }
 
-.today-list .title-count .details {
-  margin-left: 5px;
-  font-size: 10px;
-}
 .today-list .title-count .count .container-count-unit {
   display: flex;
   align-items: baseline;
@@ -40,24 +36,15 @@
 }
 .today-list .title-count .count .container-count-unit input {
   max-width: 40px;
+  border: 2px solid green;
 }
 .today-list .title-count .count button {
-  /* display: flex; */
   margin: 2px;
-  width: 35px;
+  width: 37px;
+  height: 25px;
   font-size: 10px;
 }
 .today-list .description-button {
   display: flex;
   justify-content: space-between;
 }
-.remove {
-  color: red;
-}
-
-/* .today-list .task-not-done {
-  background-color: red;
-} */
-/* .today-list .task-done {
-  background-color: green;
-} */

@@ -151,9 +151,10 @@ const Today: React.FC<TodayProps> = ({
                   </div>
                 </div>
 
-                <p className={clickedIndex === index ? "active" : "hidden"}>
+                <div className={clickedIndex === index ? "active" : "hidden"}>
                   <strong>{item.description}</strong>
-                  <br /> {item.details}
+                  <br />
+                  <p>{item.details}</p>
                   <span
                     className="remove"
                     onClick={() => {
@@ -161,9 +162,9 @@ const Today: React.FC<TodayProps> = ({
                       handleRemoveTaskFromTodayList(item.id);
                     }}
                   >
-                    remove
+                    <img src="./red-bin.png" alt="la bin" />
                   </span>
-                </p>
+                </div>
               </li>
             );
           })}

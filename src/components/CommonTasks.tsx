@@ -43,20 +43,26 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
                 handleAddTaskToTodayList(commonTask);
               }}
             >
-              {commonTask.name}
+              <div className="name-details">
+                <h3>
+                  {commonTask.name}
+                  <button
+                    className="details"
+                    onClick={() => {
+                      setClickedIndex((prevIndex) =>
+                        prevIndex === index ? null : index
+                      );
+                    }}
+                  >
+                    {"?"}
+                  </button>
+                </h3>
+              </div>
+
               <button className="add">+</button>
             </div>
             <div className="description-button">
               <p className="description">{commonTask.description}</p>
-              <button
-                onClick={() => {
-                  setClickedIndex((prevIndex) =>
-                    prevIndex === index ? null : index
-                  );
-                }}
-              >
-                {">"}
-              </button>
             </div>
 
             <div className={clickedIndex === index ? "active" : "hidden"}>

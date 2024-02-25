@@ -55,24 +55,37 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
           <li className="task" key={index}>
             <div
               className="name-button"
-              onClick={() => {
+              /* onClick={() => {
                 handleAddTaskToTodayList(customTask);
-              }}
+              }} */
             >
-              {customTask.name}
-              <button className="add">+</button>
+              <div className="name-details">
+                <h3>
+                  {customTask.name}
+                  <button
+                    className="details"
+                    onClick={() => {
+                      setClickedIndex((prevIndex) =>
+                        prevIndex === index ? null : index
+                      );
+                    }}
+                  >
+                    ?
+                  </button>
+                </h3>
+              </div>
+
+              <button
+                className="add"
+                onClick={() => {
+                  handleAddTaskToTodayList(customTask);
+                }}
+              >
+                +
+              </button>
             </div>
             <div className="description-button">
               <p className="description">{customTask.description}</p>
-              <button
-                onClick={() => {
-                  setClickedIndex((prevIndex) =>
-                    prevIndex === index ? null : index
-                  );
-                }}
-              >
-                {">"}
-              </button>
             </div>
 
             <div className={clickedIndex === index ? "active" : "hidden"}>
@@ -82,10 +95,15 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
         ))
       )}
 
-      <button className="add" onClick={() => setShowForm(!showForm)}>
-        {showForm ? "Hide Form" : "Create a new task"}
+      <button
+        className={`${showForm ? "" : "add"}`}
+        onClick={() => setShowForm(!showForm)}
+      >
+        {showForm ? "Hide Form" : "New task"}
       </button>
-      {showForm && <FormCustomTask updateCustomTasks={updateCustomTasks} />}
+      <div className={showForm ? "cont-form opened" : "cont-form"}>
+        <FormCustomTask updateCustomTasks={updateCustomTasks} />
+      </div>
     </ul>
   );
 };

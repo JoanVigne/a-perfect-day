@@ -120,16 +120,26 @@ li {
   background-color: rgb(70 69 69);
   border-radius: 5px;
 }
+.details {
+  font-size: 10px;
+  margin-left: 5px;
+}
 .add,
 .save {
   padding: 2px;
   margin: 1px;
-  border: 2px solid green;
-  border-radius: 2px;
+
+  background-color: green;
 }
 .message-error {
   color: red;
 }
+
+.remove img {
+  width: 25px;
+  height: 25px;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

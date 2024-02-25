@@ -86,6 +86,18 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
     console.log(newLocalStorage);
     localStorage.setItem("custom", JSON.stringify(newLocalStorage));
     updateCustomTasks(newLocalStorage);
+    // reset form
+    setTask({
+      unit: false,
+      details: "",
+      description: "",
+      count: "",
+      name: "",
+      id: Math.random().toString(36),
+    });
+    setIsBooleanSelected(true);
+    setCustomValue("");
+    setMessage("New task created !");
   };
 
   return (
@@ -120,7 +132,7 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
           />
         </div>
         <label htmlFor="unit">Unit (boolean or string):</label>
-        <div>
+        <div className="option">
           <input
             type="radio"
             id="boolean"
@@ -131,7 +143,7 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
           />
           <label htmlFor="boolean">Boolean</label>
         </div>
-        <div>
+        <div className="option">
           <input
             type="radio"
             id="other"
@@ -141,21 +153,20 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
             onChange={handleOptionChange}
           />
           <label htmlFor="other">Other</label>
-          {!isBooleanSelected && (
+        </div>
+
+        {!isBooleanSelected && (
+          <div>
+            <label htmlFor="unit">Unit of mesure</label>
             <input
               type="text"
               id="custom-value"
               name="unit"
               onChange={handleChange}
               value={isBooleanSelected ? "" : (task.unit as string)}
-              placeholder="Enter custom value"
+              placeholder="min, hours, reps..."
             />
-          )}
-        </div>
-
-        {!isBooleanSelected && (
-          <div>
-            <label htmlFor="count">start Count:</label>
+            <label htmlFor="count">Count starting at</label>
             <input
               type="text"
               id="count"
