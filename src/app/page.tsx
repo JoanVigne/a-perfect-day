@@ -7,7 +7,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/config";
 import Footer from "@/components/Footer";
-import { sendToHistoric } from "@/firebase/db/db";
+import { checkDB, sendToHistoric } from "@/firebase/db/db";
 import CustomTasks from "@/components/CustomTasks";
 import { useRouter } from "next/navigation";
 
@@ -26,7 +26,6 @@ export default function Home() {
   useEffect(() => {
     if (user == null || user?.uid == null || user?.uid == undefined) {
       return router.push("/connect");
-      // CREER UN MESSAGE D'ERREUR
     }
     const fetchData = async () => {
       try {
@@ -42,13 +41,59 @@ export default function Home() {
 
   const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
 
-  // pour envoyer dans historic ou non :
+  async function checkDBForTodayList() {
+    const { snapShot } = await checkDB("users", user.uid);
+    return snapShot.exists() ? snapShot.data().todayList : null;
+  }
+  function updateStorageAndTodayList(data: any) {
+    localStorage.setItem("todayList", JSON.stringify(data));
+    setTodayList(data);
+  }
+  async function whichList() {
+    const localStorageTodayList = localStorage.getItem("todayList");
+    const todayDate = new Date().toISOString();
+    if (localStorageTodayList === null) {
+      const todayListFromDb = await checkDBForTodayList();
+      if (todayListFromDb) {
+        updateStorageAndTodayList(todayListFromDb);
+        return todayListFromDb;
+      } else {
+        const newList = { date: todayDate };
+        localStorage.setItem("todayList", JSON.stringify(newList));
+        return newList;
+      }
+    }
+    if (localStorageTodayList !== null) {
+      const parsed = JSON.parse(localStorageTodayList);
+      /*const parsedDate = parsed.date ? parsed.date.slice(0, 10) : null; */
+      const compareDateDay = parsed.date.slice(0, 10);
+      const newDate = todayDate.slice(0, 10);
+      if (compareDateDay !== newDate) {
+        sendToHistoric(parsed, user.uid);
+        const resetedData = resetListToFalseAndZero(parsed);
+        updateStorageAndTodayList(resetedData);
+        return resetedData;
+      } else {
+        console.log(
+          "C'est le même jour donc ne pas envoyer a historic et ne pas mettre a 0"
+        );
+        setTodayList(parsed);
+        return parsed;
+      }
+    }
+  }
   useEffect(() => {
+    whichList();
+  }, []);
+  /*   useEffect(() => {
     const localStorageTodayList = localStorage.getItem("todayList");
     const todayDate = new Date().toISOString();
 
     if (localStorageTodayList === null) {
-      // il n'y a rien dans le localStorage, donc créer un nouveau ?
+      // il n'y a rien dans le localStorage
+      // voir la db
+      const todayListFromDb = await checkDBForTodayList();
+      // si pas dans db :
       const newList = {
         date: todayDate,
       };
@@ -83,7 +128,7 @@ export default function Home() {
       }
     }
   }, []);
-
+ */
   interface Task {
     id: string;
     name: string;
@@ -140,22 +185,19 @@ export default function Home() {
         </h1>
         {/*  <button
           onClick={() => {
-            const localStorageTodayList = localStorage.getItem("todayList");
-            if (localStorageTodayList !== null) {
-              const parsed = JSON.parse(localStorageTodayList);
-              trier(parsed);
-            
-              sendToHistoric(parsed, user.uid); 
-            }
+            chck().then((todayListInDb) => {
+              console.log(todayListInDb);
+            });
           }}
         >
-          SEND TO HISTORIC
-        </button>
-        */}
+          test
+        </button> */}
+
         <p></p>
         <Today
           list={todayList}
           handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
+          userid={user.uid}
         />
 
         <div className="container">

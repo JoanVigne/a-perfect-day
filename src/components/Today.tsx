@@ -1,5 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./today.css";
+import { checkDB } from "@/firebase/db/db";
+import { AuthContext } from "@/context/AuthContext";
+import { setDoc } from "firebase/firestore";
 
 interface Task {
   unit: boolean | string;
@@ -12,11 +15,13 @@ interface Task {
 interface TodayProps {
   list: { [key: string]: any };
   handleRemoveTaskFromTodayList: any;
+  userid: string;
 }
 
 const Today: React.FC<TodayProps> = ({
   list,
   handleRemoveTaskFromTodayList,
+  userid,
 }) => {
   useEffect(() => {
     setTaskList(list);
@@ -48,7 +53,7 @@ const Today: React.FC<TodayProps> = ({
     }));
   };
 
-  const handleSaveCount = (itemId: string) => {
+  const handleSave = (itemId: string) => {
     const updatedList = {
       ...taskList,
       [itemId]: {
@@ -58,9 +63,22 @@ const Today: React.FC<TodayProps> = ({
     };
     setTaskList(updatedList);
     console.log(updatedList);
-    localStorage.setItem("todayList", JSON.stringify(updatedList));
-  };
 
+    // et envoyer dans la DB la liste du jour:
+    sendTodayListToDB(updatedList);
+  };
+  async function sendTodayListToDB(data: any) {
+    const { ref, snapShot } = await checkDB("users", userid);
+    if (!snapShot.exists()) {
+      console.log("id utilisateur introuvable dans collection historic");
+      return;
+    }
+    const userData = snapShot.data();
+    const todayList = data;
+    const newData = { ...userData, todayList };
+    await setDoc(ref, newData);
+    localStorage.setItem("todayList", JSON.stringify(todayList));
+  }
   // ouvrir et fermer la description :
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
@@ -123,7 +141,7 @@ const Today: React.FC<TodayProps> = ({
                         <button
                           className="save"
                           onClick={() => {
-                            handleSaveCount(item.id);
+                            handleSave(item.id);
                           }}
                         >
                           save

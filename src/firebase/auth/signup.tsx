@@ -24,14 +24,8 @@ export default async function signUp(
       const userRef = doc(db, "users", userId);
       const userData = {
         nickname: nickname,
-        "tasks-list": {
-          common: [],
-          custom: [],
-        },
-        "tasks-today": {
-          date: new Date().toISOString(),
-          tasks: [],
-        },
+        lists: {},
+        todayList: {},
       };
       // les await se font une par une,
       // plus tard peut etre en parallele avec await Promise.all([setDoc(),setDoc(),])
