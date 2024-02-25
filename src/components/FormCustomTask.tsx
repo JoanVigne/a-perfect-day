@@ -1,5 +1,5 @@
 import { useAuthContext } from "@/context/AuthContext";
-import { sendToCustom } from "@/firebase/db/db";
+import { sendToCustom } from "@/firebase/db/custom";
 import React, { useState } from "react";
 import "./form.css";
 

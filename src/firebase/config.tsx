@@ -55,32 +55,6 @@ const db = getFirestore();
 }
  */
 
-async function fetchOnlyThisIdToLocalStorage(
-  collectionName: string,
-  thisID: string
-) {
-  const inLocalStorage = localStorage.getItem(collectionName);
-  if (inLocalStorage) {
-    return JSON.parse(inLocalStorage);
-  }
-  const colRef = collection(db, collectionName);
-  try {
-    const docRef = doc(colRef, thisID);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-
-      localStorage.setItem(collectionName, JSON.stringify(data));
-      return data;
-    } else {
-      console.log("Nothing found with ID:", thisID);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching data from firestore:", error);
-  }
-}
 /* function inLocalStorage(thisItem: string) {
   const thisLocalStorage = localStorage.getItem(thisItem);
   if (thisLocalStorage) {
@@ -123,28 +97,5 @@ async function userFetchDBtoLStorage(thisID: string) {
     console.error("Error fetching user data from firestore:", error);
   }
 }
-async function fetchDataFromDBToLocalStorage(collectionName: string) {
-  // verification session storage
-  const dansLeLocalStorage = localStorage.getItem(collectionName);
-  if (dansLeLocalStorage) {
-    return JSON.parse(dansLeLocalStorage);
-  }
-  const colRef = collection(db, collectionName);
-  try {
-    const snapshot = await getDocs(colRef);
-    const data = snapshot.docs.map((doc) => {
-      return { ...doc.data(), id: doc.id };
-    });
-    localStorage.setItem(collectionName, JSON.stringify(data));
-    console.log("Fetched :", collectionName);
-    return data;
-  } catch (error) {
-    console.error("Error fetching data from Firestore:", error);
-  }
-}
 
-export {
-  fetchDataFromDBToLocalStorage,
-  /*fetchDataDB, */
-  fetchOnlyThisIdToLocalStorage,
-};
+export {};

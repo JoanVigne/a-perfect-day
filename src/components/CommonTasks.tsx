@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./commonTasks.css";
-import { fetchDataFromDBToLocalStorage } from "@/firebase/config";
+import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
 
 interface CommonTasksProps {
   handleAddTaskToTodayList: (task: Task) => void;

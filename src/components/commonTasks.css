@@ -1,3 +1,7 @@
+.task {
+  /* pour position de la modale remove */
+  position: relative;
+}
 .task .name-button {
   display: flex;
   justify-content: space-between;
@@ -29,4 +33,20 @@
 
 .opened {
   max-height: 500px;
+}
+
+.modal {
+  position: fixed;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  color: white;
+  background-color: black;
+  border: 1px red solid;
+  padding: 10px;
+}
+.modal button {
+  margin: 2px;
 }

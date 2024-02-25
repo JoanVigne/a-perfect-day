@@ -1,4 +1,11 @@
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  setDoc,
+} from "firebase/firestore";
 
 const db = getFirestore();
 
@@ -8,93 +15,55 @@ const checkDB = async (dbName: string, userId: string) => {
   const snapShot = await getDoc(ref);
   return { ref, snapShot };
 };
+async function fetchOnlyThisIdToLocalStorage(
+  collectionName: string,
+  thisID: string
+) {
+  const inLocalStorage = localStorage.getItem(collectionName);
+  if (inLocalStorage) {
+    return JSON.parse(inLocalStorage);
+  }
+  const colRef = collection(db, collectionName);
+  try {
+    const docRef = doc(colRef, thisID);
+    const docSnap = await getDoc(docRef);
 
-interface DataObject {
-  date: string;
-  [key: string]: any;
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+
+      localStorage.setItem(collectionName, JSON.stringify(data));
+      return data;
+    } else {
+      console.log("Nothing found with ID:", thisID);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching data from firestore:", error);
+  }
+}
+async function fetchDataFromDBToLocalStorage(collectionName: string) {
+  // verification session storage
+  const dansLeLocalStorage = localStorage.getItem(collectionName);
+  if (dansLeLocalStorage) {
+    return JSON.parse(dansLeLocalStorage);
+  }
+  const colRef = collection(db, collectionName);
+  try {
+    const snapshot = await getDocs(colRef);
+    const data = snapshot.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id };
+    });
+    localStorage.setItem(collectionName, JSON.stringify(data));
+    console.log("Fetched :", collectionName);
+    return data;
+  } catch (error) {
+    console.error("Error fetching data from Firestore:", error);
+  }
 }
 
-interface DataCustom {
-  [key: string]: any;
-}
-
-const sendToCustom = async (data: DataCustom, userId: string) => {
-  const { ref, snapShot } = await checkDB("custom", userId);
-  if (!snapShot.exists()) {
-    // Traitez le cas où l'id du user n'existe pas
-    await setDoc(ref, {});
-  }
-  const customData = snapShot.data();
-  if (!customData) {
-    return;
-  }
-  let alreadyInDB = false;
-  Object.values(customData).map((ele) => {
-    console.log("ele : ", ele);
-    if (data.name === ele.name) {
-      console.log("Ce nom est deja pris");
-      alreadyInDB = true;
-    }
-  });
-
-  if (alreadyInDB) {
-    console.log("Ce nom est deja pris");
-    return;
-  }
-
-  const updatedData = {
-    ...customData,
-    [data.id]: {
-      ...data,
-    },
-  };
-  console.log(updatedData);
-  await setDoc(ref, updatedData);
-  localStorage.setItem("custom", JSON.stringify(updatedData));
-  console.log("custom est mis a jour");
+export {
+  checkDB,
+  fetchOnlyThisIdToLocalStorage,
+  fetchDataFromDBToLocalStorage,
+  db,
 };
-
-const sendToHistoric = async (data: DataObject, userId: string) => {
-  const { ref, snapShot } = await checkDB("historic", userId);
-
-  if (!snapShot.exists()) {
-    // Traitez le cas où l'id du user n'existe pas
-    await setDoc(ref, {});
-  }
-  const historicData = snapShot.data();
-
-  if (!historicData) {
-    return;
-  }
-  // verifie si deja dans historic
-  const historicDataDate = historicData.date?.substring(0, 10);
-  const dataDate = data.date.substring(0, 10);
-  if (historicDataDate === dataDate) {
-    console.log("pareil");
-    return;
-  }
-  const copieData = { ...data };
-
-  Object.keys(copieData).forEach((key) => {
-    const ele = copieData[key];
-    if (
-      ele.unit === false ||
-      (typeof ele.unit !== "boolean" && (ele.count === "0" || ele.count === 0))
-    ) {
-      delete copieData[key];
-    }
-  });
-
-  const updatedData = {
-    ...historicData,
-    [copieData.date.substring(0, 10)]: {
-      ...copieData,
-    },
-  };
-
-  await setDoc(ref, updatedData);
-  localStorage.setItem("historic", JSON.stringify(updatedData));
-  console.log("historic est mis a jour");
-};
-
-export { sendToHistoric, checkDB, sendToCustom };

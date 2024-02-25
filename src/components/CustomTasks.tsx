@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./commonTasks.css";
-import { fetchOnlyThisIdToLocalStorage } from "@/firebase/config";
+import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import FormCustomTask from "./FormCustomTask";
+import { removeFromCustom } from "@/firebase/db/custom";
 
 interface CustomTasksProps {
   handleAddTaskToTodayList: (task: Task) => void;
@@ -45,6 +46,34 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   // ouvrir et fermer le form :
   const [showForm, setShowForm] = useState(false);
+
+  // supprimer une custom :
+  const [taskToRemove, setTaskToRemove] = useState<Task | null>(null);
+  const handleRemoveTask = (task: Task) => {
+    console.log("task ", task);
+    setTaskToRemove(task);
+    return;
+  };
+  const handleConfirmRemoveTask = () => {
+    if (taskToRemove && taskToRemove.id !== undefined) {
+      // Créer une copie de customTasks
+      const updatedTasks = { ...customTasks };
+
+      // Supprimer la tâche avec l'ID correspondant de la copie de customTasks
+      Object.keys(updatedTasks).forEach((key) => {
+        const taskKey = key as keyof typeof updatedTasks;
+        if (taskKey === taskToRemove?.id) {
+          delete updatedTasks[taskKey];
+        }
+      });
+
+      setTaskToRemove(null);
+      // envoi a la db custom
+      removeFromCustom(updatedTasks, userId);
+      setCustomTasks(updatedTasks);
+    }
+  };
+
   return (
     <ul>
       {loadingTasks ? (
@@ -56,8 +85,8 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
             <div
               className="name-button"
               /* onClick={() => {
-                handleAddTaskToTodayList(customTask);
-              }} */
+                  handleAddTaskToTodayList(customTask);
+                }} */
             >
               <div className="name-details">
                 <h3>
@@ -84,17 +113,35 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                 +
               </button>
             </div>
-            <div className="description-button">
-              <p className="description">{customTask.description}</p>
-            </div>
+            <div className="description-button"></div>
 
             <div className={clickedIndex === index ? "active" : "hidden"}>
+              <p className="description">{customTask.description}</p>
               <p>{customTask.details}</p>
+
+              <span
+                className="remove"
+                onClick={() => {
+                  handleRemoveTask(customTask);
+                }}
+              >
+                <img src="./red-bin.png" alt="remove" />
+              </span>
             </div>
           </li>
         ))
       )}
-
+      {taskToRemove && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>Are you sure you want to delete this task?</p>
+            <div className="modal-buttons">
+              <button onClick={handleConfirmRemoveTask}>Confirm</button>
+              <button onClick={() => setTaskToRemove(null)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
       <button
         className={`${showForm ? "" : "add"}`}
         onClick={() => setShowForm(!showForm)}

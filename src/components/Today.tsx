@@ -162,7 +162,7 @@ const Today: React.FC<TodayProps> = ({
                       handleRemoveTaskFromTodayList(item.id);
                     }}
                   >
-                    <img src="./red-bin.png" alt="la bin" />
+                    <img src="./red-bin.png" alt="remove" />
                   </span>
                 </div>
               </li>

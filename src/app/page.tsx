@@ -5,9 +5,10 @@ import "./pageHome.css";
 import CommonTasks from "@/components/CommonTasks";
 import { useAuthContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
-import { fetchOnlyThisIdToLocalStorage } from "@/firebase/config";
+import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import Footer from "@/components/Footer";
-import { checkDB, sendToHistoric } from "@/firebase/db/db";
+import { checkDB } from "@/firebase/db/db";
+import { sendToHistoric } from "@/firebase/db/historic";
 import CustomTasks from "@/components/CustomTasks";
 import { useRouter } from "next/navigation";
 
@@ -85,50 +86,7 @@ export default function Home() {
   useEffect(() => {
     whichList();
   }, []);
-  /*   useEffect(() => {
-    const localStorageTodayList = localStorage.getItem("todayList");
-    const todayDate = new Date().toISOString();
 
-    if (localStorageTodayList === null) {
-      // il n'y a rien dans le localStorage
-      // voir la db
-      const todayListFromDb = await checkDBForTodayList();
-      // si pas dans db :
-      const newList = {
-        date: todayDate,
-      };
-      localStorage.setItem("todayList", JSON.stringify(newList));
-      setTodayList(newList);
-    }
-    // SI IL Y A DANS LOCAL STORAGE
-    if (localStorageTodayList !== null) {
-      let parsed = JSON.parse(localStorageTodayList);
-      if (!parsed.date) {
-        // si il n'y a pas la date
-        const withDate = { ...parsed, date: todayDate };
-        setTodayList(withDate);
-        localStorage.setItem("todayList", JSON.stringify(withDate));
-        return;
-      }
-      const compareDateDay = parsed.date.slice(0, 10);
-      const newDate = todayDate.slice(0, 10);
-      if (compareDateDay !== newDate) {
-        // si pas la date du jour
-        sendToHistoric(parsed, user.uid);
-        // on reset les counts:
-        const resetedData = resetListToFalseAndZero(parsed);
-        setTodayList(resetedData);
-        localStorage.setItem("todayList", JSON.stringify(resetedData));
-      }
-      if (compareDateDay === newDate) {
-        console.log(
-          "C'est le même jour donc ne pas envoyer a historic et ne pas mettre a 0"
-        );
-        setTodayList(parsed);
-      }
-    }
-  }, []);
- */
   interface Task {
     id: string;
     name: string;
@@ -164,14 +122,14 @@ export default function Home() {
   };
   function resetListToFalseAndZero(data: any) {
     const todayDate = new Date().toISOString();
-    let copyData = JSON.parse(JSON.stringify(data)); // Copie profonde de data
+    let copyData = JSON.parse(JSON.stringify(data));
     Object.keys(copyData).forEach((key) => {
       const ele = copyData[key];
       if (typeof ele.unit === "boolean") {
-        copyData[key].unit = false; // Mettre à jour copyData[key]
+        copyData[key].unit = false;
       }
       if (typeof ele.unit === "string" || typeof ele.unit === "number") {
-        copyData[key].count = "0"; // Mettre à jour copyData[key]
+        copyData[key].count = "0";
       }
     });
     copyData.date = todayDate;
