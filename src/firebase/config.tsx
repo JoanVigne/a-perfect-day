@@ -70,7 +70,7 @@ async function fetchOnlyThisIdToLocalStorage(
 
     if (docSnap.exists()) {
       const data = docSnap.data();
-      console.log("data: ", data);
+
       localStorage.setItem(collectionName, JSON.stringify(data));
       return data;
     } else {

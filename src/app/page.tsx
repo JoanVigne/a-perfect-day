@@ -25,7 +25,7 @@ export default function Home() {
 
   useEffect(() => {
     if (user == null || user?.uid == null || user?.uid == undefined) {
-      return router.push("/");
+      return router.push("/connect");
       // CREER UN MESSAGE D'ERREUR
     }
     const fetchData = async () => {
