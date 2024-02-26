@@ -11,6 +11,7 @@ import { checkDB } from "@/firebase/db/db";
 import { sendToHistoric } from "@/firebase/db/historic";
 import CustomTasks from "@/components/CustomTasks";
 import { useRouter } from "next/navigation";
+import Loading from "./loading";
 
 interface UserData {
   email: string;
@@ -27,17 +28,21 @@ export default function Home() {
   useEffect(() => {
     if (user == null || user?.uid == null || user?.uid == undefined) {
       return router.push("/connect");
+    } else {
+      const fetchData = async () => {
+        try {
+          const fetching = await fetchOnlyThisIdToLocalStorage(
+            "users",
+            user.uid
+          );
+          setUserInfo(fetching);
+        } catch (error) {
+          console.error("Error fetching common tasks:", error);
+        }
+      };
+      fetchData();
+      whichList();
     }
-    const fetchData = async () => {
-      try {
-        const fetching = await fetchOnlyThisIdToLocalStorage("users", user.uid);
-        setUserInfo(fetching);
-      } catch (error) {
-        console.error("Error fetching common tasks:", error);
-      }
-    };
-
-    fetchData();
   }, [user]);
 
   const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
@@ -83,9 +88,6 @@ export default function Home() {
       }
     }
   }
-  useEffect(() => {
-    whichList();
-  }, []);
 
   interface Task {
     id: string;
@@ -135,11 +137,14 @@ export default function Home() {
     copyData.date = todayDate;
     return copyData;
   }
+  if (!user) {
+    return <Loading />;
+  }
   return (
     <>
       <main>
         <h1>
-          Welcome <br></br> {userInfo?.nickname ?? "Loading..."}
+          Welcome <br></br> {userInfo?.nickname}
         </h1>
         {/*  <button
           onClick={() => {
@@ -155,7 +160,7 @@ export default function Home() {
         <Today
           list={todayList}
           handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
-          userid={user.uid}
+          userid={user?.uid}
         />
 
         <div className="container">
