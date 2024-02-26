@@ -118,7 +118,7 @@ const Today: React.FC<TodayProps> = ({
                         className={
                           item.unit === false
                             ? "task-not-done save"
-                            : "task-done remove"
+                            : "task-done undo"
                         }
                       >
                         {item.unit === false ? "Done?" : "undo"}

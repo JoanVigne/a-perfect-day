@@ -1,8 +1,8 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import { useAuthContext } from "@/context/AuthContext";
 import { checkDB } from "@/firebase/db/db";
-import React, { useEffect, useState } from "react";
 
 interface UserData {
   email: string;
@@ -19,47 +19,37 @@ interface Task {
 }
 
 interface HistoricData {
-  [date: string]: {
-    [activityId: string]: Task;
+  [shortDate: string]: {
+    date: string;
+    [activityId: string]: Task | string;
   };
 }
 
 const Page = () => {
   const { user } = useAuthContext() as { user: UserData };
-
   const [dataHistoric, setDataHistoric] = useState<HistoricData | null>(null);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { snapShot } = await checkDB("historic", user.uid);
+        if (!snapShot.exists()) return;
+        const historicData: HistoricData = snapShot.data();
+        setDataHistoric(historicData);
+        localStorage.setItem("historic", JSON.stringify(historicData));
+      } catch (error) {
+        console.error("Error fetching historic data:", error);
+      }
+    };
+
     const inLocalStorage = localStorage.getItem("historic");
     if (inLocalStorage) {
       const localData: HistoricData = JSON.parse(inLocalStorage);
-      const dates = Object.keys(localData).map((key) => key.slice(0, 10));
-      const today = new Date().toISOString().slice(0, 10);
-      const isTodayInHistoric = dates.includes(today);
-      if (isTodayInHistoric) {
-        console.log("historic dans local déjà à jour !");
-        setDataHistoric(localData);
-        return;
-      }
-      console.log("historic local pas à jour :");
-      fetchHistoric();
+      setDataHistoric(localData);
     } else {
-      console.log("pas dans local ");
-      fetchHistoric();
+      fetchData();
     }
-  }, []);
-
-  async function fetchHistoric() {
-    const { ref, snapShot } = await checkDB("historic", user.uid);
-    if (!snapShot.exists()) {
-      console.log("id utilisateur introuvable dans collection historic");
-      return;
-    }
-    const historicData: HistoricData = snapShot.data();
-    console.log(historicData);
-    setDataHistoric(historicData);
-    localStorage.setItem("historic", JSON.stringify(historicData));
-  }
+  }, [user.uid]);
 
   const sortedHistoricDays = dataHistoric
     ? Object.entries(dataHistoric)
@@ -69,31 +59,31 @@ const Page = () => {
         .map(({ historicDay }) => historicDay)
     : [];
 
+  function formatDate(dateString: string) {
+    const date = new Date(dateString);
+    const options = { month: "long" as const, day: "2-digit" as const };
+    return date.toLocaleDateString("fr-FR", options); // Vous pouvez ajuster le local selon vos besoins
+  }
   return (
     <>
       <main>
-        <h1>Historique</h1>
-        {dataHistoric &&
-          sortedHistoricDays.map((historicDay, index) => (
-            <div key={`historic-${index}`}>
-              <h2>Day: {index}</h2>
-              <h3>date: {/* {console.log(historicDay.date)} probleme TS */}</h3>
-              {Object.values(historicDay).map((activity: Task) => (
-                <div key={activity.id}>
-                  <h3>{activity.name}</h3>
+        {sortedHistoricDays.map((day, index) => (
+          <div key={`historic-${index}`}>
+            <p>Date: {formatDate(day.date)}</p>
+            <p></p>
+            {Object.entries(day)
+              .filter(([key]) => key !== "date")
+              .map(([activityId, activity]) => (
+                <div key={activityId}>
+                  <h3>{(activity as Task).name}</h3>
+                  <p>{(activity as Task).details}</p>
                   <p>
-                    {typeof activity.unit === "string" ? (
-                      <>
-                        {activity.count} {activity.unit}
-                      </>
-                    ) : (
-                      "done !"
-                    )}
+                    {(activity as Task).count} {(activity as Task).unit}
                   </p>
                 </div>
               ))}
-            </div>
-          ))}
+          </div>
+        ))}
       </main>
       <Footer />
     </>

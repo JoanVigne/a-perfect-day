@@ -20,7 +20,6 @@ function Signin() {
       setMessageErreur(error.message);
       return console.log(error);
     }
-    console.log(result);
     setErreur(false);
     setMessageErreur("");
     return router.push("/");

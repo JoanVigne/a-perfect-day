@@ -71,14 +71,23 @@ export default function Home() {
     }
     if (localStorageTodayList !== null) {
       const parsed = JSON.parse(localStorageTodayList);
-      /*const parsedDate = parsed.date ? parsed.date.slice(0, 10) : null; */
-      const compareDateDay = parsed.date.slice(0, 10);
-      const newDate = todayDate.slice(0, 10);
-      if (compareDateDay !== newDate) {
-        sendToHistoric(parsed, user.uid);
-        const resetedData = resetListToFalseAndZero(parsed);
-        updateStorageAndTodayList(resetedData);
-        return resetedData;
+      if (parsed.date === undefined) {
+        const withDate = { ...parsed, date: todayDate };
+        console.log("withDate", withDate);
+        setTodayList(parsed);
+        return parsed;
+      }
+      if (parsed.date !== undefined) {
+        console.log("il n'y a pas de date dans ce localStorage");
+
+        const compareDateDay = parsed.date.slice(0, 10);
+        const newDate = todayDate.slice(0, 10);
+        if (compareDateDay !== newDate) {
+          sendToHistoric(parsed, user.uid);
+          const resetedData = resetListToFalseAndZero(parsed);
+          updateStorageAndTodayList(resetedData);
+          return resetedData;
+        }
       } else {
         console.log(
           "C'est le même jour donc ne pas envoyer a historic et ne pas mettre a 0"
@@ -146,23 +155,20 @@ export default function Home() {
         <h1>
           Welcome <br></br> {userInfo?.nickname}
         </h1>
-        {/*  <button
-          onClick={() => {
-            chck().then((todayListInDb) => {
-              console.log(todayListInDb);
-            });
+
+        {/*   <button
+          onClick={async () => {
+            const test = await whichList();
+            console.log("TEST ", test);
           }}
         >
           test
         </button> */}
-
-        <p></p>
         <Today
           list={todayList}
           handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
           userid={user?.uid}
         />
-
         <div className="container">
           <h2>Custom tasks</h2>
           <CustomTasks
