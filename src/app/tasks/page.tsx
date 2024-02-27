@@ -1,4 +1,4 @@
-import "./styles.css";
+/* import "./styles.css";
 
 import cubejs from "@cubejs-client/core";
 import Chart from "chart.js/auto";
@@ -76,3 +76,4 @@ var chartJsData = function (resultSet) {
     }),
   };
 };
+ */
