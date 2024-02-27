@@ -6,8 +6,7 @@ import {
   getFirestore,
   setDoc,
 } from "firebase/firestore";
-
-const db = getFirestore();
+import { db } from "../config";
 
 // fonction reutilisable pour voir certaines collections :
 const checkDB = async (dbName: string, userId: string) => {

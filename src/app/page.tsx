@@ -12,6 +12,7 @@ import { sendToHistoric } from "@/firebase/db/historic";
 import CustomTasks from "@/components/CustomTasks";
 import { useRouter } from "next/navigation";
 import Loading from "./loading";
+import { firebaseApp } from "@/firebase/config";
 
 interface UserData {
   email: string;
@@ -24,8 +25,16 @@ export default function Home() {
   const { user } = useAuthContext() as { user: UserData };
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const router = useRouter();
-
+  const [firebaseInitialized, setFirebaseInitialized] = useState(false);
   useEffect(() => {
+    async function checkFBInit() {
+      try {
+        await firebaseApp;
+        setFirebaseInitialized(true);
+      } catch (error) {
+        console.error("Error fetching common tasks:", error);
+      }
+    }
     if (user == null || user?.uid == null || user?.uid == undefined) {
       return router.push("/connect");
     } else {
@@ -40,6 +49,7 @@ export default function Home() {
           console.error("Error fetching common tasks:", error);
         }
       };
+      checkFBInit();
       fetchData();
       whichList();
     }
@@ -153,7 +163,7 @@ export default function Home() {
     copyData.date = todayDate;
     return copyData;
   }
-  if (!user) {
+  if (!user || !firebaseInitialized) {
     return <Loading />;
   }
   return (

@@ -1,4 +1,4 @@
-import "./styles.css";
+import "./tasks.css";
 import React from "react";
 
 const page = () => {
