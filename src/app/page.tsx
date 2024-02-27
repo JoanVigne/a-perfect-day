@@ -46,7 +46,7 @@ export default function Home() {
   }, [user]);
 
   const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
-
+  const [messagelist, setMessagelist] = useState<string | null>(null);
   async function checkDBForTodayList() {
     const { snapShot } = await checkDB("users", user.uid);
     return snapShot.exists() ? snapShot.data().todayList : null;
@@ -54,6 +54,7 @@ export default function Home() {
   function updateStorageAndTodayList(data: any) {
     localStorage.setItem("todayList", JSON.stringify(data));
     setTodayList(data);
+    return data;
   }
   async function whichList() {
     const localStorageTodayList = localStorage.getItem("todayList");
@@ -71,15 +72,14 @@ export default function Home() {
     }
     if (localStorageTodayList !== null) {
       const parsed = JSON.parse(localStorageTodayList);
+      console.log("parsed date: ", parsed.date);
       if (parsed.date === undefined) {
         const withDate = { ...parsed, date: todayDate };
-        console.log("withDate", withDate);
-        setTodayList(parsed);
-        return parsed;
+        setTodayList(withDate);
+        return withDate;
       }
       if (parsed.date !== undefined) {
-        console.log("il n'y a pas de date dans ce localStorage");
-
+        console.log("OK ", parsed.date);
         const compareDateDay = parsed.date.slice(0, 10);
         const newDate = todayDate.slice(0, 10);
         if (compareDateDay !== newDate) {
@@ -88,10 +88,13 @@ export default function Home() {
           updateStorageAndTodayList(resetedData);
           return resetedData;
         }
+        if (compareDateDay === newDate) {
+          console.log("meme jour");
+          setTodayList(parsed);
+          return parsed;
+        }
       } else {
-        console.log(
-          "C'est le même jour donc ne pas envoyer a historic et ne pas mettre a 0"
-        );
+        console.log("aucune condition dans whichList");
         setTodayList(parsed);
         return parsed;
       }
@@ -117,13 +120,14 @@ export default function Home() {
     );
 
     if (isTaskAlreadyExists) {
-      console.log("Task with the same name or ID already exists in the list.");
+      setMessagelist("Task with already exists in the list.");
       return;
     }
     const updatedList = { ...todayList };
     updatedList[task.id] = task;
     setTodayList(updatedList);
     localStorage.setItem("todayList", JSON.stringify(updatedList));
+    setMessagelist(null);
   };
   const handleRemoveTaskFromTodayList = (itemId: string) => {
     const updatedList = { ...todayList };
@@ -132,6 +136,7 @@ export default function Home() {
     localStorage.setItem("todayList", JSON.stringify(updatedList));
   };
   function resetListToFalseAndZero(data: any) {
+    console.log("today list reseted");
     const todayDate = new Date().toISOString();
     let copyData = JSON.parse(JSON.stringify(data));
     Object.keys(copyData).forEach((key) => {
@@ -164,11 +169,14 @@ export default function Home() {
         >
           test
         </button> */}
-        <Today
-          list={todayList}
-          handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
-          userid={user?.uid}
-        />
+        <div className="container">
+          <Today
+            list={todayList}
+            handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
+            userid={user?.uid}
+          />
+          <p className="message-error">{messagelist}</p>
+        </div>
         <div className="container">
           <h2>Custom tasks</h2>
           <CustomTasks

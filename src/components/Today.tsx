@@ -83,7 +83,7 @@ const Today: React.FC<TodayProps> = ({
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
   return (
-    <div className="today-list container">
+    <div className="today-list">
       <h2>today's list</h2>
       <ul>
         {taskList &&

@@ -3,6 +3,7 @@ import "./commonTasks.css";
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import FormCustomTask from "./FormCustomTask";
 import { removeFromCustom } from "@/firebase/db/custom";
+import Load from "./Load";
 
 interface CustomTasksProps {
   handleAddTaskToTodayList: (task: Task) => void;
@@ -21,7 +22,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
   userId,
 }) => {
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
-
+  const [messageCustom, setMessageCustom] = useState<string | null>(null);
   const updateCustomTasks = (newCustomTasks: Task[]) => {
     setCustomTasks(newCustomTasks);
   };
@@ -54,7 +55,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
     setTaskToRemove(task);
     return;
   };
-  const handleConfirmRemoveTask = () => {
+  const handleConfirmRemoveTask = async () => {
     if (taskToRemove && taskToRemove.id !== undefined) {
       // Créer une copie de customTasks
       const updatedTasks = { ...customTasks };
@@ -69,7 +70,8 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
 
       setTaskToRemove(null);
       // envoi a la db custom
-      removeFromCustom(updatedTasks, userId);
+      const mess = await removeFromCustom(updatedTasks, userId);
+      setMessageCustom(mess);
       setCustomTasks(updatedTasks);
     }
   };
@@ -77,7 +79,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
   return (
     <ul>
       {loadingTasks ? (
-        <li>Loading...</li>
+        <Load />
       ) : (
         customTasks &&
         Object.values(customTasks).map((customTask, index) => (
@@ -131,6 +133,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
           </li>
         ))
       )}
+      <p>{messageCustom}</p>
       {taskToRemove && (
         <div className="modal">
           <div className="modal-content">

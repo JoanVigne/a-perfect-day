@@ -64,6 +64,7 @@ const Page = () => {
     const options = { month: "long" as const, day: "2-digit" as const };
     return date.toLocaleDateString("fr-FR", options); // Vous pouvez ajuster le local selon vos besoins
   }
+
   return (
     <>
       <main>
@@ -76,7 +77,7 @@ const Page = () => {
               .map(([activityId, activity]) => (
                 <div key={activityId}>
                   <h3>{(activity as Task).name}</h3>
-                  <p>{(activity as Task).details}</p>
+                  {/*   <p>{(activity as Task).details}</p> */}
                   <p>
                     {(activity as Task).count} {(activity as Task).unit}
                   </p>

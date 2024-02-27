@@ -133,6 +133,7 @@ li {
 }
 .message-error {
   color: red;
+  text-align: center;
 }
 
 .remove img {
