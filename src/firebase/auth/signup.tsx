@@ -1,8 +1,8 @@
 import { doc, getFirestore, setDoc } from "firebase/firestore";
-import firebase_app from "../config";
+import { firebaseApp } from "../config";
 import { createUserWithEmailAndPassword, Auth, getAuth } from "firebase/auth";
 
-const auth: Auth = getAuth(firebase_app);
+const auth: Auth = getAuth(firebaseApp);
 const db = getFirestore();
 
 interface SignUpResult {

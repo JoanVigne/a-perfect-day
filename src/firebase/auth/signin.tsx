@@ -1,7 +1,7 @@
-import firebase_app from "../config";
+import { firebaseApp } from "../config";
 import { signInWithEmailAndPassword, Auth, getAuth } from "firebase/auth";
 
-const auth: Auth = getAuth(firebase_app);
+const auth: Auth = getAuth(firebaseApp);
 
 interface SignInResult {
   result: any;
