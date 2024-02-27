@@ -79,7 +79,6 @@ export default function Home() {
         return withDate;
       }
       if (parsed.date !== undefined) {
-        console.log("OK ", parsed.date);
         const compareDateDay = parsed.date.slice(0, 10);
         const newDate = todayDate.slice(0, 10);
         if (compareDateDay !== newDate) {
@@ -89,7 +88,6 @@ export default function Home() {
           return resetedData;
         }
         if (compareDateDay === newDate) {
-          console.log("meme jour");
           setTodayList(parsed);
           return parsed;
         }
@@ -161,14 +159,13 @@ export default function Home() {
           Welcome <br></br> {userInfo?.nickname}
         </h1>
 
-        {/*   <button
+        <button
           onClick={async () => {
-            const test = await whichList();
-            console.log("TEST ", test);
+            checkDBForTodayList();
           }}
         >
           test
-        </button> */}
+        </button>
         <div className="container">
           <Today
             list={todayList}

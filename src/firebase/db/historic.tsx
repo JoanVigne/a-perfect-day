@@ -6,10 +6,9 @@ interface DataObject {
   [key: string]: any;
 }
 const sendToHistoric = async (data: DataObject, userId: string) => {
+  console.log("data : ", data);
   const { ref, snapShot } = await checkDB("historic", userId);
-
   if (!snapShot.exists()) {
-    // Traitez le cas où l'id du user n'existe pas
     await setDoc(ref, {});
   }
   const historicData = snapShot.data();
@@ -21,8 +20,7 @@ const sendToHistoric = async (data: DataObject, userId: string) => {
   const historicDataDate = historicData.date?.substring(0, 10);
   const dataDate = data.date.substring(0, 10);
   if (historicDataDate === dataDate) {
-    console.log("pareil");
-    return;
+    return console.log("pareil");
   }
   const copieData = { ...data };
 
@@ -35,6 +33,12 @@ const sendToHistoric = async (data: DataObject, userId: string) => {
       delete copieData[key];
     }
   });
+
+  if (Object.keys(copieData).length === 1 && data.hasOwnProperty("date")) {
+    return console.log(
+      "ne contient que la date, donc pas envoyé à l'historic."
+    );
+  }
 
   const updatedData = {
     ...historicData,

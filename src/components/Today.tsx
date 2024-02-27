@@ -26,9 +26,7 @@ const Today: React.FC<TodayProps> = ({
   useEffect(() => {
     setTaskList(list);
   }, [list]);
-  // remettre a 0 ?
 
-  //
   const [taskList, setTaskList] = useState<{ [key: string]: Task }>(list);
 
   const handleTaskCompletionToggle = (itemId: string) => {
@@ -68,14 +66,36 @@ const Today: React.FC<TodayProps> = ({
     sendTodayListToDB(updatedList);
   };
   async function sendTodayListToDB(data: any) {
+    const waitingHistoric = localStorage.getItem("waitingHistoric");
+    if (!navigator.onLine) {
+      //hors ligne
+      if (!waitingHistoric) {
+        localStorage.setItem("waitingHistoric", JSON.stringify(data));
+      }
+      if (waitingHistoric) {
+        const copyWaitingHistoric = JSON.parse(waitingHistoric);
+        copyWaitingHistoric.push(data);
+        localStorage.setItem(
+          "waitingHistoric",
+          JSON.stringify(copyWaitingHistoric)
+        );
+      }
+      return;
+    }
     const { ref, snapShot } = await checkDB("users", userid);
     if (!snapShot.exists()) {
       console.log("id utilisateur introuvable dans collection historic");
       return;
     }
-    const userData = snapShot.data();
+    if (waitingHistoric) {
+      // envoyer a db
+      const copyWaitingHistoric = JSON.parse(waitingHistoric);
+      const newData = { ...snapShot.data(), copyWaitingHistoric };
+      await setDoc(ref, newData);
+      localStorage.removeItem("waitingHistoric");
+    }
     const todayList = data;
-    const newData = { ...userData, todayList };
+    const newData = { ...snapShot.data(), todayList };
     await setDoc(ref, newData);
     localStorage.setItem("todayList", JSON.stringify(todayList));
   }

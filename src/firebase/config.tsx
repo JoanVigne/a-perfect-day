@@ -24,13 +24,28 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 // Initialize Firebase
-let firebase_app =
+/* let firebase_app =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 if (!firebase_app) {
   console.log("Firebase initialized successfully!");
 } else {
   console.log("Firebase is already initialized.");
+} */
+// Vérifier si Firebase a déjà été initialisé et mis en cache localement
+let firebaseCached = localStorage.getItem("firebaseInitialized");
+let firebase_app;
+if (!firebaseCached) {
+  firebase_app = initializeApp(firebaseConfig);
+  if (firebase_app) {
+    localStorage.setItem("firebaseInitialized", "true");
+    console.log("Firebase initialized successfully!");
+  } else {
+    console.error("Failed to initialize Firebase!");
+  }
+} else {
+  console.log("Firebase is already initialized.");
 }
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export default firebase_app;
@@ -39,28 +54,6 @@ export default firebase_app;
 // fetch données
 const db = getFirestore();
 
-/* async function fetchDataDB(collectionName: string) {
-  const colRef = collection(db, collectionName);
-  try {
-    const snapshot = await getDocs(colRef);
-    const data = snapshot.docs.map((doc) => {
-      return { ...doc.data(), id: doc.id };
-    });
-    console.log("Fetched", collectionName);
-    console.log("data: ", data);
-    return data;
-  } catch (error) {
-    console.error("Error fetching data from firestore:", error);
-  }
-}
- */
-
-/* function inLocalStorage(thisItem: string) {
-  const thisLocalStorage = localStorage.getItem(thisItem);
-  if (thisLocalStorage) {
-    const parsed = JSON.parse(thisLocalStorage);
-  }
-} */
 async function userFetchDBtoLStorage(thisID: string) {
   const inLocalStorage = localStorage.getItem("user");
 
