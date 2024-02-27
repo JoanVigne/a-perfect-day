@@ -49,7 +49,11 @@ export default function Home() {
   const [messagelist, setMessagelist] = useState<string | null>(null);
   async function checkDBForTodayList() {
     const { snapShot } = await checkDB("users", user.uid);
-    return snapShot.exists() ? snapShot.data().todayList : null;
+    const todayListFromDB = snapShot.exists()
+      ? snapShot.data().todayList
+      : null;
+    console.log("todayList :", todayListFromDB);
+    return todayListFromDB;
   }
   function updateStorageAndTodayList(data: any) {
     localStorage.setItem("todayList", JSON.stringify(data));
