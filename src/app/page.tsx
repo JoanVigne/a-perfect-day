@@ -20,6 +20,7 @@ interface UserData {
 }
 interface UserInfo {
   nickname: string;
+  lists: Array<string>;
 }
 export default function Home() {
   const { user } = useAuthContext() as { user: UserData };

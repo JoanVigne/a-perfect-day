@@ -21,14 +21,15 @@ export default async function signUp(
     result = await createUserWithEmailAndPassword(auth, email, password);
     if (result && result.user) {
       const userId = result.user.uid;
-      const userRef = doc(db, "users", userId);
+
       const userData = {
         nickname: nickname,
         lists: {},
         todayList: {},
       };
-      // les await se font une par une,
+      // les await se font un par un,
       // plus tard peut etre en parallele avec await Promise.all([setDoc(),setDoc(),])
+      const userRef = doc(db, "users", userId);
       await setDoc(userRef, userData);
       const historicRef = doc(db, "historic", userId);
       await setDoc(historicRef, {});

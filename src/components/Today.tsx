@@ -3,6 +3,8 @@ import "./today.css";
 import { checkDB } from "@/firebase/db/db";
 import { AuthContext } from "@/context/AuthContext";
 import { setDoc } from "firebase/firestore";
+import resetListToFalseAndZero from "@/app/utils/reset";
+import { sendToUsers } from "@/firebase/db/users";
 
 interface Task {
   unit: boolean | string;
@@ -63,7 +65,7 @@ const Today: React.FC<TodayProps> = ({
     console.log(updatedList);
 
     // et envoyer dans la DB la liste du jour:
-    sendTodayListToDB(updatedList);
+    /*  sendTodayListToDB(updatedList); */
   };
   async function sendTodayListToDB(data: any) {
     const waitingHistoric = localStorage.getItem("waitingHistoric");
@@ -80,7 +82,8 @@ const Today: React.FC<TodayProps> = ({
           JSON.stringify(copyWaitingHistoric)
         );
       }
-      return;
+      resetListToFalseAndZero(data);
+      return data;
     }
     const { ref, snapShot } = await checkDB("users", userid);
     if (!snapShot.exists()) {
@@ -99,12 +102,68 @@ const Today: React.FC<TodayProps> = ({
     await setDoc(ref, newData);
     localStorage.setItem("todayList", JSON.stringify(todayList));
   }
+
+  const [listOfLists, setListOfLists] = useState({});
+  useEffect(() => {
+    setListsWithLocalStorage();
+  }, []);
+  function openFavListForm() {}
+
+  function handleSubmitNewFavList(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const nameOfNewFav =
+      (e.currentTarget.elements.namedItem("name") as HTMLInputElement | null)
+        ?.value || "";
+    if (nameOfNewFav === "") {
+      return "empty name not possible";
+    }
+    console.log("nameOfNewFav", nameOfNewFav);
+    let user = localStorage.getItem("users");
+    let userList = {};
+    if (user) {
+      userList = JSON.parse(user).lists;
+      console.log("userList", userList);
+    }
+
+    const newFavList = { ...userList, [nameOfNewFav]: taskList };
+    console.log("newFavList", newFavList);
+    const updatedUser = {
+      ...JSON.parse(user || "{}"),
+      lists: newFavList,
+    };
+    /*     setListOfLists(newFavList); */
+    localStorage.setItem("users", JSON.stringify(updatedUser));
+    e.currentTarget.reset();
+    // fonction pour envoyer a la DB
+    sendToUsers(updatedUser, userid);
+    setListsWithLocalStorage();
+  }
+
+  function updateThisFav(list: any) {
+    console.log("list", list);
+    let user = localStorage.getItem("users");
+    let userList;
+    if (user) {
+      userList = JSON.parse(user).lists;
+    }
+    console.log("userList", userList);
+    Object.keys(userList).map((key) => {
+      console.log("key : ", key);
+    });
+  }
+  function setListsWithLocalStorage() {
+    let user = localStorage.getItem("users");
+    const parsed = JSON.parse(user || "{}");
+    setListOfLists(parsed.lists);
+  }
   // ouvrir et fermer la description :
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
   return (
     <div className="today-list">
       <h2>today's list</h2>
+      <button onClick={setListsWithLocalStorage}>Test</button>
       <ul>
         {taskList &&
           Object.values(taskList).map((item, index) => {
@@ -189,6 +248,34 @@ const Today: React.FC<TodayProps> = ({
             );
           })}
       </ul>
+      <div className="container-save-list">
+        {/* Button pour ouvrir et fermer lists */}
+        <button onClick={openFavListForm}>Save to your favorite lists</button>
+
+        <div className="lists">
+          {listOfLists && Object.keys(listOfLists).length === 0 && (
+            <p>No favorite list yet</p>
+          )}
+          <ul>
+            {Object.keys(listOfLists).map((key, index) => (
+              <li key={index}>
+                <strong>{key}</strong>
+                <button onClick={() => updateThisFav(key)}>update</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <form action="" onSubmit={(e) => handleSubmitNewFavList(e)}>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="name of the new favorite list"
+            required
+          />
+          <input type="submit" value="create new list" />
+        </form>
+      </div>
     </div>
   );
 };
