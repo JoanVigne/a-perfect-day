@@ -152,6 +152,11 @@ export default function Home() {
     console.log("today list reseted");
     const todayDate = new Date().toISOString();
     let copyData = JSON.parse(JSON.stringify(data));
+    if (!copyData) {
+      console.log("nothing in local storage");
+      copyData = { date: todayDate };
+      return copyData;
+    }
     Object.keys(copyData).forEach((key) => {
       const ele = copyData[key];
       if (typeof ele.unit === "boolean") {
@@ -164,6 +169,7 @@ export default function Home() {
     copyData.date = todayDate;
     return copyData;
   }
+
   if (!user || !firebaseInitialized) {
     return <Loading />;
   }

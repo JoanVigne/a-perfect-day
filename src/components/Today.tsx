@@ -150,6 +150,9 @@ const Today: React.FC<TodayProps> = ({
     console.log("userList", userList);
     Object.keys(userList).map((key) => {
       console.log("key : ", key);
+      if (list === key) {
+        // replace this object userList[key] par list
+      }
     });
   }
   function setListsWithLocalStorage() {
