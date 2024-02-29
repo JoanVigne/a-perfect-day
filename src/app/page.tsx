@@ -13,6 +13,7 @@ import CustomTasks from "@/components/CustomTasks";
 import { useRouter } from "next/navigation";
 import Loading from "./loading";
 import { firebaseApp } from "@/firebase/config";
+import Lists from "@/components/Lists";
 
 interface UserData {
   email: string;
@@ -59,6 +60,7 @@ export default function Home() {
   const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
   const [messagelist, setMessagelist] = useState<string | null>(null);
   async function checkDBForTodayList() {
+    console.log("checkDbForTodayList");
     const { snapShot } = await checkDB("users", user.uid);
     const todayListFromDB = snapShot.exists()
       ? snapShot.data().todayList
@@ -75,6 +77,14 @@ export default function Home() {
     const localStorageTodayList = localStorage.getItem("todayList");
     const todayDate = new Date().toISOString();
     if (localStorageTodayList === null) {
+      const userLocal: string | null = localStorage.getItem("users");
+      if (userLocal !== null) {
+        const user = JSON.parse(userLocal);
+        if (user.todayList) {
+          console.log("user.todayList", user.todayList);
+          return user.todayList;
+        }
+      }
       const todayListFromDb = await checkDBForTodayList();
       if (todayListFromDb) {
         updateStorageAndTodayList(todayListFromDb);
@@ -86,30 +96,29 @@ export default function Home() {
       }
     }
     if (localStorageTodayList !== null) {
-      const parsed = JSON.parse(localStorageTodayList);
-      console.log("parsed date: ", parsed.date);
-      if (parsed.date === undefined) {
-        const withDate = { ...parsed, date: todayDate };
+      const parsedTodayList = JSON.parse(localStorageTodayList);
+      if (parsedTodayList.date === undefined) {
+        const withDate = { ...parsedTodayList, date: todayDate };
         setTodayList(withDate);
         return withDate;
       }
-      if (parsed.date !== undefined) {
-        const compareDateDay = parsed.date.slice(0, 10);
+      if (parsedTodayList.date !== undefined) {
+        const compareDateDay = parsedTodayList.date.slice(0, 10);
         const newDate = todayDate.slice(0, 10);
         if (compareDateDay !== newDate) {
-          sendToHistoric(parsed, user.uid);
-          const resetedData = resetListToFalseAndZero(parsed);
+          sendToHistoric(parsedTodayList, user.uid);
+          const resetedData = resetListToFalseAndZero(parsedTodayList);
           updateStorageAndTodayList(resetedData);
           return resetedData;
         }
         if (compareDateDay === newDate) {
-          setTodayList(parsed);
-          return parsed;
+          setTodayList(parsedTodayList);
+          return parsedTodayList;
         }
       } else {
         console.log("aucune condition dans whichList");
-        setTodayList(parsed);
-        return parsed;
+        setTodayList(parsedTodayList);
+        return parsedTodayList;
       }
     }
   }
@@ -155,6 +164,7 @@ export default function Home() {
     if (!copyData) {
       console.log("nothing in local storage");
       copyData = { date: todayDate };
+      console.log("nothing in local storage, copyData : ", copyData);
       return copyData;
     }
     Object.keys(copyData).forEach((key) => {
@@ -182,7 +192,8 @@ export default function Home() {
 
         <button
           onClick={async () => {
-            checkDBForTodayList();
+            const tsx = whichList();
+            console.log("TEST : ", tsx);
           }}
         >
           test
@@ -209,6 +220,7 @@ export default function Home() {
         <h2>Comming soon :</h2>
         <h3>historic and statistic</h3>
         <h3>favorite list ( week days, weekend, hollidays... )</h3>
+        <Lists user={userInfo ? userInfo : null} />
       </main>
       <Footer />
     </>

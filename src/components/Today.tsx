@@ -111,7 +111,6 @@ const Today: React.FC<TodayProps> = ({
 
   function handleSubmitNewFavList(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     const nameOfNewFav =
       (e.currentTarget.elements.namedItem("name") as HTMLInputElement | null)
         ?.value || "";
@@ -125,8 +124,17 @@ const Today: React.FC<TodayProps> = ({
       userList = JSON.parse(user).lists;
       console.log("userList", userList);
     }
+    /*     const newFavList = { ...userList, [nameOfNewFav]: taskList }; */
+    const newFavList = {
+      ...userList,
+      [nameOfNewFav]: Object.entries(taskList).reduce((acc, [key, value]) => {
+        if (key !== "date") {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, any>),
+    };
 
-    const newFavList = { ...userList, [nameOfNewFav]: taskList };
     console.log("newFavList", newFavList);
     const updatedUser = {
       ...JSON.parse(user || "{}"),
