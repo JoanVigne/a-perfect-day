@@ -21,7 +21,7 @@ interface UserData {
 }
 interface UserInfo {
   nickname: string;
-  lists: Array<string>;
+  lists: { [key: string]: object };
 }
 export default function Home() {
   const { user } = useAuthContext() as { user: UserData };
@@ -217,10 +217,8 @@ export default function Home() {
           <h2>Common tasks</h2>
           <CommonTasks handleAddTaskToTodayList={handleAddTaskToTodayList} />
         </div>
-        <h2>Comming soon :</h2>
-        <h3>historic and statistic</h3>
-        <h3>favorite list ( week days, weekend, hollidays... )</h3>
-        <Lists user={userInfo ? userInfo : null} />
+
+        {userInfo && <Lists user={userInfo} />}
       </main>
       <Footer />
     </>

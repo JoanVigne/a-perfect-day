@@ -284,7 +284,7 @@ const Today: React.FC<TodayProps> = ({
             placeholder="name of the new favorite list"
             required
           />
-          <input type="submit" value="create new list" />
+          <input type="submit" value="save this list" />
         </form>
       </div>
     </div>

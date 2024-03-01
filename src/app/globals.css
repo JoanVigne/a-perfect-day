@@ -114,6 +114,9 @@ li {
 .container h2 {
   text-align: center;
 }
+.smaller-container {
+  background-color: rgb(70 69 69);
+}
 .task,
 .item {
   border: 1px solid #ccc;
@@ -123,6 +126,28 @@ li {
 .details {
   font-size: 10px;
   margin-left: 5px;
+}
+
+form {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+form input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+form input[type="submit"],
+form button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
 }
 .add,
 .save {
