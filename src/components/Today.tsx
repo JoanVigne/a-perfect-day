@@ -268,12 +268,13 @@ const Today: React.FC<TodayProps> = ({
             <p>No favorite list yet</p>
           )}
           <ul>
-            {Object.keys(listOfLists).map((key, index) => (
-              <li key={index}>
-                <strong>{key}</strong>
-                <button onClick={() => updateThisFav(key)}>update</button>
-              </li>
-            ))}
+            {listOfLists &&
+              Object.keys(listOfLists).map((key, index) => (
+                <li key={index}>
+                  <strong>{key}</strong>
+                  <button onClick={() => updateThisFav(key)}>update</button>
+                </li>
+              ))}
           </ul>
         </div>
         <form action="" onSubmit={(e) => handleSubmitNewFavList(e)}>

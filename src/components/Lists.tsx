@@ -123,7 +123,7 @@ const Lists: React.FC<Props> = ({ user }) => {
                 </p>
               )}
             </ul>
-            {Object.keys(newFav).length === 0 ? (
+            {newFav && Object.keys(newFav).length === 0 ? (
               <p>Add some tasks from the lists below</p>
             ) : (
               <form action="" onSubmit={createANewFavoriteList}>

@@ -62,9 +62,14 @@ export default function Home() {
   async function checkDBForTodayList() {
     console.log("checkDbForTodayList");
     const { snapShot } = await checkDB("users", user.uid);
-    const todayListFromDB = snapShot.exists()
-      ? snapShot.data().todayList
-      : null;
+    let todayListFromDB: any;
+    const snapshotData = snapShot.data();
+    if (!snapshotData) {
+      console.log("snapShot.exists() n'a pas retourné ce qu'il faut");
+      return;
+    }
+    todayListFromDB = snapshotData.todayList;
+    console.log("snapshot.exists est bien bon : ", todayListFromDB);
     console.log("todayList :", todayListFromDB);
     return todayListFromDB;
   }
