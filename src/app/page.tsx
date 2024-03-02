@@ -59,8 +59,8 @@ export default function Home() {
 
   const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
   const [messagelist, setMessagelist] = useState<string | null>(null);
+
   async function checkDBForTodayList() {
-    console.log("checkDbForTodayList");
     const { snapShot } = await checkDB("users", user.uid);
     let todayListFromDB: any;
     const snapshotData = snapShot.data();
@@ -69,8 +69,6 @@ export default function Home() {
       return;
     }
     todayListFromDB = snapshotData.todayList;
-    console.log("snapshot.exists est bien bon : ", todayListFromDB);
-    console.log("todayList :", todayListFromDB);
     return todayListFromDB;
   }
   function updateStorageAndTodayList(data: any) {
@@ -87,6 +85,7 @@ export default function Home() {
         const user = JSON.parse(userLocal);
         if (user.todayList) {
           console.log("user.todayList", user.todayList);
+          updateStorageAndTodayList(user.todayList);
           return user.todayList;
         }
       }
@@ -96,34 +95,30 @@ export default function Home() {
         return todayListFromDb;
       } else {
         const newList = { date: todayDate };
-        localStorage.setItem("todayList", JSON.stringify(newList));
+        updateStorageAndTodayList(newList);
         return newList;
       }
     }
     if (localStorageTodayList !== null) {
-      const parsedTodayList = JSON.parse(localStorageTodayList);
-      if (parsedTodayList.date === undefined) {
-        const withDate = { ...parsedTodayList, date: todayDate };
-        setTodayList(withDate);
+      const parsedLocalTodayList = JSON.parse(localStorageTodayList);
+      if (parsedLocalTodayList.date === undefined) {
+        const withDate = { ...parsedLocalTodayList, date: todayDate };
+        updateStorageAndTodayList(withDate);
         return withDate;
       }
-      if (parsedTodayList.date !== undefined) {
-        const compareDateDay = parsedTodayList.date.slice(0, 10);
+      if (parsedLocalTodayList.date !== undefined) {
+        const compareDateDay = parsedLocalTodayList.date.slice(0, 10);
         const newDate = todayDate.slice(0, 10);
         if (compareDateDay !== newDate) {
-          sendToHistoric(parsedTodayList, user.uid);
-          const resetedData = resetListToFalseAndZero(parsedTodayList);
+          await sendToHistoric(parsedLocalTodayList, user.uid);
+          const resetedData = resetListToFalseAndZero(parsedLocalTodayList);
           updateStorageAndTodayList(resetedData);
           return resetedData;
         }
         if (compareDateDay === newDate) {
-          setTodayList(parsedTodayList);
-          return parsedTodayList;
+          setTodayList(parsedLocalTodayList);
+          return parsedLocalTodayList;
         }
-      } else {
-        console.log("aucune condition dans whichList");
-        setTodayList(parsedTodayList);
-        return parsedTodayList;
       }
     }
   }
@@ -147,7 +142,7 @@ export default function Home() {
     );
 
     if (isTaskAlreadyExists) {
-      setMessagelist("Task with already exists in the list.");
+      setMessagelist(`"${task.name}" is already in the list`);
       return;
     }
     const updatedList = { ...todayList };

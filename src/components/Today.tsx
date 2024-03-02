@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import "./today.css";
 import { checkDB } from "@/firebase/db/db";
 import { AuthContext } from "@/context/AuthContext";
-import { setDoc } from "firebase/firestore";
+import { setDoc, snapshotEqual } from "firebase/firestore";
 import resetListToFalseAndZero from "@/app/utils/reset";
-import { sendToUsers } from "@/firebase/db/users";
+import TodaySaveList from "./TodaySaveList";
+/* import { sendToUsers } from "@/firebase/db/users"; */
 
 interface Task {
   unit: boolean | string;
@@ -30,18 +31,7 @@ const Today: React.FC<TodayProps> = ({
   }, [list]);
 
   const [taskList, setTaskList] = useState<{ [key: string]: Task }>(list);
-
-  const handleTaskCompletionToggle = (itemId: string) => {
-    const updatedList = {
-      ...taskList,
-      [itemId]: {
-        ...taskList[itemId],
-        unit: !taskList[itemId].unit,
-      },
-    };
-    setTaskList(updatedList);
-    localStorage.setItem("todayList", JSON.stringify(updatedList));
-  };
+  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
   const [countInputValues, setCountInputValues] = useState<{
     [key: string]: string;
@@ -52,7 +42,18 @@ const Today: React.FC<TodayProps> = ({
       [itemId]: value,
     }));
   };
-
+  const handleTaskCompletionToggle = (itemId: string) => {
+    const updatedList = {
+      ...taskList,
+      [itemId]: {
+        ...taskList[itemId],
+        unit: !taskList[itemId].unit,
+      },
+    };
+    setTaskList(updatedList);
+    localStorage.setItem("todayList", JSON.stringify(updatedList));
+    // to db ?
+  };
   const handleSave = (itemId: string) => {
     const updatedList = {
       ...taskList,
@@ -62,119 +63,44 @@ const Today: React.FC<TodayProps> = ({
       },
     };
     setTaskList(updatedList);
+    localStorage.setItem("todayList", JSON.stringify(updatedList));
     console.log(updatedList);
-
-    // et envoyer dans la DB la liste du jour:
-    /*  sendTodayListToDB(updatedList); */
   };
-  async function sendTodayListToDB(data: any) {
-    const waitingHistoric = localStorage.getItem("waitingHistoric");
-    if (!navigator.onLine) {
-      //hors ligne
-      if (!waitingHistoric) {
-        localStorage.setItem("waitingHistoric", JSON.stringify(data));
-      }
-      if (waitingHistoric) {
-        const copyWaitingHistoric = JSON.parse(waitingHistoric);
-        copyWaitingHistoric.push(data);
-        localStorage.setItem(
-          "waitingHistoric",
-          JSON.stringify(copyWaitingHistoric)
-        );
-      }
-      resetListToFalseAndZero(data);
-      return data;
+
+  const [countCalls, setCountcalls] = useState(0);
+  const [messageInfoDB, setMessageInfoDB] = useState("");
+  async function sendListToUserTodayList() {
+    setMessageInfoDB("");
+    setCountcalls(countCalls + 1);
+    console.log(countCalls);
+    if (countCalls >= 3) {
+      setMessageInfoDB("Already saved in your phone and in the database");
+      return "too many calls";
     }
     const { ref, snapShot } = await checkDB("users", userid);
     if (!snapShot.exists()) {
       console.log("id utilisateur introuvable dans collection historic");
       return;
     }
-    if (waitingHistoric) {
-      // envoyer a db
-      const copyWaitingHistoric = JSON.parse(waitingHistoric);
-      const newData = { ...snapShot.data(), copyWaitingHistoric };
-      await setDoc(ref, newData);
-      localStorage.removeItem("waitingHistoric");
-    }
-    const todayList = data;
+    console.log(snapShot.data());
+    const todayList = taskList;
+
     const newData = { ...snapShot.data(), todayList };
     await setDoc(ref, newData);
-    localStorage.setItem("todayList", JSON.stringify(todayList));
+    console.log("data envoyé");
+    return "today list sent to db in users";
   }
-
-  const [listOfLists, setListOfLists] = useState({});
-  useEffect(() => {
-    setListsWithLocalStorage();
-  }, []);
-  function openFavListForm() {}
-
-  function handleSubmitNewFavList(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const nameOfNewFav =
-      (e.currentTarget.elements.namedItem("name") as HTMLInputElement | null)
-        ?.value || "";
-    if (nameOfNewFav === "") {
-      return "empty name not possible";
-    }
-    console.log("nameOfNewFav", nameOfNewFav);
-    let user = localStorage.getItem("users");
-    let userList = {};
-    if (user) {
-      userList = JSON.parse(user).lists;
-      console.log("userList", userList);
-    }
-    /*     const newFavList = { ...userList, [nameOfNewFav]: taskList }; */
-    const newFavList = {
-      ...userList,
-      [nameOfNewFav]: Object.entries(taskList).reduce((acc, [key, value]) => {
-        if (key !== "date") {
-          acc[key] = value;
-        }
-        return acc;
-      }, {} as Record<string, any>),
-    };
-
-    console.log("newFavList", newFavList);
-    const updatedUser = {
-      ...JSON.parse(user || "{}"),
-      lists: newFavList,
-    };
-    /*     setListOfLists(newFavList); */
-    localStorage.setItem("users", JSON.stringify(updatedUser));
-    e.currentTarget.reset();
-    // fonction pour envoyer a la DB
-    sendToUsers(updatedUser, userid);
-    setListsWithLocalStorage();
-  }
-
-  function updateThisFav(list: any) {
-    console.log("list", list);
-    let user = localStorage.getItem("users");
-    let userList;
-    if (user) {
-      userList = JSON.parse(user).lists;
-    }
-    console.log("userList", userList);
-    Object.keys(userList).map((key) => {
-      console.log("key : ", key);
-      if (list === key) {
-        // replace this object userList[key] par list
-      }
-    });
-  }
-  function setListsWithLocalStorage() {
-    let user = localStorage.getItem("users");
-    const parsed = JSON.parse(user || "{}");
-    setListOfLists(parsed.lists);
-  }
-  // ouvrir et fermer la description :
-  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
   return (
     <div className="today-list">
       <h2>today's list</h2>
-      <button onClick={setListsWithLocalStorage}>Test</button>
+      {/* <button
+        onClick={() => {
+          sendListToUserTodayList();
+        }}
+      >
+        Test
+      </button> */}
       <ul>
         {taskList &&
           Object.values(taskList).map((item, index) => {
@@ -259,35 +185,12 @@ const Today: React.FC<TodayProps> = ({
             );
           })}
       </ul>
-      <div className="container-save-list">
-        {/* Button pour ouvrir et fermer lists */}
-        <button onClick={openFavListForm}>Save to your favorite lists</button>
+      <button className="add" onClick={sendListToUserTodayList}>
+        save to db
+      </button>
+      <p className="message-error"> {messageInfoDB}</p>
 
-        <div className="lists">
-          {listOfLists && Object.keys(listOfLists).length === 0 && (
-            <p>No favorite list yet</p>
-          )}
-          <ul>
-            {listOfLists &&
-              Object.keys(listOfLists).map((key, index) => (
-                <li key={index}>
-                  <strong>{key}</strong>
-                  <button onClick={() => updateThisFav(key)}>update</button>
-                </li>
-              ))}
-          </ul>
-        </div>
-        <form action="" onSubmit={(e) => handleSubmitNewFavList(e)}>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            placeholder="name of the new favorite list"
-            required
-          />
-          <input type="submit" value="save this list" />
-        </form>
-      </div>
+      <TodaySaveList taskList={taskList} userid={userid} />
     </div>
   );
 };
