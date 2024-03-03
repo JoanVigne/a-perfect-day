@@ -22,6 +22,7 @@ interface UserData {
 interface UserInfo {
   nickname: string;
   lists: { [key: string]: object };
+  todayList: { [key: string]: object };
 }
 export default function Home() {
   const { user } = useAuthContext() as { user: UserData };
@@ -101,8 +102,8 @@ export default function Home() {
     }
     if (localStorageTodayList !== null) {
       const parsedLocalTodayList = JSON.parse(localStorageTodayList);
+      const withDate = { ...parsedLocalTodayList, date: todayDate };
       if (parsedLocalTodayList.date === undefined) {
-        const withDate = { ...parsedLocalTodayList, date: todayDate };
         updateStorageAndTodayList(withDate);
         return withDate;
       }
@@ -110,7 +111,9 @@ export default function Home() {
         const compareDateDay = parsedLocalTodayList.date.slice(0, 10);
         const newDate = todayDate.slice(0, 10);
         if (compareDateDay !== newDate) {
+          // envoi des data dans historic
           await sendToHistoric(parsedLocalTodayList, user.uid);
+          // reset les counts a 0 et false
           const resetedData = resetListToFalseAndZero(parsedLocalTodayList);
           updateStorageAndTodayList(resetedData);
           return resetedData;
@@ -190,14 +193,14 @@ export default function Home() {
           Welcome <br></br> {userInfo?.nickname}
         </h1>
 
-        <button
+        {/*         <button
           onClick={async () => {
             const tsx = whichList();
             console.log("TEST : ", tsx);
           }}
         >
           test
-        </button>
+        </button> */}
         <div className="container">
           <Today
             list={todayList}
@@ -220,7 +223,7 @@ export default function Home() {
 
         {userInfo && <Lists user={userInfo} />}
       </main>
-      <Footer />
+      {userInfo && <Footer taskList={todayList} userInfo={userInfo} />}
     </>
   );
 }

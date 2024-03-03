@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./today.css";
 import { checkDB } from "@/firebase/db/db";
-import { AuthContext } from "@/context/AuthContext";
-import { setDoc, snapshotEqual } from "firebase/firestore";
-import resetListToFalseAndZero from "@/app/utils/reset";
+import { setDoc } from "firebase/firestore";
 import TodaySaveList from "./TodaySaveList";
-/* import { sendToUsers } from "@/firebase/db/users"; */
+import { sendToHistoric } from "@/firebase/db/historic";
 
 interface Task {
   unit: boolean | string;
@@ -15,6 +13,7 @@ interface Task {
   name: string;
   id: string;
 }
+
 interface TodayProps {
   list: { [key: string]: any };
   handleRemoveTaskFromTodayList: any;
@@ -74,7 +73,7 @@ const Today: React.FC<TodayProps> = ({
     setCountcalls(countCalls + 1);
     console.log(countCalls);
     if (countCalls >= 3) {
-      setMessageInfoDB("Already saved in your phone and in the database");
+      setMessageInfoDB("Already saved twice.");
       return "too many calls";
     }
     const { ref, snapShot } = await checkDB("users", userid);
@@ -88,7 +87,15 @@ const Today: React.FC<TodayProps> = ({
     const newData = { ...snapShot.data(), todayList };
     await setDoc(ref, newData);
     console.log("data envoyé");
+    setMessageInfoDB("today list sent to");
     return "today list sent to db in users";
+    // send to historic directement ?
+    //
+    const updatedTaskList = { ...taskList, date: new Date().toISOString() };
+    console.log(updatedTaskList);
+    return;
+    //
+    sendToHistoric(updatedTaskList, userid);
   }
 
   return (

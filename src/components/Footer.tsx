@@ -3,20 +3,44 @@ import React from "react";
 import "./footer.css";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthContext } from "@/context/AuthContext";
+import { checkDB } from "@/firebase/db/db";
+import { setDoc } from "firebase/firestore";
+import { sendToUsers } from "@/firebase/db/users";
 
 interface UserData {
   email: string;
   uid: string;
 }
-const Footer = () => {
+interface Task {
+  count: string;
+  details: string;
+  description: string;
+  unit: boolean | string;
+  name: string;
+  id: string;
+}
+
+interface TaskList {
+  [key: string]: Task | string;
+}
+interface UserInfo {}
+const Footer: React.FC<{ taskList: TaskList; userInfo: UserInfo }> = ({
+  taskList,
+  userInfo,
+}) => {
   const { user } = useAuthContext() as { user: UserData };
+
   function logOut() {
+    const updatedUser = {
+      ...(userInfo || "{}"),
+      todayList: taskList,
+    };
+    sendToUsers(updatedUser, user.uid);
     const auth = getAuth();
     signOut(auth)
       .then(() => {
         // Sign-out successful.
         console.log("LOGGED OUT");
-
         localStorage.clear();
       })
       .catch((error) => {
@@ -24,7 +48,19 @@ const Footer = () => {
         console.error("this error occured :", error);
       });
   }
+  async function sendListToUserTodayList() {
+    const { ref, snapShot } = await checkDB("users", user.uid);
+    if (!snapShot.exists()) {
+      console.log("id utilisateur introuvable dans collection historic");
+      return;
+    }
+    console.log(snapShot.data());
+    const todayList = taskList;
 
+    const newData = { ...snapShot.data(), todayList };
+    await setDoc(ref, newData);
+    console.log("data envoyé");
+  }
   return (
     <footer>
       <nav>

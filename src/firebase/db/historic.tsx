@@ -1,10 +1,19 @@
 import { setDoc } from "firebase/firestore";
 import { checkDB } from "./db";
 
+interface Task {
+  unit: boolean | string;
+  details: string;
+  description: string;
+  count: number | string;
+  name: string;
+  id: string;
+}
 interface DataObject {
   date: string;
-  [key: string]: any;
+  [key: string]: Task | any;
 }
+
 const sendToHistoric = async (data: DataObject, userId: string) => {
   console.log("data : ", data);
   const { ref, snapShot } = await checkDB("historic", userId);

@@ -86,7 +86,7 @@ const Page = () => {
           </div>
         ))}
       </main>
-      <Footer />
+      {/*       <Footer /> */}
     </>
   );
 };
