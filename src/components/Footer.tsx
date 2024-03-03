@@ -48,19 +48,7 @@ const Footer: React.FC<{ taskList: TaskList; userInfo: UserInfo }> = ({
         console.error("this error occured :", error);
       });
   }
-  async function sendListToUserTodayList() {
-    const { ref, snapShot } = await checkDB("users", user.uid);
-    if (!snapShot.exists()) {
-      console.log("id utilisateur introuvable dans collection historic");
-      return;
-    }
-    console.log(snapShot.data());
-    const todayList = taskList;
 
-    const newData = { ...snapShot.data(), todayList };
-    await setDoc(ref, newData);
-    console.log("data envoyé");
-  }
   return (
     <footer>
       <nav>
