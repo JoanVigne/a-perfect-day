@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import Loading from "./loading";
 import { firebaseApp } from "@/firebase/config";
 import Lists from "@/components/Lists";
+import Header from "@/components/Header";
 
 interface UserData {
   email: string;
@@ -29,7 +30,29 @@ export default function Home() {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const router = useRouter();
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
+  const months = [
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+  ];
+  const [dateToday, setDateToday] = useState("");
   useEffect(() => {
+    const date = new Date();
+    const month = date.getMonth() + 1; // Les mois sont indexés à partir de 0, donc on ajoute 1
+    const monthName = months[month];
+    const day = date.getDate();
+
+    setDateToday(`${day} of ${monthName} `);
+    console.log(dateToday);
     async function checkFBInit() {
       try {
         await firebaseApp;
@@ -188,11 +211,8 @@ export default function Home() {
   }
   return (
     <>
+      <Header nickname={userInfo?.nickname} />
       <main>
-        <h1>
-          Welcome <br></br> {userInfo?.nickname}
-        </h1>
-
         {/*         <button
           onClick={async () => {
             const tsx = whichList();

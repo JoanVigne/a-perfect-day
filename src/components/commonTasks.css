@@ -1,38 +1,7 @@
-.task {
-  /* pour position de la modale remove */
-  position: relative;
-}
-.task .name-button {
-  display: flex;
-  justify-content: space-between;
-}
-
-.task .description-button {
-  display: flex;
-  justify-content: space-between;
-}
-
-.hidden {
-  max-height: 0;
-  overflow: hidden;
-}
-.active {
-  max-height: 150px;
-}
-
-.task {
-  margin: 5px;
-  padding: 5px;
-  border: 1px black solid;
-}
 .cont-form {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
-}
-
-.opened {
-  max-height: 500px;
 }
 
 .modal {

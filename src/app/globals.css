@@ -3,6 +3,12 @@
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+  --color-white: rgba(218, 218, 218, 1);
+  --color-grey: rgb(70 69 69);
+  --color-dark-grey: rgb(45, 45, 45);
+  --color-black: rgba(20, 20, 20, 1);
+  --color-green: rgb(3 143 3);
+  --color-red: rgb(199 0 0);
 }
 
 * {
@@ -13,17 +19,14 @@
 }
 
 html,
-body {
+body,
+main {
   max-width: 100vw;
   /*   overflow-x: hidden; */
+  background-color: var(--color-black);
+  color: var(--color-white);
 }
-main {
-  background-color: black;
-  color: white;
-}
-h1 {
-  text-align: center;
-}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -40,25 +43,16 @@ li {
 }
 .container {
   padding: 5px;
-  margin: 5px;
+  margin: 15px 0;
   border-radius: 5px;
-  border: 1px solid #ccc;
+
+  background-color: var(--color-dark-grey);
 }
 .container h2 {
   text-align: center;
 }
 .smaller-container {
-  background-color: rgb(70 69 69);
-}
-.task,
-.item {
-  border: 1px solid #ccc;
-  background-color: rgb(70 69 69);
-  border-radius: 5px;
-}
-.details {
-  font-size: 10px;
-  margin-left: 5px;
+  background-color: var(--color-grey);
 }
 
 form {
@@ -72,8 +66,23 @@ form input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 3px;
   margin-bottom: 10px;
+  background-color: var(--color-dark-grey);
+  color: var(--color-white);
+  ::placeholder {
+    color: var(--color-grey); /* Couleur du placeholder */
+    opacity: 0.7; /* Opacité du placeholder */
+  }
 }
-
+input::placeholder {
+  color: var(--color-white); /* Couleur du placeholder */
+  opacity: 0.7; /* Opacité du placeholder */
+}
+input {
+  color: var(--color-white);
+}
+input[type="number"] {
+  background-color: var(--color-dark-grey);
+}
 form input[type="submit"],
 form button[type="submit"] {
   display: block;
@@ -81,26 +90,26 @@ form button[type="submit"] {
   padding: 10px;
   border: none;
   border-radius: 3px;
+  color: var(--color-white);
 }
 .add,
 .save {
   padding: 2px;
   margin: 1px;
-
-  background-color: green;
+  color: var(--color-white);
+  background-color: var(--color-green);
+}
+.add-button {
+  width: 25px;
+  height: 25px;
 }
 .message-error {
-  color: red;
+  color: var(--color-white);
   text-align: center;
+  background-color: var(--color-red);
 }
 
 .remove img {
   width: 25px;
   height: 25px;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }

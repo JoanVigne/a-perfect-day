@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./commonTasks.css";
+
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
 
 interface CommonTasksProps {
@@ -37,29 +37,29 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
       {commonTasks &&
         commonTasks.map((commonTask, index) => (
           <li className="task" key={index}>
-            <div
-              className="name-button"
-              onClick={() => {
-                handleAddTaskToTodayList(commonTask);
-              }}
-            >
-              <div className="name-details">
-                <h3>
-                  {commonTask.name}
-                  <button
-                    className="details"
-                    onClick={() => {
-                      setClickedIndex((prevIndex) =>
-                        prevIndex === index ? null : index
-                      );
-                    }}
-                  >
-                    {"?"}
-                  </button>
-                </h3>
-              </div>
+            <div className="title-inputs">
+              <h3>
+                {commonTask.name}
+                <button
+                  className="details"
+                  onClick={() => {
+                    setClickedIndex((prevIndex) =>
+                      prevIndex === index ? null : index
+                    );
+                  }}
+                >
+                  {"?"}
+                </button>
+              </h3>
 
-              <button className="add">+</button>
+              <img
+                src="./add.png"
+                className="add-button"
+                alt="add"
+                onClick={() => {
+                  handleAddTaskToTodayList(commonTask);
+                }}
+              />
             </div>
             <div className="description-button">
               <p className="description">{commonTask.description}</p>

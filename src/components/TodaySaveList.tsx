@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { sendToUsers } from "@/firebase/db/users";
+import "./todaySaveList.css";
 
 interface TodaySaveListProps {
   taskList: object;
@@ -7,7 +8,8 @@ interface TodaySaveListProps {
 }
 const TodaySaveList: React.FC<TodaySaveListProps> = ({ taskList, userid }) => {
   const [listOfLists, setListOfLists] = useState({});
-
+  const [showForm, setShowForm] = useState(false);
+  const [message, setMessage] = useState("");
   useEffect(() => {
     setListsWithLocalStorage();
   }, []);
@@ -54,32 +56,35 @@ const TodaySaveList: React.FC<TodaySaveListProps> = ({ taskList, userid }) => {
     const parsed = JSON.parse(user || "{}");
     setListOfLists(parsed.lists);
   }
-  function updateThisFav(list: any) {
-    console.log("list", list);
+  function updateThisFav(name: string): void {
+    console.log("list", name);
     let user = localStorage.getItem("users");
-    let userList;
+    let userList: { [listname: string]: object } = {};
     if (user) {
-      userList = JSON.parse(user).lists;
+      userList = JSON.parse(user).lists || {};
     }
     console.log("userList", userList);
     Object.keys(userList).map((key) => {
-      console.log("key : ", key);
-      if (list === key) {
-        // replace this object userList[key] par list
+      if (name === key) {
+        userList[key] = taskList;
       }
     });
+    setMessage(`fav list "${name}" modified`);
   }
 
-  const [showForm, setShowForm] = useState(false);
   return (
     <>
       <button
         className={`${showForm ? "" : "add"}`}
-        onClick={() => setShowForm(!showForm)}
+        onClick={() => {
+          setShowForm(!showForm);
+          setMessage("");
+        }}
       >
         {showForm ? "Hide this " : "add to favorite"}
       </button>
-      <div className={showForm ? "cont-form opened" : "cont-form"}>
+      {message && message}
+      <div className={showForm ? "active" : "hidden"}>
         <div className="container-save-list">
           <div className="lists">
             {listOfLists && Object.keys(listOfLists).length === 0 && (
@@ -89,23 +94,30 @@ const TodaySaveList: React.FC<TodaySaveListProps> = ({ taskList, userid }) => {
               {listOfLists &&
                 Object.keys(listOfLists).map((key, index) => (
                   <li key={index}>
-                    <strong>{key}</strong>
-                    <button onClick={() => updateThisFav(key)}>update</button>
+                    <div className="text-container">
+                      <strong>{key}</strong>
+                    </div>
+                    <button
+                      className="message-error"
+                      onClick={() => updateThisFav(key)}
+                    >
+                      update
+                    </button>
                   </li>
                 ))}
             </ul>
           </div>
-          <form action="" onSubmit={(e) => handleSubmitNewFavList(e)}>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="name of the new favorite list"
-              required
-            />
-            <input type="submit" value="save this list" />
-          </form>
         </div>
+        <form action="" onSubmit={(e) => handleSubmitNewFavList(e)}>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="new list ?"
+            required
+          />
+          <input type="submit" value="save" className="save" />
+        </form>
       </div>
     </>
   );

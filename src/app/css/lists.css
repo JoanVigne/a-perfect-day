@@ -1,0 +1,72 @@
+.task {
+  border: 1px solid #ccc;
+  background-color: var(--color-grey);
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.details {
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+.task .title-inputs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task .title-inputs h3 {
+  width: 60%;
+  overflow: hidden;
+}
+
+.task .title-inputs .count {
+  width: 40%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.task .title-inputs .count .container-count-unit {
+  display: flex;
+  align-items: center;
+}
+.task .title-inputs .count .container-count-unit .unit {
+  width: 25px;
+  overflow: hidden;
+  font-size: 10px;
+}
+
+.task .title-inputs .count input {
+  max-width: 40px;
+}
+
+.task .title-inputs .count button {
+  margin: 2px;
+  width: 37px;
+  height: 25px;
+  font-size: 10px;
+}
+
+.task .title-inputs .description-button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task .undo {
+  border: 1px red solid;
+}
+
+.hidden {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  overflow: hidden;
+}
+.active {
+  max-height: 1150px;
+  transition: max-height 0.3s ease-in;
+  overflow: hidden;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./commonTasks.css";
+
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import FormCustomTask from "./FormCustomTask";
 import { removeFromCustom } from "@/firebase/db/custom";
@@ -85,38 +85,34 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
         Object.values(customTasks).map((customTask, index) => (
           <li className="task" key={index}>
             <div
-              className="name-button"
+              className="title-inputs"
               /* onClick={() => {
                   handleAddTaskToTodayList(customTask);
                 }} */
             >
-              <div className="name-details">
-                <h3>
-                  {customTask.name}
-                  <button
-                    className="details"
-                    onClick={() => {
-                      setClickedIndex((prevIndex) =>
-                        prevIndex === index ? null : index
-                      );
-                    }}
-                  >
-                    ?
-                  </button>
-                </h3>
-              </div>
+              <h3>
+                {customTask.name}
+                <button
+                  className="details"
+                  onClick={() => {
+                    setClickedIndex((prevIndex) =>
+                      prevIndex === index ? null : index
+                    );
+                  }}
+                >
+                  ?
+                </button>
+              </h3>
 
-              <button
-                className="add"
+              <img
                 onClick={() => {
                   handleAddTaskToTodayList(customTask);
                 }}
-              >
-                +
-              </button>
+                src="./add.png"
+                alt="add"
+                className="add-button"
+              />
             </div>
-            <div className="description-button"></div>
-
             <div className={clickedIndex === index ? "active" : "hidden"}>
               <p className="description">{customTask.description}</p>
               <p>{customTask.details}</p>
@@ -151,7 +147,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
       >
         {showForm ? "Hide Form" : "New task"}
       </button>
-      <div className={showForm ? "cont-form opened" : "cont-form"}>
+      <div className={showForm ? "cont-form active" : "cont-form hidden"}>
         <FormCustomTask updateCustomTasks={updateCustomTasks} />
       </div>
     </ul>

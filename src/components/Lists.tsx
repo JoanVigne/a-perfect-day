@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./lists.css";
 
 interface User {
   nickname: string;
@@ -90,7 +89,11 @@ const Lists: React.FC<Props> = ({ user }) => {
         >
           {showForm ? "Hide new fav" : "New favorite"}
         </button>
-        <div className={showForm ? "cont-form opened" : "cont-form"}>
+        <div
+          className={
+            showForm ? "container-form active" : "container-form hidden"
+          }
+        >
           <div className="new-fav-list container">
             <h3>New favorite list :</h3>
             <ul>

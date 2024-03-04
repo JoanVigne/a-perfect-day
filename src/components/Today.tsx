@@ -89,18 +89,11 @@ const Today: React.FC<TodayProps> = ({
     console.log("data envoyé");
     setMessageInfoDB("today list sent to");
     return "today list sent to db in users";
-    // send to historic directement ?
-    //
-    const updatedTaskList = { ...taskList, date: new Date().toISOString() };
-    console.log(updatedTaskList);
-    return;
-    //
-    sendToHistoric(updatedTaskList, userid);
   }
 
   return (
     <div className="today-list">
-      <h2>today's list</h2>
+      <h2>Today</h2>
       {/* <button
         onClick={() => {
           sendListToUserTodayList();
@@ -116,8 +109,8 @@ const Today: React.FC<TodayProps> = ({
               return null;
             }
             return (
-              <li key={item.id} className="item">
-                <div className="title-count">
+              <li key={item.id} className="task">
+                <div className="title-inputs">
                   <h3>
                     {item.name}
                     <button
@@ -193,7 +186,7 @@ const Today: React.FC<TodayProps> = ({
           })}
       </ul>
       <button className="add" onClick={sendListToUserTodayList}>
-        save to db
+        save to db(if you logout)
       </button>
       <p className="message-error"> {messageInfoDB}</p>
 
