@@ -168,8 +168,7 @@ const Today: React.FC<TodayProps> = ({
                 </div>
 
                 <div className={clickedIndex === index ? "active" : "hidden"}>
-                  <strong>{item.description}</strong>
-                  <br />
+                  <h4>{item.description}</h4>
                   <p>{item.details}</p>
                   <span
                     className="remove"

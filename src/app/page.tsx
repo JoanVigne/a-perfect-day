@@ -44,15 +44,8 @@ export default function Home() {
     "novembre",
     "décembre",
   ];
-  const [dateToday, setDateToday] = useState("");
-  useEffect(() => {
-    const date = new Date();
-    const month = date.getMonth() + 1; // Les mois sont indexés à partir de 0, donc on ajoute 1
-    const monthName = months[month];
-    const day = date.getDate();
 
-    setDateToday(`${day} of ${monthName} `);
-    console.log(dateToday);
+  useEffect(() => {
     async function checkFBInit() {
       try {
         await firebaseApp;
@@ -100,6 +93,7 @@ export default function Home() {
     setTodayList(data);
     return data;
   }
+
   async function whichList() {
     const localStorageTodayList = localStorage.getItem("todayList");
     const todayDate = new Date().toISOString();
@@ -133,15 +127,22 @@ export default function Home() {
       if (parsedLocalTodayList.date !== undefined) {
         const compareDateDay = parsedLocalTodayList.date.slice(0, 10);
         const newDate = todayDate.slice(0, 10);
+        console.log("dans parsedLocalTodayList.date !== undefined");
+        console.log("la date du todayList : ", compareDateDay);
+        console.log("la date du jour : ", newDate);
         if (compareDateDay !== newDate) {
           // envoi des data dans historic
           await sendToHistoric(parsedLocalTodayList, user.uid);
           // reset les counts a 0 et false
           const resetedData = resetListToFalseAndZero(parsedLocalTodayList);
+          console.log("les data supposé reseted :", resetedData);
           updateStorageAndTodayList(resetedData);
           return resetedData;
         }
         if (compareDateDay === newDate) {
+          console.log(
+            "la c'est bon, on a la bonne date dans le TodayList Local"
+          );
           setTodayList(parsedLocalTodayList);
           return parsedLocalTodayList;
         }

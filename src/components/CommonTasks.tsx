@@ -61,11 +61,10 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
                 }}
               />
             </div>
-            <div className="description-button">
-              <p className="description">{commonTask.description}</p>
-            </div>
+            <div className="description-button"></div>
 
             <div className={clickedIndex === index ? "active" : "hidden"}>
+              <h4 className="description">{commonTask.description}</h4>
               <p>{commonTask.details}</p>
             </div>
           </li>

@@ -114,7 +114,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
               />
             </div>
             <div className={clickedIndex === index ? "active" : "hidden"}>
-              <p className="description">{customTask.description}</p>
+              <h4 className="description">{customTask.description}</h4>
               <p>{customTask.details}</p>
 
               <span

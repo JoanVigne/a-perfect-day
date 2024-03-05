@@ -3,8 +3,6 @@ import React from "react";
 import "./footer.css";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthContext } from "@/context/AuthContext";
-import { checkDB } from "@/firebase/db/db";
-import { setDoc } from "firebase/firestore";
 import { sendToUsers } from "@/firebase/db/users";
 
 interface UserData {
@@ -63,7 +61,6 @@ const Footer: React.FC<{ taskList: TaskList; userInfo: UserInfo }> = ({
                 <Link href="/historic">historic</Link>
               </li>
               <li>
-                {" "}
                 <button onClick={logOut}>Sign out</button>
               </li>
             </>
