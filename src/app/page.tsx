@@ -223,12 +223,14 @@ export default function Home() {
           test
         </button> */}
         <div className="container">
+          <h2>Today</h2>
           <Today
             list={todayList}
             handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
-            userid={user?.uid}
+            user={userInfo && userInfo}
+            userId={user.uid}
           />
-          <p className="message-error">{messagelist}</p>
+          <p className="message-small">{messagelist}</p>
         </div>
         <div className="container">
           <h2>Custom tasks</h2>

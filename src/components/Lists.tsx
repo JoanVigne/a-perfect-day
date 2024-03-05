@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import FavoriteLists from "./FavoriteLists";
 
 interface User {
   nickname: string;
@@ -52,50 +53,23 @@ const Lists: React.FC<Props> = ({ user }) => {
 
   return (
     <div className="container">
-      <h2>Favorite Lists</h2>
-      <div className="container smaller-container">
-        <h3>Excisting favorites : </h3>
-        {user &&
-          Object.keys(user.lists).map((listName: string, index: number) => {
-            return (
-              <React.Fragment key={index}>
-                <li>
-                  {listName}
-                  <button
-                    className="add"
-                    onClick={() => {
-                      listDetail(listName);
-                    }}
-                  >
-                    Use
-                  </button>
-                  <span
-                    className="remove"
-                    onClick={() => {
-                      removeList(listName);
-                    }}
-                  >
-                    <img src="./red-bin.png" alt="remove" />
-                  </span>
-                </li>
-              </React.Fragment>
-            );
-          })}
-      </div>
+      <FavoriteLists user={user} />
       <div className="container-new-fav-list">
-        <button
-          className={`${showForm ? "" : "add"}`}
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? "Hide new fav" : "New favorite"}
-        </button>
+        <h3>
+          New favorite list :
+          <button
+            className={`${showForm ? "" : "add"}`}
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? "Hide new fav" : "New favorite"}
+          </button>
+        </h3>
         <div
           className={
             showForm ? "container-form active" : "container-form hidden"
           }
         >
           <div className="new-fav-list container">
-            <h3>New favorite list :</h3>
             <ul>
               {newFav ? (
                 Object.values(newFav).map((ele: any, index: number) => {

@@ -4,6 +4,7 @@ import { checkDB } from "@/firebase/db/db";
 import { setDoc } from "firebase/firestore";
 import TodaySaveList from "./TodaySaveList";
 import { sendToHistoric } from "@/firebase/db/historic";
+import FavoriteLists from "./FavoriteLists";
 
 interface Task {
   unit: boolean | string;
@@ -17,13 +18,18 @@ interface Task {
 interface TodayProps {
   list: { [key: string]: any };
   handleRemoveTaskFromTodayList: any;
-  userid: string;
+  user: User | null;
+  userId: string;
 }
-
+interface User {
+  nickname: string;
+  lists: { [key: string]: object };
+}
 const Today: React.FC<TodayProps> = ({
   list,
   handleRemoveTaskFromTodayList,
-  userid,
+  user,
+  userId,
 }) => {
   useEffect(() => {
     setTaskList(list);
@@ -64,6 +70,7 @@ const Today: React.FC<TodayProps> = ({
     setTaskList(updatedList);
     localStorage.setItem("todayList", JSON.stringify(updatedList));
     console.log(updatedList);
+    setMessageSaved("saved !");
   };
 
   const [countCalls, setCountcalls] = useState(0);
@@ -76,7 +83,7 @@ const Today: React.FC<TodayProps> = ({
       setMessageInfoDB("Already saved twice.");
       return "too many calls";
     }
-    const { ref, snapShot } = await checkDB("users", userid);
+    const { ref, snapShot } = await checkDB("users", userId);
     if (!snapShot.exists()) {
       console.log("id utilisateur introuvable dans collection historic");
       return;
@@ -90,10 +97,10 @@ const Today: React.FC<TodayProps> = ({
     setMessageInfoDB("today list sent to");
     return "today list sent to db in users";
   }
-
+  const [messageSaved, setMessageSaved] = useState("");
+  const [clickedItemId, setClickedItemId] = useState<string | null>(null);
   return (
     <div className="today-list">
-      <h2>Today</h2>
       {/* <button
         onClick={() => {
           sendListToUserTodayList();
@@ -104,6 +111,14 @@ const Today: React.FC<TodayProps> = ({
       <ul>
         {taskList &&
           Object.values(taskList).map((item, index) => {
+            if (Object.keys(taskList).length <= 1) {
+              return (
+                <p key={index}>
+                  Your list is empty. You can add some tasks from the common
+                  task list, or from your custom task list.
+                </p>
+              );
+            }
             // Si la clé est "date", on ne l'affiche pas
             if (typeof item === "string") {
               return null;
@@ -123,13 +138,16 @@ const Today: React.FC<TodayProps> = ({
                     >
                       ?
                     </button>
+                    {clickedItemId === item.id && (
+                      <small className="message-small">{messageSaved}</small>
+                    )}
                   </h3>{" "}
                   <div className="count">
                     {typeof item.unit === "boolean" ? (
                       <button
                         onClick={() => {
                           handleTaskCompletionToggle(item.id);
-                          /*      handleClickCount(item.id); */
+                          setClickedItemId(item.id);
                         }}
                         className={
                           item.unit === false
@@ -158,6 +176,7 @@ const Today: React.FC<TodayProps> = ({
                           className="save"
                           onClick={() => {
                             handleSave(item.id);
+                            setClickedItemId(item.id);
                           }}
                         >
                           save
@@ -184,12 +203,14 @@ const Today: React.FC<TodayProps> = ({
             );
           })}
       </ul>
-      <button className="add" onClick={sendListToUserTodayList}>
-        save to db(if you logout)
-      </button>
-      <p className="message-error"> {messageInfoDB}</p>
+      <FavoriteLists user={user} />
 
-      <TodaySaveList taskList={taskList} userid={userid} />
+      {/*      <button className="add" onClick={sendListToUserTodayList}>
+        save to db(if you logout)
+      </button> */}
+      <p className="message-small"> {messageInfoDB}</p>
+
+      {/*    <TodaySaveList taskList={taskList} userid={userId} /> */}
     </div>
   );
 };

@@ -18,6 +18,7 @@
 }
 
 .task .title-inputs h3 {
+  text-align: unset;
   width: 60%;
   overflow: hidden;
 }
@@ -69,4 +70,26 @@
   max-height: 1150px;
   transition: max-height 0.3s ease-in;
   overflow: hidden;
+}
+
+/* COMPOSANT FAVORITE LIST */
+.favorite-lists .smaller-container ul {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.favorite-lists .smaller-container ul li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+/* Styles pour les éléments de la première colonne */
+.favorite-lists .smaller-container ul li:nth-child(odd) {
+  flex-direction: row-reverse;
+  border-right: 2px solid black;
+}
+
+/* Styles pour les éléments de la deuxième colonne */
+.favorite-lists .smaller-container ul li:nth-child(even) {
+  flex-direction: row;
 }

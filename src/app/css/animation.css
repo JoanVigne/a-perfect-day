@@ -1,0 +1,25 @@
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+button {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+button:active {
+  animation: pulseAnimation 0.3s;
+}
+
+.options-logo {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.options-logo:active {
+  animation: pulseAnimation 0.3s;
+}

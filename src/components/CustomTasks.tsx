@@ -22,7 +22,12 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
   userId,
 }) => {
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
+
   const [messageCustom, setMessageCustom] = useState<string | null>(null);
+
+  const [messageAdded, setMessageAdded] = useState("");
+  const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
+
   const updateCustomTasks = (newCustomTasks: Task[]) => {
     setCustomTasks(newCustomTasks);
   };
@@ -45,8 +50,6 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
 
   // ouvrir et fermer la description :
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
-  // ouvrir et fermer le form :
-  const [showForm, setShowForm] = useState(false);
 
   // supprimer une custom :
   const [taskToRemove, setTaskToRemove] = useState<Task | null>(null);
@@ -55,6 +58,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
     setTaskToRemove(task);
     return;
   };
+  const [forceUpdate, setForceUpdate] = useState(false);
   const handleConfirmRemoveTask = async () => {
     if (taskToRemove && taskToRemove.id !== undefined) {
       // Créer une copie de customTasks
@@ -73,8 +77,19 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
       const mess = await removeFromCustom(updatedTasks, userId);
       setMessageCustom(mess);
       setCustomTasks(updatedTasks);
+      setForceUpdate((prev) => !prev);
     }
   };
+
+  // Reset messageAdded after a delay
+  useEffect(() => {
+    if (messageAdded) {
+      const timeoutId = setTimeout(() => {
+        setMessageAdded("");
+      }, 3000); // 3 seconds delay
+      return () => clearTimeout(timeoutId);
+    }
+  }, [messageAdded]);
 
   return (
     <ul>
@@ -102,11 +117,19 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                 >
                   ?
                 </button>
+                {clickedItemIndex === index && (
+                  <small className="message-small">{messageAdded}</small>
+                )}
               </h3>
 
               <img
                 onClick={() => {
                   handleAddTaskToTodayList(customTask);
+                  setClickedItemIndex((prevIndex) =>
+                    prevIndex === index ? null : index
+                  );
+
+                  setMessageAdded("added !");
                 }}
                 src="./add.png"
                 alt="add"
@@ -129,7 +152,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
           </li>
         ))
       )}
-      <p>{messageCustom}</p>
+      <small className="message-small">{messageCustom}</small>
       {taskToRemove && (
         <div className="modal">
           <div className="modal-content">
@@ -141,15 +164,8 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
           </div>
         </div>
       )}
-      <button
-        className={`${showForm ? "" : "add"}`}
-        onClick={() => setShowForm(!showForm)}
-      >
-        {showForm ? "Hide Form" : "New task"}
-      </button>
-      <div className={showForm ? "cont-form active" : "cont-form hidden"}>
-        <FormCustomTask updateCustomTasks={updateCustomTasks} />
-      </div>
+
+      <FormCustomTask updateCustomTasks={updateCustomTasks} />
     </ul>
   );
 };

@@ -17,8 +17,8 @@
 .container-form form textarea {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
   border-radius: 3px;
+  background-color: var(--color-grey);
 }
 
 .container-form form textarea {
