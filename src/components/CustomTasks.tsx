@@ -4,6 +4,7 @@ import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import FormCustomTask from "./FormCustomTask";
 import { removeFromCustom } from "@/firebase/db/custom";
 import Load from "./Load";
+import TemporaryMessage from "@/app/utils/message";
 
 interface CustomTasksProps {
   handleAddTaskToTodayList: (task: Task) => void;
@@ -30,6 +31,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
 
   const updateCustomTasks = (newCustomTasks: Task[]) => {
     setCustomTasks(newCustomTasks);
+    localStorage.setItem("custom", JSON.stringify(newCustomTasks));
   };
 
   const [loadingTasks, setLoadingTasks] = useState(true);
@@ -71,7 +73,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
           delete updatedTasks[taskKey];
         }
       });
-
+      console.log("updated Task", updatedTasks);
       setTaskToRemove(null);
       // envoi a la db custom
       const mess = await removeFromCustom(updatedTasks, userId);
@@ -82,14 +84,14 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
   };
 
   // Reset messageAdded after a delay
-  useEffect(() => {
+  /*   useEffect(() => {
     if (messageAdded) {
       const timeoutId = setTimeout(() => {
         setMessageAdded("");
       }, 3000); // 3 seconds delay
       return () => clearTimeout(timeoutId);
     }
-  }, [messageAdded]);
+  }, [messageAdded]); */
 
   return (
     <ul>
@@ -118,7 +120,8 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                   ?
                 </button>
                 {clickedItemIndex === index && (
-                  <small className="message-small">{messageAdded}</small>
+                  <TemporaryMessage message={messageAdded} />
+                  /*    <small className="message-small">{messageAdded}</small> */
                 )}
               </h3>
 
@@ -129,7 +132,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                     prevIndex === index ? null : index
                   );
 
-                  setMessageAdded("added !");
+                  setMessageAdded("added!");
                 }}
                 src="./add.png"
                 alt="add"

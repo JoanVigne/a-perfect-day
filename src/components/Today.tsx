@@ -75,7 +75,7 @@ const Today: React.FC<TodayProps> = ({
 
   const [countCalls, setCountcalls] = useState(0);
   const [messageInfoDB, setMessageInfoDB] = useState("");
-  async function sendListToUserTodayList() {
+  /*   async function sendListToUserTodayList() {
     setMessageInfoDB("");
     setCountcalls(countCalls + 1);
     console.log(countCalls);
@@ -96,7 +96,7 @@ const Today: React.FC<TodayProps> = ({
     console.log("data envoyé");
     setMessageInfoDB("today list sent to");
     return "today list sent to db in users";
-  }
+  } */
   const [messageSaved, setMessageSaved] = useState("");
   const [clickedItemId, setClickedItemId] = useState<string | null>(null);
   return (
@@ -208,7 +208,7 @@ const Today: React.FC<TodayProps> = ({
       {/*      <button className="add" onClick={sendListToUserTodayList}>
         save to db(if you logout)
       </button> */}
-      <p className="message-small"> {messageInfoDB}</p>
+      {/*     <p className="message-small"> {messageInfoDB}</p> */}
 
       {/*    <TodaySaveList taskList={taskList} userid={userId} /> */}
     </div>

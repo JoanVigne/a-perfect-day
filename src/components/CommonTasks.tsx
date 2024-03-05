@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
+import TemporaryMessage from "@/app/utils/message";
 
 interface CommonTasksProps {
   handleAddTaskToTodayList: (task: Task) => void;
@@ -17,6 +18,8 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
   handleAddTaskToTodayList,
 }) => {
   const [commonTasks, setCommonTasks] = useState<Task[]>([]);
+  const [messageAdded, setMessageAdded] = useState("");
+  const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,6 +53,9 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
                 >
                   {"?"}
                 </button>
+                {clickedItemIndex === index && (
+                  <TemporaryMessage message={messageAdded} />
+                )}
               </h3>
 
               <img
@@ -58,6 +64,10 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
                 alt="add"
                 onClick={() => {
                   handleAddTaskToTodayList(commonTask);
+                  setClickedItemIndex((prevIndex) =>
+                    prevIndex === index ? null : index
+                  );
+                  setMessageAdded("added!");
                 }}
               />
             </div>

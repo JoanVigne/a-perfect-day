@@ -57,7 +57,9 @@
 }
 
 .task .undo {
-  border: 1px red solid;
+  border: 1px solid var(--color-white);
+  background-color: var(--color-black);
+  color: var(--color-white);
 }
 
 .hidden {

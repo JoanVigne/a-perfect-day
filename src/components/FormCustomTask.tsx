@@ -126,6 +126,7 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
                 name="name"
                 value={task.name}
                 onChange={handleChange}
+                required
               />
             </div>
             <div>

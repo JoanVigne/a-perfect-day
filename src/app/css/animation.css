@@ -23,3 +23,11 @@ button:active {
 .options-logo:active {
   animation: pulseAnimation 0.3s;
 }
+
+.add-button {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.add-button:active {
+  animation: pulseAnimation 0.3s;
+}

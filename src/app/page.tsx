@@ -15,6 +15,7 @@ import Loading from "./loading";
 import { firebaseApp } from "@/firebase/config";
 import Lists from "@/components/Lists";
 import Header from "@/components/Header";
+import TemporaryMessage from "./utils/message";
 
 interface UserData {
   email: string;
@@ -25,25 +26,20 @@ interface UserInfo {
   lists: { [key: string]: object };
   todayList: { [key: string]: object };
 }
+
+interface Task {
+  id: string;
+  name: string;
+  description: string;
+  details: string;
+  count: any;
+  unit: any;
+}
 export default function Home() {
   const { user } = useAuthContext() as { user: UserData };
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const router = useRouter();
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
-  const months = [
-    "janvier",
-    "février",
-    "mars",
-    "avril",
-    "mai",
-    "juin",
-    "juillet",
-    "août",
-    "septembre",
-    "octobre",
-    "novembre",
-    "décembre",
-  ];
 
   useEffect(() => {
     async function checkFBInit() {
@@ -150,14 +146,6 @@ export default function Home() {
     }
   }
 
-  interface Task {
-    id: string;
-    name: string;
-    description: string;
-    details: string;
-    count: any;
-    unit: any;
-  }
   const handleAddTaskToTodayList = (task: Task) => {
     if (typeof todayList !== "object" || Array.isArray(todayList)) {
       console.error("todayList is not an object.");
@@ -230,7 +218,7 @@ export default function Home() {
             user={userInfo && userInfo}
             userId={user.uid}
           />
-          <p className="message-small">{messagelist}</p>
+          <TemporaryMessage message={messagelist} />
         </div>
         <div className="container">
           <h2>Custom tasks</h2>
