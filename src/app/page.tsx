@@ -41,6 +41,9 @@ export default function Home() {
   const router = useRouter();
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
 
+  const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
+  const [messagelist, setMessagelist] = useState<string | null>(null);
+
   useEffect(() => {
     async function checkFBInit() {
       try {
@@ -69,9 +72,6 @@ export default function Home() {
       whichList();
     }
   }, [user]);
-
-  const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
-  const [messagelist, setMessagelist] = useState<string | null>(null);
 
   async function checkDBForTodayList() {
     const { snapShot } = await checkDB("users", user.uid);

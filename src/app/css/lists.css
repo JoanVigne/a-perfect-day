@@ -78,8 +78,9 @@
 .favorite-lists {
   background-color: var(--color-grey);
   border-radius: 5px;
+  border: 1px solid var(--color-white);
   padding: 5px;
-  margin: 5px;
+  margin: 10px 5px;
 }
 .favorite-lists .excisting-favorites {
   border-radius: 5px;

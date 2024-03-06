@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 interface Props {
   deleteOnOff: boolean;
   useOnOff: boolean;
+  setTodayList?: (data: any) => void | boolean;
 }
 interface UserInfoData {
   nickname: string;
@@ -18,7 +19,11 @@ interface UserData {
   uid: string;
 }
 
-const FavoriteLists: React.FC<Props> = ({ useOnOff, deleteOnOff }) => {
+const FavoriteLists: React.FC<Props> = ({
+  useOnOff,
+  deleteOnOff,
+  setTodayList,
+}) => {
   const [userInfoData, setUserInfoData] = useState<UserInfoData | null>(null);
   const { user }: any = useAuthContext();
   const [showFav, setShowFav] = useState(false);
@@ -37,8 +42,17 @@ const FavoriteLists: React.FC<Props> = ({ useOnOff, deleteOnOff }) => {
         console.log("element name: ", element.name);
       });
     }
-
     // envoyer avec la date du jour !
+  }
+
+  function useThisList(listname: string) {
+    // fonction drilled depuis homepage
+    if (setTodayList && userInfoData) {
+      setTodayList(userInfoData.lists[listname]);
+    }
+    // set le localstorage todayList
+
+    // set le localstorage users=>todayList ?
   }
   async function removeList(listname: string) {
     // pour remove list de DB et local
@@ -89,7 +103,8 @@ const FavoriteLists: React.FC<Props> = ({ useOnOff, deleteOnOff }) => {
                           <button
                             className="add"
                             onClick={() => {
-                              listDetail(listName);
+                              useThisList(listName);
+                              /*              listDetail(listName); */
                             }}
                           >
                             Use

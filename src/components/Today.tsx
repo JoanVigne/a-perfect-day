@@ -37,6 +37,13 @@ const Today: React.FC<TodayProps> = ({
   const [messageSaved, setMessageSaved] = useState("");
   const [clickedItemId, setClickedItemId] = useState<string | null>(null);
 
+  function updateTaskList(newList: any) {
+    if (false) {
+      return;
+    } else {
+      setTaskList(newList);
+    }
+  }
   const [countInputValues, setCountInputValues] = useState<{
     [key: string]: string;
   }>({});
@@ -180,7 +187,11 @@ const Today: React.FC<TodayProps> = ({
             );
           })}
       </ul>
-      <FavoriteLists useOnOff={true} deleteOnOff={false} />
+      <FavoriteLists
+        setTodayList={updateTaskList}
+        useOnOff={true}
+        deleteOnOff={false}
+      />
 
       {/*      <button className="add" onClick={sendListToUserTodayList}>
         save to db(if you logout)
