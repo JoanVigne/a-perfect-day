@@ -3,21 +3,22 @@ import { checkDB } from "./db";
 
 async function sendToUsers(data: any, userId: string) {
   const { ref, snapShot } = await checkDB("users", userId);
-  if (!snapShot.exists()) {
-    // Traitez le cas où l'id du user n'existe pas
+  /* if (!snapShot.exists()) {
+    //! Traitez le cas où l'id du user n'existe pas
     await setDoc(ref, {});
-  }
+  } */
   const userData = snapShot.data();
   if (!userData) {
-    return;
+    console.log("no user found in db");
+    return false;
   }
   const updatedData = {
     ...userData,
     ...data,
   };
-  console.log(updatedData);
+
   await setDoc(ref, updatedData);
-  console.log("user est mis a jour");
+  return "user est mis a jour";
 }
 
 export { sendToUsers };

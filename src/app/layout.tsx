@@ -4,6 +4,7 @@ import "./globals.css";
 import "./css/lists.css";
 import "./css/form.css";
 import "./css/animation.css";
+import "./css/modal.css";
 
 import { AuthContextProvider } from "@/context/AuthContext";
 

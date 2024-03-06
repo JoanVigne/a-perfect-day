@@ -41,7 +41,7 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
         commonTasks.map((commonTask, index) => (
           <li className="task" key={index}>
             <div className="title-inputs">
-              <h3>
+              <h4>
                 {commonTask.name}
                 <button
                   className="details"
@@ -56,7 +56,7 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
                 {clickedItemIndex === index && (
                   <TemporaryMessage message={messageAdded} />
                 )}
-              </h3>
+              </h4>
 
               <img
                 src="./add.png"

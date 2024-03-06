@@ -83,16 +83,6 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
     }
   };
 
-  // Reset messageAdded after a delay
-  /*   useEffect(() => {
-    if (messageAdded) {
-      const timeoutId = setTimeout(() => {
-        setMessageAdded("");
-      }, 3000); // 3 seconds delay
-      return () => clearTimeout(timeoutId);
-    }
-  }, [messageAdded]); */
-
   return (
     <ul>
       {loadingTasks ? (
@@ -107,7 +97,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                   handleAddTaskToTodayList(customTask);
                 }} */
             >
-              <h3>
+              <h4>
                 {customTask.name}
                 <button
                   className="details"
@@ -121,9 +111,8 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                 </button>
                 {clickedItemIndex === index && (
                   <TemporaryMessage message={messageAdded} />
-                  /*    <small className="message-small">{messageAdded}</small> */
                 )}
-              </h3>
+              </h4>
 
               <img
                 onClick={() => {
@@ -147,27 +136,42 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                 className="remove"
                 onClick={() => {
                   handleRemoveTask(customTask);
+                  setClickedItemIndex((prevIndex) =>
+                    prevIndex === index ? null : index
+                  );
                 }}
               >
                 <img src="./red-bin.png" alt="remove" />
               </span>
+              {clickedItemIndex === index && taskToRemove && (
+                <div className="modal-remove">
+                  <div className="modal-content">
+                    <p>
+                      Are you sure you want to delete "{customTask.name}" for
+                      ever ?
+                    </p>
+                    <div className="modal-buttons">
+                      <button
+                        onClick={handleConfirmRemoveTask}
+                        className="confirm"
+                      >
+                        Confirm
+                      </button>
+                      <button
+                        onClick={() => setTaskToRemove(null)}
+                        className="cancel"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </li>
         ))
       )}
-      <small className="message-small">{messageCustom}</small>
-      {taskToRemove && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>Are you sure you want to delete this task?</p>
-            <div className="modal-buttons">
-              <button onClick={handleConfirmRemoveTask}>Confirm</button>
-              <button onClick={() => setTaskToRemove(null)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
-
+      <TemporaryMessage message={messageCustom} />
       <FormCustomTask updateCustomTasks={updateCustomTasks} />
     </ul>
   );

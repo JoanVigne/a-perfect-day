@@ -7,9 +7,9 @@ interface User {
 }
 
 interface Props {
-  user: User;
+  userInfo: User;
 }
-const Lists: React.FC<Props> = ({ user }) => {
+const Lists: React.FC<Props> = ({ userInfo }) => {
   const [custom, setCustom] = useState();
   const [common, setCommon] = useState();
 
@@ -17,17 +17,19 @@ const Lists: React.FC<Props> = ({ user }) => {
   const [newFav, setNewFav] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
+    console.log(userInfo);
+    // get les listes de tasks
     const localCustom = localStorage.getItem("custom") as string;
     const localCommon = localStorage.getItem("common") as string;
-
     setCustom(JSON.parse(localCustom));
     setCommon(JSON.parse(localCommon));
+    // la liste
   }, []);
 
   function listDetail(name: string) {
-    if (user) {
-      console.log("list : ", user.lists[name]);
-      Object.values(user.lists[name]).forEach((element: any) => {
+    if (userInfo) {
+      console.log("list : ", userInfo.lists[name]);
+      Object.values(userInfo.lists[name]).forEach((element: any) => {
         console.log("element name: ", element.name);
       });
     }
@@ -46,14 +48,21 @@ const Lists: React.FC<Props> = ({ user }) => {
     console.log("newFav", newFav);
     // envoyer dans local et db
   }
-  function removeList(listname: string) {
+  /*   function removeList(listname: string) {
     // pour remove list de DB et local
     console.log(listname);
-  }
+    console.log("user : ", user);
+    if (user) {
+      console.log("list : ", user.lists[name]);
+      Object.values(user.lists[name]).forEach((element: any) => {
+        console.log("element name: ", element.name);
+      });
+    }
+  } */
 
   return (
     <div className="container">
-      <FavoriteLists user={user} />
+      <FavoriteLists useOnOff={false} deleteOnOff={true} />
       <div className="container-new-fav-list">
         <h3>
           New favorite list :

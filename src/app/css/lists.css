@@ -17,7 +17,7 @@
   align-items: center;
 }
 
-.task .title-inputs h3 {
+.task .title-inputs h4 {
   text-align: unset;
   width: 60%;
   overflow: hidden;
@@ -75,23 +75,40 @@
 }
 
 /* COMPOSANT FAVORITE LIST */
-.favorite-lists .smaller-container ul {
+.favorite-lists {
+  background-color: var(--color-grey);
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+}
+.favorite-lists .excisting-favorites {
+  border-radius: 5px;
+  margin: 2px;
+}
+.favorite-lists .excisting-favorites ul {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  padding: 5px;
 }
 
-.favorite-lists .smaller-container ul li {
+.favorite-lists .excisting-favorites ul li {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  white-space: nowrap;
+  overflow: hidden;
+
+  flex-direction: row-reverse;
+  margin-right: 15px;
 }
-/* Styles pour les éléments de la première colonne */
+/* /* Styles pour les éléments de la première colonne 
 .favorite-lists .smaller-container ul li:nth-child(odd) {
   flex-direction: row-reverse;
   border-right: 2px solid black;
 }
 
-/* Styles pour les éléments de la deuxième colonne */
+ Styles pour les éléments de la deuxième colonne 
 .favorite-lists .smaller-container ul li:nth-child(even) {
   flex-direction: row;
 }
+ */

@@ -1,42 +1,68 @@
+import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import TemporaryMessage from "@/app/utils/message";
+import { useAuthContext } from "@/context/AuthContext";
+import { sendToUsers } from "@/firebase/db/users";
 import React, { useEffect, useState } from "react";
 
 interface Props {
-  user: User | null;
+  deleteOnOff: boolean;
+  useOnOff: boolean;
 }
-interface User {
+interface UserInfoData {
   nickname: string;
   lists: { [key: string]: object };
 }
 
-const FavoriteLists: React.FC<Props> = ({ user }) => {
-  const [listOfLists, setListOfLists] = useState({});
+interface UserData {
+  email: string;
+  uid: string;
+}
 
+const FavoriteLists: React.FC<Props> = ({ useOnOff, deleteOnOff }) => {
+  const [userInfoData, setUserInfoData] = useState<UserInfoData | null>(null);
+  const { user }: any = useAuthContext();
+  const [showFav, setShowFav] = useState(false);
+  const [messageDelete, setMessageDelete] = useState("");
   useEffect(() => {
-    setListsWithLocalStorage();
-    console.log("list of list dans favoriteLists: ", listOfLists);
-    console.log("user dans favoriteLists :  ", user);
+    const data = getItemFromLocalStorage("users");
+
+    setUserInfoData(data);
+    console.log("user uid etc ", user);
   }, []);
 
-  function setListsWithLocalStorage() {
-    let user = localStorage.getItem("users");
-    const parsed = JSON.parse(user || "{}");
-    setListOfLists(parsed.lists);
-  }
   function listDetail(name: string) {
-    if (user) {
-      console.log("list : ", user.lists[name]);
-      Object.values(user.lists[name]).forEach((element: any) => {
+    if (userInfoData) {
+      console.log("list : ", userInfoData.lists[name]);
+      Object.values(userInfoData.lists[name]).forEach((element: any) => {
         console.log("element name: ", element.name);
       });
     }
 
     // envoyer avec la date du jour !
   }
-  function removeList(listname: string) {
+  async function removeList(listname: string) {
     // pour remove list de DB et local
     console.log(listname);
+    /*     console.log("userInfo : ", userInfo); */
+    if (!userInfoData) {
+      return;
+    }
+    const newlist: { [listName: string]: any } = { ...userInfoData.lists };
+    delete newlist[listname];
+
+    userInfoData.lists = newlist;
+    console.log("user info data apres modif : ", userInfoData);
+    // to db :
+    let dataSent = await sendToUsers(userInfoData, user.uid);
+    if (!dataSent) {
+      console.log("fail to delete");
+      return;
+    }
+    // if db ok, setlocal et set userInfoData
+    setMessageDelete(`${listname} has been deleted`);
+    localStorage.setItem("users", JSON.stringify(userInfoData));
+    setUserInfoData(userInfoData);
   }
-  const [showFav, setShowFav] = useState(false);
 
   return (
     <>
@@ -50,36 +76,47 @@ const FavoriteLists: React.FC<Props> = ({ user }) => {
             {showFav ? "Hide favorites" : "Show favorites"}
           </button>
         </h3>
-        <div className={`smaller-container ${showFav ? "active" : "hidden"}`}>
-          <h3>Excisting favorites : </h3>
+        <div className={`excisting-favorites ${showFav ? "active" : "hidden"}`}>
           <ul>
-            {user &&
-              Object.keys(user.lists).map((listName: string, index: number) => {
-                return (
-                  <React.Fragment key={index}>
-                    <li>
-                      {listName}
-                      <button
-                        className="add"
-                        onClick={() => {
-                          listDetail(listName);
-                        }}
-                      >
-                        Use
-                      </button>
-                      <span
-                        className="remove"
-                        onClick={() => {
-                          removeList(listName);
-                        }}
-                      >
-                        <img src="./delet.png" alt="remove" />
-                      </span>
-                    </li>
-                  </React.Fragment>
-                );
-              })}
+            {userInfoData &&
+              Object.keys(userInfoData.lists).map(
+                (listName: string, index: number) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <li>
+                        {listName}
+                        {useOnOff ? (
+                          <button
+                            className="add"
+                            onClick={() => {
+                              listDetail(listName);
+                            }}
+                          >
+                            Use
+                          </button>
+                        ) : (
+                          ""
+                        )}
+
+                        {deleteOnOff ? (
+                          <span
+                            className="remove"
+                            onClick={() => {
+                              removeList(listName);
+                            }}
+                          >
+                            <img src="./delet.png" alt="remove" />
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                      </li>
+                    </React.Fragment>
+                  );
+                }
+              )}
           </ul>
+          <TemporaryMessage message={messageDelete} />
         </div>
       </div>
     </>

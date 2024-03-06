@@ -1,0 +1,16 @@
+.modal-remove .modal-content {
+  border: 2px red solid;
+  text-align: center;
+}
+
+.modal-remove .modal-content button {
+  margin: 5px;
+  color: white;
+}
+
+.modal-remove .modal-content .confirm {
+  background-color: var(--color-green);
+}
+.modal-remove .modal-content .cancel {
+  background-color: var(--color-dark-grey);
+}

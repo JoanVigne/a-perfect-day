@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./today.css";
-import { checkDB } from "@/firebase/db/db";
-import { setDoc } from "firebase/firestore";
-import TodaySaveList from "./TodaySaveList";
-import { sendToHistoric } from "@/firebase/db/historic";
 import FavoriteLists from "./FavoriteLists";
+import TemporaryMessage from "@/app/utils/message";
 
 interface Task {
   unit: boolean | string;
@@ -18,7 +14,7 @@ interface Task {
 interface TodayProps {
   list: { [key: string]: any };
   handleRemoveTaskFromTodayList: any;
-  user: User | null;
+  userInfo: User | null;
   userId: string;
 }
 interface User {
@@ -28,7 +24,7 @@ interface User {
 const Today: React.FC<TodayProps> = ({
   list,
   handleRemoveTaskFromTodayList,
-  user,
+  userInfo,
   userId,
 }) => {
   useEffect(() => {
@@ -37,6 +33,9 @@ const Today: React.FC<TodayProps> = ({
 
   const [taskList, setTaskList] = useState<{ [key: string]: Task }>(list);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+  // set message when click save
+  const [messageSaved, setMessageSaved] = useState("");
+  const [clickedItemId, setClickedItemId] = useState<string | null>(null);
 
   const [countInputValues, setCountInputValues] = useState<{
     [key: string]: string;
@@ -47,6 +46,8 @@ const Today: React.FC<TodayProps> = ({
       [itemId]: value,
     }));
   };
+
+  // que dans le localStorage
   const handleTaskCompletionToggle = (itemId: string) => {
     const updatedList = {
       ...taskList,
@@ -57,8 +58,10 @@ const Today: React.FC<TodayProps> = ({
     };
     setTaskList(updatedList);
     localStorage.setItem("todayList", JSON.stringify(updatedList));
-    // to db ?
+    setMessageSaved("saved !");
   };
+
+  // que dans le localStorage
   const handleSave = (itemId: string) => {
     const updatedList = {
       ...taskList,
@@ -69,36 +72,9 @@ const Today: React.FC<TodayProps> = ({
     };
     setTaskList(updatedList);
     localStorage.setItem("todayList", JSON.stringify(updatedList));
-    console.log(updatedList);
     setMessageSaved("saved !");
   };
 
-  const [countCalls, setCountcalls] = useState(0);
-  const [messageInfoDB, setMessageInfoDB] = useState("");
-  /*   async function sendListToUserTodayList() {
-    setMessageInfoDB("");
-    setCountcalls(countCalls + 1);
-    console.log(countCalls);
-    if (countCalls >= 3) {
-      setMessageInfoDB("Already saved twice.");
-      return "too many calls";
-    }
-    const { ref, snapShot } = await checkDB("users", userId);
-    if (!snapShot.exists()) {
-      console.log("id utilisateur introuvable dans collection historic");
-      return;
-    }
-    console.log(snapShot.data());
-    const todayList = taskList;
-
-    const newData = { ...snapShot.data(), todayList };
-    await setDoc(ref, newData);
-    console.log("data envoyé");
-    setMessageInfoDB("today list sent to");
-    return "today list sent to db in users";
-  } */
-  const [messageSaved, setMessageSaved] = useState("");
-  const [clickedItemId, setClickedItemId] = useState<string | null>(null);
   return (
     <div className="today-list">
       {/* <button
@@ -126,8 +102,9 @@ const Today: React.FC<TodayProps> = ({
             return (
               <li key={item.id} className="task">
                 <div className="title-inputs">
-                  <h3>
+                  <h4>
                     {item.name}
+
                     <button
                       className="details"
                       onClick={() => {
@@ -139,9 +116,9 @@ const Today: React.FC<TodayProps> = ({
                       ?
                     </button>
                     {clickedItemId === item.id && (
-                      <small className="message-small">{messageSaved}</small>
+                      <TemporaryMessage message={messageSaved} />
                     )}
-                  </h3>{" "}
+                  </h4>{" "}
                   <div className="count">
                     {typeof item.unit === "boolean" ? (
                       <button
@@ -203,7 +180,7 @@ const Today: React.FC<TodayProps> = ({
             );
           })}
       </ul>
-      <FavoriteLists user={user} />
+      <FavoriteLists useOnOff={true} deleteOnOff={false} />
 
       {/*      <button className="add" onClick={sendListToUserTodayList}>
         save to db(if you logout)

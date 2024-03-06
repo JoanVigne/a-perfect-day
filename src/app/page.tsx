@@ -215,7 +215,7 @@ export default function Home() {
           <Today
             list={todayList}
             handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
-            user={userInfo && userInfo}
+            userInfo={userInfo && userInfo}
             userId={user.uid}
           />
           <TemporaryMessage message={messagelist} />
@@ -232,7 +232,7 @@ export default function Home() {
           <CommonTasks handleAddTaskToTodayList={handleAddTaskToTodayList} />
         </div>
 
-        {userInfo && <Lists user={userInfo} />}
+        {userInfo && <Lists userInfo={userInfo} />}
       </main>
       {userInfo && <Footer taskList={todayList} userInfo={userInfo} />}
     </>

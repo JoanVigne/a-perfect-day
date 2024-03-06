@@ -21,7 +21,8 @@
 html,
 body,
 main {
-  max-width: 100vw;
+  /*   max-width: 100vw; */
+  max-width: 800px;
   /*   overflow-x: hidden; */
   background-color: var(--color-black);
   color: var(--color-white);
@@ -51,6 +52,9 @@ li {
 h2,
 h3 {
   text-align: center;
+}
+h3 {
+  font-size: 15px;
 }
 
 .smaller-container {
