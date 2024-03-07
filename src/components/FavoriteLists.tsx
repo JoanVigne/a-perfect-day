@@ -39,9 +39,6 @@ const FavoriteLists: React.FC<Props> = ({
     // set le localstorage users=>todayList ?
   }
   async function removeList(listname: string) {
-    // pour remove list de DB et local
-    console.log(listname);
-    /*     console.log("userInfo : ", userInfo); */
     if (!userInfo || !functionSetUserInfo) {
       return;
     }
@@ -55,7 +52,6 @@ const FavoriteLists: React.FC<Props> = ({
       },
     };
     delete updatedUserInfo.lists[listname];
-    console.log("user info data apres modif : ", updatedUserInfo);
     // to db :
     let dataSent = await sendToUsers(updatedUserInfo, user.uid);
     if (!dataSent) {

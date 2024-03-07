@@ -46,3 +46,40 @@
   display: flex;
   align-items: baseline;
 }
+
+/*  FORM NEW FAV LIST */
+
+.container-new-fav-list {
+}
+
+.container-new-fav-list .new-fav-list {
+  background-color: var(--color-grey);
+  border-radius: 5px;
+  border: 1px solid var(--color-white);
+  padding: 5px;
+  margin: 10px 5px;
+}
+
+.container-new-fav-list ul {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.container-new-fav-list ul li {
+  display: flex;
+  align-items: center;
+  margin: 2px 10px;
+}
+.container-new-fav-list .new-fav-list ul li button {
+  margin-right: 2px;
+}
+
+.container-new-fav-list .container-column {
+  display: flex;
+}
+
+.container-new-fav-list .container-column .common,
+.container-new-fav-list .container-column .custom {
+  width: 50%;
+}

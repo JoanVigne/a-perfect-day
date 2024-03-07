@@ -192,6 +192,7 @@ const Today: React.FC<TodayProps> = ({
         useOnOff={true}
         deleteOnOff={false}
         userInfo={userInfo}
+        /*        functionSetUserInfo={functionSetUserInfo} */
       />
 
       {/*      <button className="add" onClick={sendListToUserTodayList}>

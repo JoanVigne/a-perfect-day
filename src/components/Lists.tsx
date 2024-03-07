@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
 import TemporaryMessage from "@/app/utils/message";
+import { sendToUsers } from "@/firebase/db/users";
 
 interface UserInfo {
   nickname: string;
@@ -37,7 +38,12 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
       name: { value: string };
     };
     const name: string = target.name.value;
-
+    console.log("name lenght : ", name.length);
+    if (name.length === 0) {
+      console.log("name inferieur ou egal a 0");
+      setMessage("Please name this list");
+      return;
+    }
     if (userInfo.lists.hasOwnProperty(name)) {
       setMessage("This name is already taken");
       // Affichez un message d'erreur ou effectuez une action appropriée
@@ -60,18 +66,29 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
     localStorage.setItem("users", JSON.stringify(updatedUserInfo));
 
     // quand envoyer dans db ???
+    // to db : NEED USER UID
+    /*         let dataSent = await sendToUsers(updatedUserInfo, user.uid);
+        if (!dataSent) {
+          setMessageDelete("fail to delete");
+          return "fail to delete";
+        } */
     setMessage("New favorite list created");
     return "New favorite list created";
   }
 
   return (
     <div className="container">
-      <FavoriteLists useOnOff={false} deleteOnOff={true} userInfo={userInfo} />
+      <FavoriteLists
+        useOnOff={false}
+        deleteOnOff={true}
+        userInfo={userInfo}
+        functionSetUserInfo={functionSetUserInfo}
+      />
       <div className="container-new-fav-list">
         <h3>
           New favorite list :
           <button
-            className={`${showForm ? "" : "add"}`}
+            className={`${showForm ? "hide" : "add"}`}
             onClick={() => setShowForm(!showForm)}
           >
             {showForm ? "Hide new fav" : "New favorite"}
@@ -82,15 +99,16 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
             showForm ? "container-form active" : "container-form hidden"
           }
         >
-          <div className="new-fav-list container">
+          <div className="new-fav-list">
             <ul>
               {newFav ? (
                 Object.values(newFav).map((ele: any, index: number) => {
                   return (
                     <li key={index}>
-                      {ele.name}{" "}
-                      <button
-                        className=""
+                      <img
+                        className="minus-button"
+                        src="./minus-big.png"
+                        alt="remove"
                         onClick={() => {
                           setNewFav((prevState) => {
                             const newState = { ...prevState };
@@ -99,10 +117,8 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                             return newState;
                           });
                         }}
-                      >
-                        {" "}
-                        -{" "}
-                      </button>
+                      />
+                      {ele.name}{" "}
                     </li>
                   );
                 })
@@ -139,18 +155,18 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                   Object.values(custom).map((ele: any, index: number) => {
                     return (
                       <li key={index}>
-                        {ele.name}
-                        <button
-                          className="add"
+                        <img
+                          src="./add.png"
+                          className="add-button"
                           onClick={() => {
                             setNewFav((prevState) => ({
                               ...prevState,
                               [ele.id]: ele,
                             }));
                           }}
-                        >
-                          add
-                        </button>
+                          alt="add"
+                        ></img>
+                        {ele.name}
                       </li>
                     );
                   })}
@@ -163,18 +179,18 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                   Object.values(common).map((ele: any, index: number) => {
                     return (
                       <li key={index}>
-                        {ele.name}
-                        <button
-                          className="add"
+                        <img
+                          src="./add.png"
+                          className="add-button"
                           onClick={() => {
                             setNewFav((prevState) => ({
                               ...prevState,
                               [ele.id]: ele,
                             }));
                           }}
-                        >
-                          add
-                        </button>
+                          alt="add"
+                        ></img>
+                        {ele.name}
                       </li>
                     );
                   })}

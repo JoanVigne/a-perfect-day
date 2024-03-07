@@ -115,6 +115,10 @@ form button[type="submit"] {
   width: 25px;
   height: 25px;
 }
+.minus-button {
+  width: 25px;
+  height: 25px;
+}
 .message-error {
   color: var(--color-white);
   text-align: center;
