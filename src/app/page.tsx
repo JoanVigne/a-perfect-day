@@ -232,7 +232,9 @@ export default function Home() {
           <CommonTasks handleAddTaskToTodayList={handleAddTaskToTodayList} />
         </div>
 
-        {userInfo && <Lists userInfo={userInfo} />}
+        {userInfo && (
+          <Lists userInfo={userInfo} functionSetUserInfo={setUserInfo} />
+        )}
       </main>
       {userInfo && <Footer taskList={todayList} userInfo={userInfo} />}
     </>

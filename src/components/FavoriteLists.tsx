@@ -8,47 +8,31 @@ interface Props {
   deleteOnOff: boolean;
   useOnOff: boolean;
   setTodayList?: (data: any) => void | boolean;
+  userInfo: any;
+  functionSetUserInfo?: React.Dispatch<React.SetStateAction<UserInfo | null>>;
 }
-interface UserInfoData {
+interface UserInfo {
   nickname: string;
   lists: { [key: string]: object };
-}
-
-interface UserData {
-  email: string;
-  uid: string;
+  todayList: { [key: string]: object };
 }
 
 const FavoriteLists: React.FC<Props> = ({
   useOnOff,
   deleteOnOff,
   setTodayList,
+  userInfo,
+  functionSetUserInfo,
 }) => {
-  const [userInfoData, setUserInfoData] = useState<UserInfoData | null>(null);
+  /*   const [userInfoData, setUserInfoData] = useState<UserInfo | null>(null); */
   const { user }: any = useAuthContext();
   const [showFav, setShowFav] = useState(false);
   const [messageDelete, setMessageDelete] = useState("");
-  useEffect(() => {
-    const data = getItemFromLocalStorage("users");
-
-    setUserInfoData(data);
-    console.log("user uid etc ", user);
-  }, []);
-
-  function listDetail(name: string) {
-    if (userInfoData) {
-      console.log("list : ", userInfoData.lists[name]);
-      Object.values(userInfoData.lists[name]).forEach((element: any) => {
-        console.log("element name: ", element.name);
-      });
-    }
-    // envoyer avec la date du jour !
-  }
 
   function useThisList(listname: string) {
     // fonction drilled depuis homepage
-    if (setTodayList && userInfoData) {
-      setTodayList(userInfoData.lists[listname]);
+    if (setTodayList && userInfo) {
+      setTodayList(userInfo.lists[listname]);
     }
     // set le localstorage todayList
 
@@ -58,24 +42,30 @@ const FavoriteLists: React.FC<Props> = ({
     // pour remove list de DB et local
     console.log(listname);
     /*     console.log("userInfo : ", userInfo); */
-    if (!userInfoData) {
+    if (!userInfo || !functionSetUserInfo) {
       return;
     }
-    const newlist: { [listName: string]: any } = { ...userInfoData.lists };
+    const newlist: { [listName: string]: any } = { ...userInfo.lists };
     delete newlist[listname];
 
-    userInfoData.lists = newlist;
-    console.log("user info data apres modif : ", userInfoData);
+    const updatedUserInfo = {
+      ...userInfo,
+      lists: {
+        ...userInfo.lists,
+      },
+    };
+    delete updatedUserInfo.lists[listname];
+    console.log("user info data apres modif : ", updatedUserInfo);
     // to db :
-    let dataSent = await sendToUsers(userInfoData, user.uid);
+    let dataSent = await sendToUsers(updatedUserInfo, user.uid);
     if (!dataSent) {
-      console.log("fail to delete");
-      return;
+      setMessageDelete("fail to delete");
+      return "fail to delete";
     }
     // if db ok, setlocal et set userInfoData
     setMessageDelete(`${listname} has been deleted`);
-    localStorage.setItem("users", JSON.stringify(userInfoData));
-    setUserInfoData(userInfoData);
+    localStorage.setItem("users", JSON.stringify(updatedUserInfo));
+    functionSetUserInfo(updatedUserInfo);
   }
 
   return (
@@ -92,8 +82,8 @@ const FavoriteLists: React.FC<Props> = ({
         </h3>
         <div className={`excisting-favorites ${showFav ? "active" : "hidden"}`}>
           <ul>
-            {userInfoData &&
-              Object.keys(userInfoData.lists).map(
+            {userInfo &&
+              Object.keys(userInfo.lists).map(
                 (listName: string, index: number) => {
                   return (
                     <React.Fragment key={index}>
@@ -131,6 +121,18 @@ const FavoriteLists: React.FC<Props> = ({
                 }
               )}
           </ul>
+          {setTodayList ? (
+            <button
+              className="add"
+              onClick={() => {
+                location.reload();
+              }}
+            >
+              use the previous list
+            </button>
+          ) : (
+            ""
+          )}
           <TemporaryMessage message={messageDelete} />
         </div>
       </div>

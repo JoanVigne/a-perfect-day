@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
+import TemporaryMessage from "@/app/utils/message";
 
-interface User {
+interface UserInfo {
   nickname: string;
   lists: { [key: string]: object };
+  todayList: { [key: string]: object };
 }
 
 interface Props {
-  userInfo: User;
+  userInfo: UserInfo;
+  functionSetUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
 }
-const Lists: React.FC<Props> = ({ userInfo }) => {
+const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
   const [custom, setCustom] = useState();
   const [common, setCommon] = useState();
 
   const [showForm, setShowForm] = useState(false);
   const [newFav, setNewFav] = useState<{ [key: string]: any }>({});
+
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     console.log(userInfo);
@@ -24,18 +29,7 @@ const Lists: React.FC<Props> = ({ userInfo }) => {
     setCustom(JSON.parse(localCustom));
     setCommon(JSON.parse(localCommon));
     // la liste
-  }, []);
-
-  function listDetail(name: string) {
-    if (userInfo) {
-      console.log("list : ", userInfo.lists[name]);
-      Object.values(userInfo.lists[name]).forEach((element: any) => {
-        console.log("element name: ", element.name);
-      });
-    }
-
-    // envoyer avec la date du jour !
-  }
+  }, [userInfo]);
 
   function createANewFavoriteList(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,25 +38,35 @@ const Lists: React.FC<Props> = ({ userInfo }) => {
     };
     const name: string = target.name.value;
 
-    console.log("nme : ", name);
-    console.log("newFav", newFav);
-    // envoyer dans local et db
-  }
-  /*   function removeList(listname: string) {
-    // pour remove list de DB et local
-    console.log(listname);
-    console.log("user : ", user);
-    if (user) {
-      console.log("list : ", user.lists[name]);
-      Object.values(user.lists[name]).forEach((element: any) => {
-        console.log("element name: ", element.name);
-      });
+    if (userInfo.lists.hasOwnProperty(name)) {
+      setMessage("This name is already taken");
+      // Affichez un message d'erreur ou effectuez une action appropriée
+      return "This name is already taken";
     }
-  } */
+    const updatedUserInfo = {
+      ...userInfo,
+      lists: {
+        ...userInfo.lists,
+        [name]: newFav,
+      },
+    };
+
+    console.log("userInfo", updatedUserInfo);
+    /*  const newUserInfo = 
+    console.log("\\\\\\");
+    console.log("newUserInfo", newUserInfo); */
+    functionSetUserInfo(updatedUserInfo);
+
+    localStorage.setItem("users", JSON.stringify(updatedUserInfo));
+
+    // quand envoyer dans db ???
+    setMessage("New favorite list created");
+    return "New favorite list created";
+  }
 
   return (
     <div className="container">
-      <FavoriteLists useOnOff={false} deleteOnOff={true} />
+      <FavoriteLists useOnOff={false} deleteOnOff={true} userInfo={userInfo} />
       <div className="container-new-fav-list">
         <h3>
           New favorite list :
@@ -113,6 +117,8 @@ const Lists: React.FC<Props> = ({ userInfo }) => {
               <p>Add some tasks from the lists below</p>
             ) : (
               <form action="" onSubmit={createANewFavoriteList}>
+                <TemporaryMessage message={message} />
+
                 <input
                   type="text"
                   name="name"

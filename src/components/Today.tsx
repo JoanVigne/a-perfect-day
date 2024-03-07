@@ -191,6 +191,7 @@ const Today: React.FC<TodayProps> = ({
         setTodayList={updateTaskList}
         useOnOff={true}
         deleteOnOff={false}
+        userInfo={userInfo}
       />
 
       {/*      <button className="add" onClick={sendListToUserTodayList}>
