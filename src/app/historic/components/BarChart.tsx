@@ -53,8 +53,8 @@ const BarChart: React.FC<Props> = ({ data, task }) => {
       {
         label: task,
         data: counts,
-        backgroundColor: "#FF6384",
-        borderColor: "#FF6384",
+        backgroundColor: "rgb(3 143 3)",
+        borderColor: "rgba(218, 218, 218, 1)",
         borderWidth: 1,
       },
     ],
@@ -72,7 +72,7 @@ const BarChart: React.FC<Props> = ({ data, task }) => {
 
   return (
     <div>
-      <h2>About {task}</h2>
+      <h2>{task}</h2>
       <Bar data={barData} options={options} />
     </div>
   );

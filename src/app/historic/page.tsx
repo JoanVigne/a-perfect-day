@@ -7,6 +7,8 @@ import { checkDB } from "@/firebase/db/db";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 import BarChart from "./components/BarChart";
+import Footer from "@/components/Footer";
+import { getItemFromLocalStorage } from "../utils/localstorage";
 
 interface UserData {
   email: string;
@@ -28,32 +30,36 @@ interface HistoricData {
     [activityId: string]: Task | any;
   };
 }
+interface UserInfo {
+  nickname: string;
+  lists: { [key: string]: object };
+  todayList: { [key: string]: object };
+}
 
 const Page = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [dataHistoric, setDataHistoric] = useState<HistoricData | null>(null);
   ChartJS.register(ArcElement, Tooltip, Legend);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { snapShot } = await checkDB("historic", user.uid);
-        if (!snapShot.exists()) return;
-        const historicData: HistoricData = snapShot.data();
-        setDataHistoric(historicData);
-        localStorage.setItem("historic", JSON.stringify(historicData));
-      } catch (error) {
-        console.error("Error fetching historic data:", error);
-      }
-    };
 
-    const inLocalStorage = localStorage.getItem("historic");
-    if (inLocalStorage) {
-      const localData: HistoricData = JSON.parse(inLocalStorage);
-      setDataHistoric(localData);
-    } else {
-      fetchData();
-    }
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    fetchData();
+    const userInfoLocal = getItemFromLocalStorage("users");
+    setUserInfo(userInfoLocal);
   }, [user.uid]);
+
+  async function fetchData() {
+    try {
+      const { snapShot } = await checkDB("historic", user.uid);
+      if (!snapShot.exists()) return;
+      const historicData: HistoricData = snapShot.data();
+      setDataHistoric(historicData);
+      localStorage.setItem("historic", JSON.stringify(historicData));
+    } catch (error) {
+      console.error("Error fetching historic data:", error);
+    }
+  }
 
   const sortedHistoricDays = dataHistoric
     ? Object.entries(dataHistoric)
@@ -63,13 +69,44 @@ const Page = () => {
         .map(({ historicDay }) => historicDay)
     : [];
 
+  // Fonction pour compter les occurrences des tâches
+  function countTasks(data: HistoricData) {
+    const taskCounts: { [key: string]: number } = {};
+    for (const date in data) {
+      const day = data[date];
+      for (const taskId in day) {
+        const task = day[taskId];
+        if (task.name && task.name !== "date") {
+          // Vérifier que c'est une tâche valide
+          if (!taskCounts[task.name]) {
+            taskCounts[task.name] = 0;
+          }
+          taskCounts[task.name]++;
+        }
+      }
+    }
+    return taskCounts;
+  }
+
+  // Compter les occurrences des tâches
+  const taskCounts = countTasks(dataHistoric as HistoricData);
+
+  // Trier les tâches par nombre d'occurrences
+  const sortedTasks = Object.keys(taskCounts).sort(
+    (a, b) => taskCounts[b] - taskCounts[a]
+  );
+
+  // Récupérer uniquement les trois premières tâches
+  const topThreeTasks = sortedTasks.slice(0, 3);
+
   return (
     <>
       <main>
-        <BarChart data={sortedHistoricDays} task="squat" />
-        <BarChart data={sortedHistoricDays} task="marcher" />
+        {topThreeTasks.map((task) => (
+          <BarChart key={task} data={sortedHistoricDays} task={task} />
+        ))}
       </main>
-      {/*       <Footer /> */}
+      {userInfo && <Footer userInfo={userInfo} />}
     </>
   );
 };

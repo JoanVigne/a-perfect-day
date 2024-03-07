@@ -4,35 +4,32 @@ import "./footer.css";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";
+import { getItemFromLocalStorage } from "@/app/utils/localstorage";
 
 interface UserData {
   email: string;
   uid: string;
 }
-interface Task {
-  count: string;
-  details: string;
-  description: string;
-  unit: boolean | string;
-  name: string;
-  id: string;
-}
 
-interface TaskList {
-  [key: string]: Task | string;
+interface UserInfo {
+  nickname: string;
+  lists: { [key: string]: object };
+  todayList: { [key: string]: object };
 }
-interface UserInfo {}
-const Footer: React.FC<{ taskList: TaskList; userInfo: UserInfo }> = ({
-  taskList,
-  userInfo,
-}) => {
+const Footer: React.FC<{ userInfo?: UserInfo }> = ({ userInfo }) => {
   const { user } = useAuthContext() as { user: UserData };
 
   function logOut() {
-    const updatedUser = {
+    if (!userInfo) {
+      return;
+    }
+    let updatedUser;
+    const TL = getItemFromLocalStorage("todayList");
+    updatedUser = {
       ...(userInfo || "{}"),
-      todayList: taskList,
+      todayList: TL,
     };
+
     sendToUsers(updatedUser, user.uid);
     const auth = getAuth();
     signOut(auth)
