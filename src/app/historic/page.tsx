@@ -5,9 +5,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import { checkDB } from "@/firebase/db/db";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
-import ChartComponent from "./components/ChartComponent";
-import BarChartComponent from "./components/BarChartComponent";
+
 import BarChart from "./components/BarChart";
 
 interface UserData {
@@ -27,7 +25,7 @@ interface Task {
 interface HistoricData {
   [shortDate: string]: {
     date: string;
-    [activityId: string]: Task | string;
+    [activityId: string]: Task | any;
   };
 }
 
@@ -65,25 +63,11 @@ const Page = () => {
         .map(({ historicDay }) => historicDay)
     : [];
 
-  /*   function formatDate(dateString: string) {
-    const date = new Date(dateString);
-    const options = { month: "long" as const, day: "2-digit" as const };
-    console.log(date.toLocaleDateString("fr-FR", options));
-    return date.toLocaleDateString("fr-FR", options); // Vous pouvez ajuster le local selon vos besoins
-  } */
-
   return (
     <>
-      {/*       <button onClick={() => formatDate("2024-02-22T12:19:43.826Z")}>
-        TEST
-      </button> */}
       <main>
-        {/* 
-        <ChartComponent data={sortedHistoricDays} />
-        <BarChartComponent data={sortedHistoricDays} /> */}
         <BarChart data={sortedHistoricDays} task="squat" />
         <BarChart data={sortedHistoricDays} task="marcher" />
-        {/*   <BarChart data={sortedHistoricDays} /> */}
       </main>
       {/*       <Footer /> */}
     </>

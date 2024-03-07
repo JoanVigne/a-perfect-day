@@ -22,15 +22,8 @@ interface Task {
   count: string | number;
 }
 
-interface HistoricData {
-  [shortDate: string]: {
-    date: string;
-    [activityId: string]: Task | string;
-  };
-}
-
 interface Props {
-  data: HistoricData;
+  data: { date: string; [activityId: string]: Task | string }[];
   task: string;
 }
 
