@@ -94,7 +94,7 @@ const Today: React.FC<TodayProps> = ({
       <ul>
         {taskList &&
           Object.values(taskList).map((item, index) => {
-            if (Object.keys(taskList).length <= 1) {
+            if (Object.keys(taskList).length <= 0) {
               return (
                 <p key={index}>
                   Your list is empty. You can add some tasks from the common

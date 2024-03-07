@@ -48,10 +48,6 @@
 }
 
 /*  FORM NEW FAV LIST */
-
-.container-new-fav-list {
-}
-
 .container-new-fav-list .new-fav-list {
   background-color: var(--color-grey);
   border-radius: 5px;

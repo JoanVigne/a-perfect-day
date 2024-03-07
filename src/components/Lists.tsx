@@ -23,7 +23,6 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    console.log(userInfo);
     // get les listes de tasks
     const localCustom = localStorage.getItem("custom") as string;
     const localCommon = localStorage.getItem("common") as string;
@@ -38,11 +37,10 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
       name: { value: string };
     };
     const name: string = target.name.value;
-    console.log("name lenght : ", name.length);
+
     if (name.length === 0) {
-      console.log("name inferieur ou egal a 0");
       setMessage("Please name this list");
-      return;
+      return "name.length === 0";
     }
     if (userInfo.lists.hasOwnProperty(name)) {
       setMessage("This name is already taken");
@@ -56,15 +54,8 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
         [name]: newFav,
       },
     };
-
-    console.log("userInfo", updatedUserInfo);
-    /*  const newUserInfo = 
-    console.log("\\\\\\");
-    console.log("newUserInfo", newUserInfo); */
     functionSetUserInfo(updatedUserInfo);
-
     localStorage.setItem("users", JSON.stringify(updatedUserInfo));
-
     // quand envoyer dans db ???
     // to db : NEED USER UID
     /*         let dataSent = await sendToUsers(updatedUserInfo, user.uid);
@@ -113,7 +104,6 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                           setNewFav((prevState) => {
                             const newState = { ...prevState };
                             delete newState[ele.id];
-                            console.log(newState);
                             return newState;
                           });
                         }}
