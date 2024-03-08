@@ -1,17 +1,18 @@
 import React from "react";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import {
   CategoryScale,
   LinearScale,
   Chart,
-  BarController,
-  BarElement,
+  LineController,
+  LineElement,
+  PointElement,
 } from "chart.js";
 import { formatDate } from "@/app/utils/date";
 
 Chart.register(CategoryScale);
 Chart.register(LinearScale);
-Chart.register(BarController, BarElement);
+Chart.register(LineController, LineElement, PointElement);
 
 interface Task {
   id: string;
@@ -27,7 +28,7 @@ interface Props {
   task: string;
 }
 
-const BarChart: React.FC<Props> = ({ data, task }) => {
+const LineChart: React.FC<Props> = ({ data, task }) => {
   const taskData: { [date: string]: number } = {};
 
   let unit: string | undefined;
@@ -38,7 +39,7 @@ const BarChart: React.FC<Props> = ({ data, task }) => {
     if (thisTask) {
       const formattedDate = formatDate(day.date);
       taskData[formattedDate] = parseInt(thisTask.count as string);
-      unit = thisTask.unit as string; //
+      unit = thisTask.unit as string;
     } else {
       const formattedDate = formatDate(day.date);
       taskData[formattedDate] = 0;
@@ -47,15 +48,15 @@ const BarChart: React.FC<Props> = ({ data, task }) => {
   const labels = Object.keys(taskData);
   const counts = Object.values(taskData);
 
-  const barData = {
+  const lineData = {
     labels: labels,
     datasets: [
       {
         label: task,
         data: counts,
-        backgroundColor: "rgb(3 143 3)",
-        borderColor: "rgba(218, 218, 218, 1)",
-        borderWidth: 1,
+        fill: false,
+        borderColor: "rgb(3, 143, 3)",
+        tension: 0.1,
       },
     ],
   };
@@ -73,9 +74,9 @@ const BarChart: React.FC<Props> = ({ data, task }) => {
   return (
     <div>
       <h3>{task}</h3>
-      <Bar data={barData} options={options} />
+      <Line data={lineData} options={options} />
     </div>
   );
 };
 
-export default BarChart;
+export default LineChart;

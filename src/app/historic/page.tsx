@@ -9,6 +9,9 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import BarChart from "./components/BarChart";
 import Footer from "@/components/Footer";
 import { getItemFromLocalStorage } from "../utils/localstorage";
+import LineChart from "./components/LineChart";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface UserData {
   email: string;
@@ -39,7 +42,6 @@ interface UserInfo {
 const Page = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [dataHistoric, setDataHistoric] = useState<HistoricData | null>(null);
-  ChartJS.register(ArcElement, Tooltip, Legend);
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
@@ -99,9 +101,86 @@ const Page = () => {
   // Récupérer uniquement les trois premières tâches
   const topThreeTasks = sortedTasks.slice(0, 3);
 
+  // trier les non-booleens
+  function filterBooleanTasks(tasks: string[], data: HistoricData): string[] {
+    const booleanTasks: string[] = [];
+    for (const date in data) {
+      const day = data[date];
+      for (const taskId in day) {
+        const task = day[taskId];
+        if (typeof task.unit === "boolean") {
+          booleanTasks.push(task.name);
+        }
+      }
+    }
+    // Retirer les doublons et les tâches booléennes de la liste
+    console.log(tasks.filter((task) => !booleanTasks.includes(task)));
+    return tasks.filter((task) => !booleanTasks.includes(task));
+  }
+
+  // trier les booleens
+  function findBooleanTasks(data: HistoricData): string[] {
+    const booleanTasks: string[] = [];
+    for (const date in data) {
+      const day = data[date];
+      for (const taskId in day) {
+        const task = day[taskId];
+        if (typeof task.unit === "boolean") {
+          booleanTasks.push(task.name);
+        }
+      }
+    }
+    console.log("les taches booléennes :", Array.from(new Set(booleanTasks)));
+    return Array.from(new Set(booleanTasks));
+  }
+  const booleanTasks = findBooleanTasks(dataHistoric as HistoricData);
+  function findLastTimePerformed(taskName: string) {
+    let lastTimePerformed: string | null = null;
+
+    // Parcourir les jours historiques, en partant du plus récent
+    for (let i = sortedHistoricDays.length - 1; i >= 0; i--) {
+      const historicDay = sortedHistoricDays[i];
+      // Vérifier si la tâche est présente dans ce jour historique
+      if (historicDay.hasOwnProperty(taskName)) {
+        lastTimePerformed = historicDay.date;
+        break; // Sortir de la boucle une fois que la dernière date est trouvée
+      }
+    }
+
+    return lastTimePerformed;
+  }
+
+  // Utiliser la fonction pour chaque tâche booléenne
+  booleanTasks.forEach((task) => {
+    const lastTime = findLastTimePerformed(task);
+    console.log(`La dernière fois que "${task}" a été effectuée : ${lastTime}`);
+  });
   return (
     <>
+      <button onClick={() => findBooleanTasks(dataHistoric as HistoricData)}>
+        TEST
+      </button>
       <main>
+        <div className="container">
+          <h2>The task done or not :</h2>
+          {booleanTasks &&
+            booleanTasks.map((task) => {
+              return (
+                <span key={task} className="smaller-container">
+                  <h3>{task}</h3>
+                  <h4>last time :</h4>
+                  <h4>Streak: </h4>
+                </span>
+              );
+            })}
+        </div>
+
+        <h2>TEST</h2>
+        {topThreeTasks.map((task) => (
+          <LineChart key={task} data={sortedHistoricDays} task={task} />
+        ))}
+
+        <h2>Your 3 most frequent tasks</h2>
         {topThreeTasks.map((task) => (
           <BarChart key={task} data={sortedHistoricDays} task={task} />
         ))}
