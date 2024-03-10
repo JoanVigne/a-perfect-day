@@ -5,6 +5,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";
 import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import { useRouter } from "next/navigation";
 
 interface UserData {
   email: string;
@@ -18,7 +19,7 @@ interface UserInfo {
 }
 const Footer: React.FC<{ userInfo?: UserInfo }> = ({ userInfo }) => {
   const { user } = useAuthContext() as { user: UserData };
-
+  const router = useRouter();
   function logOut() {
     if (!userInfo) {
       return;
@@ -36,7 +37,8 @@ const Footer: React.FC<{ userInfo?: UserInfo }> = ({ userInfo }) => {
       .then(() => {
         // Sign-out successful.
         console.log("LOGGED OUT");
-        localStorage.clear();
+        /*  localStorage.clear(); */
+        return router.push("/connect");
       })
       .catch((error) => {
         // An error happened.

@@ -47,10 +47,11 @@ function Signin() {
               type="password"
               name="newPassword"
               id="newPassword"
-              placeholder="password"
             />
           </label>
-          <button type="submit">Sign in</button>
+          <button type="submit" className="add">
+            Sign in
+          </button>
         </form>
       </div>
 

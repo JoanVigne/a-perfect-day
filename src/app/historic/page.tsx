@@ -10,6 +10,7 @@ import BarChart from "./components/BarChart";
 import Footer from "@/components/Footer";
 import { getItemFromLocalStorage } from "../utils/localstorage";
 import LineChart from "./components/LineChart";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -42,14 +43,25 @@ interface UserInfo {
 const Page = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [dataHistoric, setDataHistoric] = useState<HistoricData | null>(null);
-
+  const router = useRouter();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
-  useEffect(() => {
-    fetchData();
-    const userInfoLocal = getItemFromLocalStorage("users");
-    setUserInfo(userInfoLocal);
-  }, [user.uid]);
+  useEffect(
+    () => {
+      console.log(" USER : ", user);
+      if (user == null || user?.uid == null || user?.uid == undefined) {
+        return router.push("/connect");
+      } else {
+        fetchData();
+      }
+
+      const userInfoLocal = getItemFromLocalStorage("users");
+      setUserInfo(userInfoLocal);
+    },
+    [
+      /* user.uid */
+    ]
+  );
 
   async function fetchData() {
     try {

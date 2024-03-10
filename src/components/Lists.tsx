@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
 import TemporaryMessage from "@/app/utils/message";
 import { sendToUsers } from "@/firebase/db/users";
+import Load from "./Load";
 
 interface UserInfo {
   nickname: string;
