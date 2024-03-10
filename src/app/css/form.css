@@ -16,7 +16,9 @@ input[type="text"],
   color: var(--color-white);
   background-color: var(--color-dark-grey);
 }
-
+input::placeholder {
+  color: var(--color-light-grey);
+}
 form input[type="submit"],
 form button[type="submit"],
 .container-form form button.add {
@@ -29,7 +31,7 @@ form button[type="submit"],
 }
 
 .container-form h2,
-.container-form form label {
+form label {
   text-align: center;
   display: block;
   font-weight: bold;

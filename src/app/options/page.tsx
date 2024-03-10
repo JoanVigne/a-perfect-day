@@ -51,7 +51,6 @@ const page = () => {
       ...(UI || "{}"),
       nickname: newNickname,
     };
-    console.log(updatedUser);
     const sending = await sendToUsers(updatedUser, user.uid);
     if (!sending) {
       setMessageChangeNickname(sending);
@@ -84,13 +83,14 @@ const page = () => {
   }
   return (
     <main>
-      <h1>Options</h1>
-
-      <div className="container">
+      <h1 style={{ textAlign: "center" }}>
+        Options{" "}
         <button onClick={logOut} className="save">
           Log out
         </button>
-        <p>OPTIONS NOT AVAILABLE YET</p>
+      </h1>
+
+      <div className="container">
         <div className="smaller-container">
           <form action="" onSubmit={changeNickName}>
             <label htmlFor="">Change your nickname</label>
@@ -100,14 +100,14 @@ const page = () => {
           <p className="message-small">{messageChangeNickname}</p>
         </div>
       </div>
-      <div className="container">
+      {/*   <div className="container">
         <h2>Styles</h2>
         <select name="" id="">
           <option value="dark">dark</option>
           <option value="dark">white</option>
           <option value="dark">other</option>
         </select>
-      </div>
+      </div> */}
       <Footer />
     </main>
   );

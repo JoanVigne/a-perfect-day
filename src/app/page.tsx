@@ -1,7 +1,6 @@
 "use client";
 
 import Today from "@/components/Today";
-import "./pageHome.css";
 import CommonTasks from "@/components/CommonTasks";
 import { useAuthContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";

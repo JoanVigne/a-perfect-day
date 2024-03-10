@@ -6,19 +6,20 @@ interface HeaderProps {
 }
 const Header: React.FC<HeaderProps> = ({ nickname }) => {
   const months = [
-    "janvier",
-    "février",
-    "mars",
-    "avril",
-    "mai",
-    "juin",
-    "juillet",
-    "août",
-    "septembre",
-    "octobre",
-    "novembre",
-    "décembre",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
+
   const [dateToday, setDateToday] = useState("");
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ nickname }) => {
     const month = date.getMonth() + 1;
     const monthName = months[month];
     const day = date.getDate();
-    setDateToday(`${day} ${monthName} `);
+    setDateToday(` ${monthName} ${day} `);
   }, []);
   return (
     <header>
