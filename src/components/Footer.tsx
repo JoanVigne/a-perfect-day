@@ -1,6 +1,29 @@
 import Link from "next/link";
 import React from "react";
 import "./footer.css";
+
+const Footer = () => {
+  return (
+    <footer>
+      <nav>
+        <ul>
+          <li>
+            <Link href="/">home</Link>
+          </li>
+          <li>
+            <Link href="/historic">historic</Link>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+  );
+};
+
+export default Footer;
+
+/* import Link from "next/link";
+import React from "react";
+import "./footer.css";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";
@@ -37,7 +60,7 @@ const Footer: React.FC<{ userInfo?: UserInfo }> = ({ userInfo }) => {
       .then(() => {
         // Sign-out successful.
         console.log("LOGGED OUT");
-        /*  localStorage.clear(); */
+        /*  localStorage.clear(); 
         return router.push("/connect");
       })
       .catch((error) => {
@@ -59,9 +82,9 @@ const Footer: React.FC<{ userInfo?: UserInfo }> = ({ userInfo }) => {
               <li>
                 <Link href="/historic">historic</Link>
               </li>
-              {/*   <li>
+               <li>
                 <button onClick={logOut}>Sign out</button>
-              </li> */}
+              </li> 
             </>
           ) : (
             <>
@@ -80,3 +103,4 @@ const Footer: React.FC<{ userInfo?: UserInfo }> = ({ userInfo }) => {
 };
 
 export default Footer;
+ */

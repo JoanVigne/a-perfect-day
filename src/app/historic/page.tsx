@@ -197,7 +197,7 @@ const Page = () => {
           <BarChart key={task} data={sortedHistoricDays} task={task} />
         ))}
       </main>
-      {userInfo && <Footer userInfo={userInfo} />}
+      <Footer />
     </>
   );
 };

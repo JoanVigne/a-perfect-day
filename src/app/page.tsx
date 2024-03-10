@@ -229,7 +229,7 @@ export default function Home() {
           <Lists userInfo={userInfo} functionSetUserInfo={setUserInfo} />
         )}
       </main>
-      {userInfo && <Footer userInfo={userInfo} />}
+      <Footer />
     </>
   );
 }

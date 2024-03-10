@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./header.css";
+import Link from "next/link";
 interface HeaderProps {
   nickname?: string; // Annoter le type de la propriété nickname
 }
@@ -30,8 +31,10 @@ const Header: React.FC<HeaderProps> = ({ nickname }) => {
   return (
     <header>
       <p>{dateToday && dateToday}</p>
-      {nickname && nickname}
-      <img src="./options.png" alt="options" className="options-logo" />{" "}
+      {nickname ? nickname : ""}
+      <Link href={"/options"}>
+        <img src="./options.png" alt="options" className="options-logo" />
+      </Link>
     </header>
   );
 };
