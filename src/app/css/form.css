@@ -5,7 +5,7 @@ form,
   border-radius: 5px;
 }
 
-form input[type="text"],
+input[type="text"],
 .container-form form input[type="text"],
 .container-form form textarea {
   width: 100%;
@@ -14,6 +14,7 @@ form input[type="text"],
   border-radius: 3px;
   margin-bottom: 10px;
   color: var(--color-white);
+  background-color: var(--color-dark-grey);
 }
 
 form input[type="submit"],

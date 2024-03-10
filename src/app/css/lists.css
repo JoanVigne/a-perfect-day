@@ -42,6 +42,8 @@
 
 .task .title-inputs .count input {
   max-width: 40px;
+  color: var(--color-white);
+  background-color: var(--color-dark-grey);
 }
 
 .task .title-inputs .count button {
