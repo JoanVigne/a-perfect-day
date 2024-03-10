@@ -54,8 +54,7 @@ const removeFromCustom = async (data: any, userId: string) => {
 
     await setDoc(ref, data);
     localStorage.setItem("custom", JSON.stringify(data));
-    console.log("Custom task removed successfully");
-    return "Custom task removed successfully";
+    return "Task removed";
   } catch (error) {
     console.error("Error removing custom task:", error);
     return "Error removing custom task";

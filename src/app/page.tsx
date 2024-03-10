@@ -15,6 +15,7 @@ import Loading from "./loading";
 import { firebaseApp } from "@/firebase/config";
 import Lists from "@/components/Lists";
 import Header from "@/components/Header";
+import TemporaryMessage from "./utils/message";
 
 interface UserData {
   email: string;
@@ -25,25 +26,23 @@ interface UserInfo {
   lists: { [key: string]: object };
   todayList: { [key: string]: object };
 }
+
+interface Task {
+  id: string;
+  name: string;
+  description: string;
+  details: string;
+  count: any;
+  unit: any;
+}
 export default function Home() {
   const { user } = useAuthContext() as { user: UserData };
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const router = useRouter();
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
-  const months = [
-    "janvier",
-    "février",
-    "mars",
-    "avril",
-    "mai",
-    "juin",
-    "juillet",
-    "août",
-    "septembre",
-    "octobre",
-    "novembre",
-    "décembre",
-  ];
+
+  const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
+  const [messagelist, setMessagelist] = useState<string | null>(null);
 
   useEffect(() => {
     async function checkFBInit() {
@@ -73,9 +72,6 @@ export default function Home() {
       whichList();
     }
   }, [user]);
-
-  const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
-  const [messagelist, setMessagelist] = useState<string | null>(null);
 
   async function checkDBForTodayList() {
     const { snapShot } = await checkDB("users", user.uid);
@@ -127,22 +123,15 @@ export default function Home() {
       if (parsedLocalTodayList.date !== undefined) {
         const compareDateDay = parsedLocalTodayList.date.slice(0, 10);
         const newDate = todayDate.slice(0, 10);
-        console.log("dans parsedLocalTodayList.date !== undefined");
-        console.log("la date du todayList : ", compareDateDay);
-        console.log("la date du jour : ", newDate);
         if (compareDateDay !== newDate) {
           // envoi des data dans historic
           await sendToHistoric(parsedLocalTodayList, user.uid);
           // reset les counts a 0 et false
           const resetedData = resetListToFalseAndZero(parsedLocalTodayList);
-          console.log("les data supposé reseted :", resetedData);
           updateStorageAndTodayList(resetedData);
           return resetedData;
         }
         if (compareDateDay === newDate) {
-          console.log(
-            "la c'est bon, on a la bonne date dans le TodayList Local"
-          );
           setTodayList(parsedLocalTodayList);
           return parsedLocalTodayList;
         }
@@ -150,14 +139,6 @@ export default function Home() {
     }
   }
 
-  interface Task {
-    id: string;
-    name: string;
-    description: string;
-    details: string;
-    count: any;
-    unit: any;
-  }
   const handleAddTaskToTodayList = (task: Task) => {
     if (typeof todayList !== "object" || Array.isArray(todayList)) {
       console.error("todayList is not an object.");
@@ -223,12 +204,14 @@ export default function Home() {
           test
         </button> */}
         <div className="container">
+          <h2>Today</h2>
           <Today
             list={todayList}
             handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
-            userid={user?.uid}
+            userInfo={userInfo && userInfo}
+            userId={user.uid}
           />
-          <p className="message-error">{messagelist}</p>
+          <TemporaryMessage message={messagelist} />
         </div>
         <div className="container">
           <h2>Custom tasks</h2>
@@ -242,9 +225,11 @@ export default function Home() {
           <CommonTasks handleAddTaskToTodayList={handleAddTaskToTodayList} />
         </div>
 
-        {userInfo && <Lists user={userInfo} />}
+        {userInfo && (
+          <Lists userInfo={userInfo} functionSetUserInfo={setUserInfo} />
+        )}
       </main>
-      {userInfo && <Footer taskList={todayList} userInfo={userInfo} />}
+      {userInfo && <Footer userInfo={userInfo} />}
     </>
   );
 }

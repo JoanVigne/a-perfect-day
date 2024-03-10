@@ -28,7 +28,8 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
   });
   const [isBooleanSelected, setIsBooleanSelected] = useState<boolean>(true);
   const [customValue, setCustomValue] = useState<string>("");
-
+  // ouvrir et fermer le form :
+  const [showForm, setShowForm] = useState(false);
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const updatedTask: Task = {
@@ -97,92 +98,110 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
     setIsBooleanSelected(true);
     setCustomValue("");
     setMessage("New task created !");
+    setTimeout(() => {
+      setShowForm(!showForm);
+    }, 600);
   };
 
   return (
-    <div className="container-form">
-      <form className="add-custom-task" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={task.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={task.description}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="details">Details:</label>
-          <textarea
-            id="details"
-            name="details"
-            value={task.details}
-            onChange={handleChange}
-          />
-        </div>
-        <label htmlFor="unit">Unit (boolean or string):</label>
-        <div className="option">
-          <input
-            type="radio"
-            id="boolean"
-            name="unit"
-            value="false"
-            checked={isBooleanSelected}
-            onChange={handleOptionChange}
-          />
-          <label htmlFor="boolean">Boolean</label>
-        </div>
-        <div className="option">
-          <input
-            type="radio"
-            id="other"
-            name="unit"
-            value=""
-            checked={!isBooleanSelected}
-            onChange={handleOptionChange}
-          />
-          <label htmlFor="other">Other</label>
-        </div>
-
-        {!isBooleanSelected && (
-          <div>
-            <label htmlFor="unit">Unit of mesure</label>
-            <input
-              type="text"
-              id="custom-value"
-              name="unit"
-              onChange={handleChange}
-              value={isBooleanSelected ? "" : (task.unit as string)}
-              placeholder="min, hours, reps..."
-            />
-            <label htmlFor="count">Count starting at</label>
-            <input
-              type="text"
-              id="count"
-              name="count"
-              value={task.count}
-              onChange={handleChange}
-              placeholder="usually start at 0"
-            />
-          </div>
-        )}
-
-        <p className="message-error">{message}</p>
-        <button className="add" type="submit">
-          Create Task
+    <>
+      <h3>
+        Create a new task :{" "}
+        <button
+          className={`${showForm ? "hide" : "add"}`}
+          onClick={() => setShowForm(!showForm)}
+        >
+          {showForm ? "Hide Form" : "New task"}
         </button>
-      </form>
-    </div>
+      </h3>
+
+      <div className={showForm ? "cont-form active" : "cont-form hidden"}>
+        <div className="container-form">
+          <form className="add-custom-task" onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={task.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="description">Description:</label>
+              <textarea
+                id="description"
+                name="description"
+                value={task.description}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="details">Details:</label>
+              <textarea
+                id="details"
+                name="details"
+                value={task.details}
+                onChange={handleChange}
+              />
+            </div>
+            <label htmlFor="unit">Unit (boolean or string):</label>
+            <div className="option">
+              <input
+                type="radio"
+                id="boolean"
+                name="unit"
+                value="false"
+                checked={isBooleanSelected}
+                onChange={handleOptionChange}
+              />
+              <label htmlFor="boolean">Boolean</label>
+            </div>
+            <div className="option">
+              <input
+                type="radio"
+                id="other"
+                name="unit"
+                value=""
+                checked={!isBooleanSelected}
+                onChange={handleOptionChange}
+              />
+              <label htmlFor="other">Other</label>
+            </div>
+
+            {!isBooleanSelected && (
+              <div>
+                <label htmlFor="unit">Unit of mesure</label>
+                <input
+                  type="text"
+                  id="custom-value"
+                  name="unit"
+                  onChange={handleChange}
+                  value={isBooleanSelected ? "" : (task.unit as string)}
+                  placeholder="min, hours, reps..."
+                />
+                <label htmlFor="count">Count starting at</label>
+                <input
+                  type="text"
+                  id="count"
+                  name="count"
+                  value={task.count}
+                  onChange={handleChange}
+                  placeholder="usually start at 0"
+                />
+              </div>
+            )}
+
+            <p className="message-small">{message}</p>
+            <button className="add" type="submit">
+              Create Task
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
 

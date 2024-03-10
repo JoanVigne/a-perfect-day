@@ -4,6 +4,7 @@ import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import FormCustomTask from "./FormCustomTask";
 import { removeFromCustom } from "@/firebase/db/custom";
 import Load from "./Load";
+import TemporaryMessage from "@/app/utils/message";
 
 interface CustomTasksProps {
   handleAddTaskToTodayList: (task: Task) => void;
@@ -22,9 +23,15 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
   userId,
 }) => {
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
+
   const [messageCustom, setMessageCustom] = useState<string | null>(null);
+
+  const [messageAdded, setMessageAdded] = useState("");
+  const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
+
   const updateCustomTasks = (newCustomTasks: Task[]) => {
     setCustomTasks(newCustomTasks);
+    localStorage.setItem("custom", JSON.stringify(newCustomTasks));
   };
 
   const [loadingTasks, setLoadingTasks] = useState(true);
@@ -45,8 +52,6 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
 
   // ouvrir et fermer la description :
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
-  // ouvrir et fermer le form :
-  const [showForm, setShowForm] = useState(false);
 
   // supprimer une custom :
   const [taskToRemove, setTaskToRemove] = useState<Task | null>(null);
@@ -55,6 +60,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
     setTaskToRemove(task);
     return;
   };
+  const [forceUpdate, setForceUpdate] = useState(false);
   const handleConfirmRemoveTask = async () => {
     if (taskToRemove && taskToRemove.id !== undefined) {
       // Créer une copie de customTasks
@@ -67,12 +73,13 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
           delete updatedTasks[taskKey];
         }
       });
-
+      console.log("updated Task", updatedTasks);
       setTaskToRemove(null);
       // envoi a la db custom
       const mess = await removeFromCustom(updatedTasks, userId);
       setMessageCustom(mess);
       setCustomTasks(updatedTasks);
+      setForceUpdate((prev) => !prev);
     }
   };
 
@@ -90,7 +97,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                   handleAddTaskToTodayList(customTask);
                 }} */
             >
-              <h3>
+              <h4>
                 {customTask.name}
                 <button
                   className="details"
@@ -102,11 +109,19 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                 >
                   ?
                 </button>
-              </h3>
+                {clickedItemIndex === index && (
+                  <TemporaryMessage message={messageAdded} />
+                )}
+              </h4>
 
               <img
                 onClick={() => {
                   handleAddTaskToTodayList(customTask);
+                  setClickedItemIndex((prevIndex) =>
+                    prevIndex === index ? null : index
+                  );
+
+                  setMessageAdded("added!");
                 }}
                 src="./add.png"
                 alt="add"
@@ -121,35 +136,43 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                 className="remove"
                 onClick={() => {
                   handleRemoveTask(customTask);
+                  setClickedItemIndex((prevIndex) =>
+                    prevIndex === index ? null : index
+                  );
                 }}
               >
                 <img src="./red-bin.png" alt="remove" />
               </span>
+              {clickedItemIndex === index && taskToRemove && (
+                <div className="modal-remove">
+                  <div className="modal-content">
+                    <p>
+                      Are you sure you want to delete "{customTask.name}" for
+                      ever ?
+                    </p>
+                    <div className="modal-buttons">
+                      <button
+                        onClick={handleConfirmRemoveTask}
+                        className="confirm"
+                      >
+                        Confirm
+                      </button>
+                      <button
+                        onClick={() => setTaskToRemove(null)}
+                        className="cancel"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </li>
         ))
       )}
-      <p>{messageCustom}</p>
-      {taskToRemove && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>Are you sure you want to delete this task?</p>
-            <div className="modal-buttons">
-              <button onClick={handleConfirmRemoveTask}>Confirm</button>
-              <button onClick={() => setTaskToRemove(null)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
-      <button
-        className={`${showForm ? "" : "add"}`}
-        onClick={() => setShowForm(!showForm)}
-      >
-        {showForm ? "Hide Form" : "New task"}
-      </button>
-      <div className={showForm ? "cont-form active" : "cont-form hidden"}>
-        <FormCustomTask updateCustomTasks={updateCustomTasks} />
-      </div>
+      <TemporaryMessage message={messageCustom} />
+      <FormCustomTask updateCustomTasks={updateCustomTasks} />
     </ul>
   );
 };

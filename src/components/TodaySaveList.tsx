@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { sendToUsers } from "@/firebase/db/users";
-import "./todaySaveList.css";
 
 interface TodaySaveListProps {
   taskList: object;
@@ -75,7 +74,7 @@ const TodaySaveList: React.FC<TodaySaveListProps> = ({ taskList, userid }) => {
   return (
     <>
       <button
-        className={`${showForm ? "" : "add"}`}
+        className={`${showForm ? "hide" : "add"}`}
         onClick={() => {
           setShowForm(!showForm);
           setMessage("");

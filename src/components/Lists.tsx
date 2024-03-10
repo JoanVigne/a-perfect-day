@@ -1,38 +1,36 @@
 import React, { useEffect, useState } from "react";
+import FavoriteLists from "./FavoriteLists";
+import TemporaryMessage from "@/app/utils/message";
+import { sendToUsers } from "@/firebase/db/users";
+import Load from "./Load";
 
-interface User {
+interface UserInfo {
   nickname: string;
   lists: { [key: string]: object };
+  todayList: { [key: string]: object };
 }
 
 interface Props {
-  user: User;
+  userInfo: UserInfo;
+  functionSetUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
 }
-const Lists: React.FC<Props> = ({ user }) => {
+const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
   const [custom, setCustom] = useState();
   const [common, setCommon] = useState();
 
   const [showForm, setShowForm] = useState(false);
   const [newFav, setNewFav] = useState<{ [key: string]: any }>({});
 
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
+    // get les listes de tasks
     const localCustom = localStorage.getItem("custom") as string;
     const localCommon = localStorage.getItem("common") as string;
-
     setCustom(JSON.parse(localCustom));
     setCommon(JSON.parse(localCommon));
-  }, []);
-
-  function listDetail(name: string) {
-    if (user) {
-      console.log("list : ", user.lists[name]);
-      Object.values(user.lists[name]).forEach((element: any) => {
-        console.log("element name: ", element.name);
-      });
-    }
-
-    // envoyer avec la date du jour !
-  }
+    // la liste
+  }, [userInfo]);
 
   function createANewFavoriteList(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,81 +39,77 @@ const Lists: React.FC<Props> = ({ user }) => {
     };
     const name: string = target.name.value;
 
-    console.log("nme : ", name);
-    console.log("newFav", newFav);
-    // envoyer dans local et db
-  }
-  function removeList(listname: string) {
-    // pour remove list de DB et local
-    console.log(listname);
+    if (name.length === 0) {
+      setMessage("Please name this list");
+      return "name.length === 0";
+    }
+    if (userInfo.lists.hasOwnProperty(name)) {
+      setMessage("This name is already taken");
+      // Affichez un message d'erreur ou effectuez une action appropriée
+      return "This name is already taken";
+    }
+    const updatedUserInfo = {
+      ...userInfo,
+      lists: {
+        ...userInfo.lists,
+        [name]: newFav,
+      },
+    };
+    functionSetUserInfo(updatedUserInfo);
+    localStorage.setItem("users", JSON.stringify(updatedUserInfo));
+    // quand envoyer dans db ???
+    // to db : NEED USER UID
+    /*         let dataSent = await sendToUsers(updatedUserInfo, user.uid);
+        if (!dataSent) {
+          setMessageDelete("fail to delete");
+          return "fail to delete";
+        } */
+    setMessage("New favorite list created");
+    return "New favorite list created";
   }
 
   return (
     <div className="container">
-      <h2>Favorite Lists</h2>
-      <div className="container smaller-container">
-        <h3>Excisting favorites : </h3>
-        {user &&
-          Object.keys(user.lists).map((listName: string, index: number) => {
-            return (
-              <React.Fragment key={index}>
-                <li>
-                  {listName}
-                  <button
-                    className="add"
-                    onClick={() => {
-                      listDetail(listName);
-                    }}
-                  >
-                    Use
-                  </button>
-                  <span
-                    className="remove"
-                    onClick={() => {
-                      removeList(listName);
-                    }}
-                  >
-                    <img src="./red-bin.png" alt="remove" />
-                  </span>
-                </li>
-              </React.Fragment>
-            );
-          })}
-      </div>
+      <FavoriteLists
+        useOnOff={false}
+        deleteOnOff={true}
+        userInfo={userInfo}
+        functionSetUserInfo={functionSetUserInfo}
+      />
       <div className="container-new-fav-list">
-        <button
-          className={`${showForm ? "" : "add"}`}
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? "Hide new fav" : "New favorite"}
-        </button>
+        <h3>
+          New favorite list :
+          <button
+            className={`${showForm ? "hide" : "add"}`}
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? "Hide new fav" : "New favorite"}
+          </button>
+        </h3>
         <div
           className={
             showForm ? "container-form active" : "container-form hidden"
           }
         >
-          <div className="new-fav-list container">
-            <h3>New favorite list :</h3>
+          <div className="new-fav-list">
             <ul>
               {newFav ? (
                 Object.values(newFav).map((ele: any, index: number) => {
                   return (
                     <li key={index}>
-                      {ele.name}{" "}
-                      <button
-                        className=""
+                      <img
+                        className="minus-button"
+                        src="./minus-big.png"
+                        alt="remove"
                         onClick={() => {
                           setNewFav((prevState) => {
                             const newState = { ...prevState };
                             delete newState[ele.id];
-                            console.log(newState);
                             return newState;
                           });
                         }}
-                      >
-                        {" "}
-                        -{" "}
-                      </button>
+                      />
+                      {ele.name}{" "}
                     </li>
                   );
                 })
@@ -130,6 +124,8 @@ const Lists: React.FC<Props> = ({ user }) => {
               <p>Add some tasks from the lists below</p>
             ) : (
               <form action="" onSubmit={createANewFavoriteList}>
+                <TemporaryMessage message={message} />
+
                 <input
                   type="text"
                   name="name"
@@ -150,18 +146,18 @@ const Lists: React.FC<Props> = ({ user }) => {
                   Object.values(custom).map((ele: any, index: number) => {
                     return (
                       <li key={index}>
-                        {ele.name}
-                        <button
-                          className="add"
+                        <img
+                          src="./add.png"
+                          className="add-button"
                           onClick={() => {
                             setNewFav((prevState) => ({
                               ...prevState,
                               [ele.id]: ele,
                             }));
                           }}
-                        >
-                          add
-                        </button>
+                          alt="add"
+                        ></img>
+                        {ele.name}
                       </li>
                     );
                   })}
@@ -174,18 +170,18 @@ const Lists: React.FC<Props> = ({ user }) => {
                   Object.values(common).map((ele: any, index: number) => {
                     return (
                       <li key={index}>
-                        {ele.name}
-                        <button
-                          className="add"
+                        <img
+                          src="./add.png"
+                          className="add-button"
                           onClick={() => {
                             setNewFav((prevState) => ({
                               ...prevState,
                               [ele.id]: ele,
                             }));
                           }}
-                        >
-                          add
-                        </button>
+                          alt="add"
+                        ></img>
+                        {ele.name}
                       </li>
                     );
                   })}
