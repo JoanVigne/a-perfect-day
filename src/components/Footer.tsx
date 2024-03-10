@@ -59,9 +59,9 @@ const Footer: React.FC<{ userInfo?: UserInfo }> = ({ userInfo }) => {
               <li>
                 <Link href="/historic">historic</Link>
               </li>
-              <li>
+              {/*   <li>
                 <button onClick={logOut}>Sign out</button>
-              </li>
+              </li> */}
             </>
           ) : (
             <>

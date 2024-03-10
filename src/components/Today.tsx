@@ -107,7 +107,14 @@ const Today: React.FC<TodayProps> = ({
               return null;
             }
             return (
-              <li key={item.id} className="task">
+              <li
+                key={item.id}
+                className={
+                  item.unit === false || item.count === "0"
+                    ? "task"
+                    : "task task-done"
+                }
+              >
                 <div className="title-inputs">
                   <h4>
                     {item.name}
@@ -133,11 +140,7 @@ const Today: React.FC<TodayProps> = ({
                           handleTaskCompletionToggle(item.id);
                           setClickedItemId(item.id);
                         }}
-                        className={
-                          item.unit === false
-                            ? "task-not-done save"
-                            : "task-done undo"
-                        }
+                        className={item.unit === false ? "save" : "undo"}
                       >
                         {item.unit === false ? "Done?" : "undo"}
                       </button>

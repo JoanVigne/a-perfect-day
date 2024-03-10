@@ -1,11 +1,17 @@
 .task {
+  position: relative;
   border: 1px solid #ccc;
   background-color: var(--color-grey);
   border-radius: 5px;
   padding: 5px;
   margin: 5px;
+  box-shadow: inset 0 0 0 0 var(--color-dark-green);
+  transition: box-shadow 1s ease-in;
 }
 
+.task-done {
+  box-shadow: inset 400px 0 0 0 var(--color-dark-green);
+}
 .details {
   font-size: 10px;
   margin-left: 5px;
@@ -51,6 +57,7 @@
   width: 37px;
   height: 25px;
   font-size: 10px;
+  transition: background-color 0.8s ease-out;
 }
 
 .task .title-inputs .description-button {
