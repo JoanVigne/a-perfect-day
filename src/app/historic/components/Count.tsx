@@ -24,7 +24,25 @@ const Count = ({ data, taskName }: { data: any; taskName: string }) => {
     setCount(times);
     return times;
   }
-  return <span>{count}</span>;
+  const [imgOrText, setImgOrText] = useState(false);
+  return (
+    <h4
+      className="img-explication"
+      onClick={() => {
+        setImgOrText(!imgOrText);
+      }}
+    >
+      {" "}
+      {imgOrText ? (
+        "Total: "
+      ) : (
+        <>
+          <img className="icon" src="./infinit.png" alt="How many times" />
+        </>
+      )}
+      <span className="number">{count}x</span>
+    </h4>
+  );
 };
 
 export default Count;

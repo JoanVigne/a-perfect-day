@@ -34,8 +34,26 @@ const Streak = ({ data, taskName }: { data: any; taskName: string }) => {
     setStreak(highestScore);
     return highestScore;
   }
+  const [imgOrText, setImgOrText] = useState(false);
 
-  return <span>{streak}</span>;
+  return (
+    <h4
+      className="img-explication"
+      onClick={() => {
+        setImgOrText(!imgOrText);
+      }}
+    >
+      {" "}
+      {imgOrText ? (
+        "Streak: "
+      ) : (
+        <>
+          <img className="icon" src="./fire.png" alt="longest streak" />
+        </>
+      )}
+      <span className="number">{streak}x</span>
+    </h4>
+  );
 };
 
 export default Streak;

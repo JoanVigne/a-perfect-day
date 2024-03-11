@@ -13,6 +13,9 @@ import LineChart from "./components/LineChart";
 import { useRouter } from "next/navigation";
 import Streak from "./components/Streak";
 import Count from "./components/Count";
+import LastTime from "./components/LastTime";
+import HighestScore from "./components/HighestScore";
+import Header from "@/components/Header";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -106,31 +109,13 @@ const Page = () => {
 
   // Compter les occurrences des tâches
   const taskCounts = countTasks(dataHistoric as HistoricData);
-
   // Trier les tâches par nombre d'occurrences
   const sortedTasks = Object.keys(taskCounts).sort(
     (a, b) => taskCounts[b] - taskCounts[a]
   );
-
   // Récupérer uniquement les trois premières tâches
   const topThreeTasks = sortedTasks.slice(0, 3);
-
-  // trier les non-booleens
-  function filterBooleanTasks(tasks: string[], data: HistoricData): string[] {
-    const booleanTasks: string[] = [];
-    for (const date in data) {
-      const day = data[date];
-      for (const taskId in day) {
-        const task = day[taskId];
-        if (typeof task.unit === "boolean") {
-          booleanTasks.push(task.name);
-        }
-      }
-    }
-    // Retirer les doublons et les tâches booléennes de la liste
-    console.log(tasks.filter((task) => !booleanTasks.includes(task)));
-    return tasks.filter((task) => !booleanTasks.includes(task));
-  }
+  // non booleans
   function findNonBooleanTasks(data: HistoricData): string[] {
     const nonBooleanTasks: string[] = [];
     for (const date in data) {
@@ -150,9 +135,8 @@ const Page = () => {
     );
     return Array.from(new Set(nonBooleanTasks));
   }
-
   const nonBooleanTasks = findNonBooleanTasks(dataHistoric as HistoricData);
-  // trier les booleens
+  //  booleans
   function findBooleanTasks(data: HistoricData): string[] {
     const booleanTasks: string[] = [];
     for (const date in data) {
@@ -168,99 +152,47 @@ const Page = () => {
     return Array.from(new Set(booleanTasks));
   }
   const booleanTasks = findBooleanTasks(dataHistoric as HistoricData);
-  function findLastTimePerformed(taskName: string) {
-    let lastTimePerformed: string | null = null;
 
-    // Parcourir les jours historiques, en partant du plus récent
-    for (let i = sortedHistoricDays.length - 1; i >= 0; i--) {
-      const historicDay = sortedHistoricDays[i];
-      // Vérifier si la tâche est présente dans ce jour historique
-      if (historicDay.hasOwnProperty(taskName)) {
-        lastTimePerformed = historicDay.date;
-        break; // Sortir de la boucle une fois que la dernière date est trouvée
-      }
-    }
-
-    return lastTimePerformed;
-  }
-
-  // Utiliser la fonction pour chaque tâche booléenne
-  /*   booleanTasks.forEach((task) => {
-    const lastTime = findLastTimePerformed(task);
-    console.log(`La dernière fois que "${task}" a été effectuée : ${lastTime}`);
-  }); */
-  const [imgOrText, setImgOrText] = useState(false);
   return (
     <>
       <main>
+        <Header nickname={userInfo?.nickname} />
         <div className="container">
+          <h2>Countable</h2>
           <div className="task-stat-container">
             {nonBooleanTasks &&
               nonBooleanTasks.map((task) => {
                 return (
                   <span key={task} className="task-stat-card">
                     <h3>{task}</h3>
-                    <h4
-                      className="img-explication"
-                      onClick={() => {
-                        setImgOrText(!imgOrText);
-                      }}
-                    >
-                      {imgOrText ? (
-                        "Done: "
-                      ) : (
-                        <>
-                          <img
-                            className="fire"
-                            src="./infinit.png"
-                            alt="fire"
-                          />
-                        </>
-                      )}
-                      <Count data={sortedHistoricDays} taskName={task} /> x
-                    </h4>
 
-                    <h4
-                      className="img-explication"
-                      onClick={() => {
-                        setImgOrText(!imgOrText);
-                      }}
-                    >
-                      {imgOrText ? (
-                        "Streak: "
-                      ) : (
-                        <>
-                          <img className="fire" src="./fire.png" alt="streak" />
-                        </>
-                      )}
-                      <Streak data={sortedHistoricDays} taskName={task} />x
-                    </h4>
-                    <h4>last time: </h4>
+                    <Count data={sortedHistoricDays} taskName={task} />
 
-                    <h4>Highest score: </h4>
+                    <Streak data={sortedHistoricDays} taskName={task} />
+
+                    <LastTime data={sortedHistoricDays} taskName={task} />
+
+                    <HighestScore data={sortedHistoricDays} taskName={task} />
                   </span>
                 );
               })}
           </div>
         </div>
         <div className="container">
-          <h2>The task done or not :</h2>
-          {booleanTasks &&
-            booleanTasks.map((task) => {
-              return (
-                <span key={task} className="task-stat-card">
-                  <h3>{task}</h3>
-                  <h4>
-                    How many times :{" "}
-                    <Count data={sortedHistoricDays} taskName={task} />{" "}
-                  </h4>
-                  <h4>last time :</h4>
-                  <h4>
-                    Streak: <Streak data={sortedHistoricDays} taskName={task} />{" "}
-                  </h4>
-                </span>
-              );
-            })}
+          <h2>Not countable:</h2>
+          <div className="task-stat-container">
+            {booleanTasks &&
+              booleanTasks.map((task) => {
+                return (
+                  <span key={task} className="task-stat-card">
+                    <h3>{task}</h3>
+                    <Count data={sortedHistoricDays} taskName={task} />
+                    <Streak data={sortedHistoricDays} taskName={task} />
+                    <LastTime data={sortedHistoricDays} taskName={task} />
+                  </span>
+                );
+              })}
+          </div>
         </div>
 
         <h2>TEST</h2>

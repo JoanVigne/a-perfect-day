@@ -5,24 +5,53 @@
 }
 
 .task-stat-card {
-  width: 45%;
   background-color: var(--color-grey);
   margin: 5px;
   padding: 5px;
   border-radius: 5px;
   border: 1px solid var(--color-white);
+  max-width: 30%;
+  min-width: 140px;
 }
-
 .task-stat-card h3 {
-  color: var(--color-green);
+  font-size: 20px;
 }
-.task-stat-card h4 {
-  text-align: center;
-  height: 30px;
-}
-
 .task-stat-card .img-explication {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  height: 40px;
+}
+
+.task-stat-card .img-explication img {
+  margin-right: 5px;
+}
+
+.number {
+  font-size: 23px;
+  color: var(--color-green);
+}
+
+.task-stat-card .img-explication-score {
+  border-top: 1px var(--color-white) solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: flex-end;
+  height: 125px;
+}
+.task-stat-card .img-explication-score .icon-bigger {
+  width: 45px;
+  height: 45px;
+}
+.score {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.date {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
