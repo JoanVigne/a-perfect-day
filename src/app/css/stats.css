@@ -1,0 +1,12 @@
+.task-stat-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.task-stat-card {
+  width: 45%;
+  background-color: var(--color-grey);
+  margin: 5px;
+  padding: 5px;
+}

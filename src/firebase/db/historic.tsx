@@ -15,7 +15,6 @@ interface DataObject {
 }
 
 const sendToHistoric = async (data: DataObject, userId: string) => {
-  console.log("data : ", data);
   const { ref, snapShot } = await checkDB("historic", userId);
   if (!snapShot.exists()) {
     await setDoc(ref, {});

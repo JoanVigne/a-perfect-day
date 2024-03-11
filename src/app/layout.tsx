@@ -6,6 +6,7 @@ import "./css/form.css";
 import "./css/animation.css";
 import "./css/modal.css";
 import "./css/charts.css";
+import "./css/stats.css";
 
 import { AuthContextProvider } from "@/context/AuthContext";
 

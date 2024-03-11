@@ -11,6 +11,8 @@ import Footer from "@/components/Footer";
 import { getItemFromLocalStorage } from "../utils/localstorage";
 import LineChart from "./components/LineChart";
 import { useRouter } from "next/navigation";
+import Streak from "./components/Streak";
+import Count from "./components/Count";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -129,7 +131,27 @@ const Page = () => {
     console.log(tasks.filter((task) => !booleanTasks.includes(task)));
     return tasks.filter((task) => !booleanTasks.includes(task));
   }
+  function findNonBooleanTasks(data: HistoricData): string[] {
+    const nonBooleanTasks: string[] = [];
+    for (const date in data) {
+      const day = data[date];
+      for (const taskId in day) {
+        const task = day[taskId];
+        if (typeof task.unit !== "boolean") {
+          if (task.name !== undefined && task.name !== null) {
+            nonBooleanTasks.push(task.name);
+          }
+        }
+      }
+    }
+    console.log(
+      "Les tâches non booléennes :",
+      Array.from(new Set(nonBooleanTasks))
+    );
+    return Array.from(new Set(nonBooleanTasks));
+  }
 
+  const nonBooleanTasks = findNonBooleanTasks(dataHistoric as HistoricData);
   // trier les booleens
   function findBooleanTasks(data: HistoricData): string[] {
     const booleanTasks: string[] = [];
@@ -163,25 +185,53 @@ const Page = () => {
   }
 
   // Utiliser la fonction pour chaque tâche booléenne
-  booleanTasks.forEach((task) => {
+  /*   booleanTasks.forEach((task) => {
     const lastTime = findLastTimePerformed(task);
     console.log(`La dernière fois que "${task}" a été effectuée : ${lastTime}`);
-  });
+  }); */
   return (
     <>
-      <button onClick={() => findBooleanTasks(dataHistoric as HistoricData)}>
-        TEST
-      </button>
       <main>
+        <div className="container">
+          <div className="task-stat-container">
+            {nonBooleanTasks &&
+              nonBooleanTasks.map((task) => {
+                /*     if (!task) {
+                return;
+              }
+ */
+                return (
+                  <span key={task} className="task-stat-card">
+                    <h3>{task}</h3>
+                    <h4>
+                      How many times:{" "}
+                      <Count data={sortedHistoricDays} taskName={task} />
+                    </h4>
+                    <h4>last time: </h4>
+                    <h4>
+                      Highest streak:{" "}
+                      <Streak data={sortedHistoricDays} taskName={task} />
+                    </h4>
+                  </span>
+                );
+              })}
+          </div>
+        </div>
         <div className="container">
           <h2>The task done or not :</h2>
           {booleanTasks &&
             booleanTasks.map((task) => {
               return (
-                <span key={task} className="smaller-container">
+                <span key={task} className="task-stat-card">
                   <h3>{task}</h3>
+                  <h4>
+                    How many times :{" "}
+                    <Count data={sortedHistoricDays} taskName={task} />{" "}
+                  </h4>
                   <h4>last time :</h4>
-                  <h4>Streak: </h4>
+                  <h4>
+                    Streak: <Streak data={sortedHistoricDays} taskName={task} />{" "}
+                  </h4>
                 </span>
               );
             })}

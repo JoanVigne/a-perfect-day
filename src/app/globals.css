@@ -58,6 +58,8 @@ h3 {
 
 .smaller-container {
   background-color: var(--color-grey);
+  margin: 5px;
+  padding: 5px;
 }
 
 .add,
