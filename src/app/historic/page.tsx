@@ -189,6 +189,7 @@ const Page = () => {
     const lastTime = findLastTimePerformed(task);
     console.log(`La dernière fois que "${task}" a été effectuée : ${lastTime}`);
   }); */
+  const [imgOrText, setImgOrText] = useState(false);
   return (
     <>
       <main>
@@ -196,22 +197,47 @@ const Page = () => {
           <div className="task-stat-container">
             {nonBooleanTasks &&
               nonBooleanTasks.map((task) => {
-                /*     if (!task) {
-                return;
-              }
- */
                 return (
                   <span key={task} className="task-stat-card">
                     <h3>{task}</h3>
-                    <h4>
-                      How many times:{" "}
-                      <Count data={sortedHistoricDays} taskName={task} />
+                    <h4
+                      className="img-explication"
+                      onClick={() => {
+                        setImgOrText(!imgOrText);
+                      }}
+                    >
+                      {imgOrText ? (
+                        "Done: "
+                      ) : (
+                        <>
+                          <img
+                            className="fire"
+                            src="./infinit.png"
+                            alt="fire"
+                          />
+                        </>
+                      )}
+                      <Count data={sortedHistoricDays} taskName={task} /> x
+                    </h4>
+
+                    <h4
+                      className="img-explication"
+                      onClick={() => {
+                        setImgOrText(!imgOrText);
+                      }}
+                    >
+                      {imgOrText ? (
+                        "Streak: "
+                      ) : (
+                        <>
+                          <img className="fire" src="./fire.png" alt="streak" />
+                        </>
+                      )}
+                      <Streak data={sortedHistoricDays} taskName={task} />x
                     </h4>
                     <h4>last time: </h4>
-                    <h4>
-                      Highest streak:{" "}
-                      <Streak data={sortedHistoricDays} taskName={task} />
-                    </h4>
+
+                    <h4>Highest score: </h4>
                   </span>
                 );
               })}

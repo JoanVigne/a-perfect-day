@@ -9,4 +9,20 @@
   background-color: var(--color-grey);
   margin: 5px;
   padding: 5px;
+  border-radius: 5px;
+  border: 1px solid var(--color-white);
+}
+
+.task-stat-card h3 {
+  color: var(--color-green);
+}
+.task-stat-card h4 {
+  text-align: center;
+  height: 30px;
+}
+
+.task-stat-card .img-explication {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
