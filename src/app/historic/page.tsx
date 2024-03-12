@@ -16,6 +16,7 @@ import Count from "./components/Count";
 import LastTime from "./components/LastTime";
 import HighestScore from "./components/HighestScore";
 import Header from "@/components/Header";
+import { findTasksByType } from "./utils/utils";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -53,7 +54,6 @@ const Page = () => {
 
   useEffect(
     () => {
-      console.log(" USER : ", user);
       if (user == null || user?.uid == null || user?.uid == undefined) {
         return router.push("/connect");
       } else {
@@ -79,80 +79,51 @@ const Page = () => {
       console.error("Error fetching historic data:", error);
     }
   }
-
-  const sortedHistoricDays = dataHistoric
-    ? Object.entries(dataHistoric)
-        .filter(([_, historicDay]) => historicDay.date)
-        .map(([date, historicDay]) => ({ date, historicDay }))
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .map(({ historicDay }) => historicDay)
-    : [];
-
-  // Fonction pour compter les occurrences des tâches
-  function countTasks(data: HistoricData) {
-    const taskCounts: { [key: string]: number } = {};
-    for (const date in data) {
-      const day = data[date];
-      for (const taskId in day) {
-        const task = day[taskId];
-        if (task.name && task.name !== "date") {
-          // Vérifier que c'est une tâche valide
-          if (!taskCounts[task.name]) {
-            taskCounts[task.name] = 0;
-          }
-          taskCounts[task.name]++;
-        }
-      }
-    }
-    return taskCounts;
-  }
-
-  // Compter les occurrences des tâches
-  const taskCounts = countTasks(dataHistoric as HistoricData);
-  // Trier les tâches par nombre d'occurrences
-  const sortedTasks = Object.keys(taskCounts).sort(
-    (a, b) => taskCounts[b] - taskCounts[a]
+  const sortedByDate = getSortedHistoricDays(dataHistoric);
+  /*   const sortedByHowOften = sortByHowOften(dataHistoric);
+  // Récupérer uniquement les trois premières tâches DE TOUT L'HISTORIC
+  const topThreeTasks = sortedByHowOften.slice(0, 3); */
+  //
+  const nonBooleanTasks = findTasksByType(
+    dataHistoric as HistoricData,
+    "nonBoolean"
   );
-  // Récupérer uniquement les trois premières tâches
-  const topThreeTasks = sortedTasks.slice(0, 3);
-  // non booleans
-  function findNonBooleanTasks(data: HistoricData): string[] {
-    const nonBooleanTasks: string[] = [];
-    for (const date in data) {
-      const day = data[date];
-      for (const taskId in day) {
-        const task = day[taskId];
-        if (typeof task.unit !== "boolean") {
-          if (task.name !== undefined && task.name !== null) {
-            nonBooleanTasks.push(task.name);
-          }
-        }
-      }
-    }
-    console.log(
-      "Les tâches non booléennes :",
-      Array.from(new Set(nonBooleanTasks))
-    );
-    return Array.from(new Set(nonBooleanTasks));
-  }
-  const nonBooleanTasks = findNonBooleanTasks(dataHistoric as HistoricData);
-  //  booleans
-  function findBooleanTasks(data: HistoricData): string[] {
-    const booleanTasks: string[] = [];
-    for (const date in data) {
-      const day = data[date];
-      for (const taskId in day) {
-        const task = day[taskId];
-        if (typeof task.unit === "boolean") {
-          booleanTasks.push(task.name);
-        }
-      }
-    }
-    console.log("les taches booléennes :", Array.from(new Set(booleanTasks)));
-    return Array.from(new Set(booleanTasks));
-  }
-  const booleanTasks = findBooleanTasks(dataHistoric as HistoricData);
+  const sortedNonBooleanTasks = sortByHowOften(
+    nonBooleanTasks,
+    dataHistoric as HistoricData
+  );
 
+  const booleanTasks = findTasksByType(dataHistoric as HistoricData, "boolean");
+  const sortedBooleanTasks = sortByHowOften(
+    booleanTasks,
+    dataHistoric as HistoricData
+  );
+  // top 3 :
+  function getTopThreeTasks(tasks: string[]): string[] {
+    return tasks.slice(0, 3);
+  }
+  const topThreeNonBooleanTasks = getTopThreeTasks(sortedNonBooleanTasks);
+  const topThreeBooleanTasks = getTopThreeTasks(sortedBooleanTasks);
+
+  function getRemainingNonBooleanTasks(
+    nonBooleanTasks: string[],
+    topThreeTasks: string[]
+  ): string[] {
+    const remainingNonBooleanTasks: string[] = [];
+    for (const task of nonBooleanTasks) {
+      if (!topThreeTasks.includes(task)) {
+        remainingNonBooleanTasks.push(task);
+      }
+    }
+    return remainingNonBooleanTasks;
+  }
+
+  const remainingNonBooleanTasks = getRemainingNonBooleanTasks(
+    nonBooleanTasks,
+    topThreeNonBooleanTasks
+  );
+
+  const [showAllNonBoolean, setShowAllNB] = useState(false);
   return (
     <>
       <main>
@@ -160,19 +131,40 @@ const Page = () => {
         <div className="container">
           <h2>Countable</h2>
           <div className="task-stat-container">
-            {nonBooleanTasks &&
-              nonBooleanTasks.map((task) => {
+            {topThreeNonBooleanTasks &&
+              topThreeNonBooleanTasks.map((task) => {
                 return (
                   <span key={task} className="task-stat-card">
                     <h3>{task}</h3>
 
-                    <Count data={sortedHistoricDays} taskName={task} />
+                    <Count data={sortedByDate} taskName={task} />
 
-                    <Streak data={sortedHistoricDays} taskName={task} />
+                    <Streak data={sortedByDate} taskName={task} />
 
-                    <LastTime data={sortedHistoricDays} taskName={task} />
+                    <LastTime data={sortedByDate} taskName={task} />
 
-                    <HighestScore data={sortedHistoricDays} taskName={task} />
+                    <HighestScore data={sortedByDate} taskName={task} />
+                  </span>
+                );
+              })}
+          </div>
+          <button onClick={() => setShowAllNB(!showAllNonBoolean)}>
+            {showAllNonBoolean ? "v" : "^"}
+          </button>
+          <div className="task-stat-container">
+            {showAllNonBoolean &&
+              remainingNonBooleanTasks.map((task) => {
+                return (
+                  <span key={task} className="task-stat-card">
+                    <h3>{task}</h3>
+
+                    <Count data={sortedByDate} taskName={task} />
+
+                    <Streak data={sortedByDate} taskName={task} />
+
+                    <LastTime data={sortedByDate} taskName={task} />
+
+                    <HighestScore data={sortedByDate} taskName={task} />
                   </span>
                 );
               })}
@@ -186,24 +178,24 @@ const Page = () => {
                 return (
                   <span key={task} className="task-stat-card">
                     <h3>{task}</h3>
-                    <Count data={sortedHistoricDays} taskName={task} />
-                    <Streak data={sortedHistoricDays} taskName={task} />
-                    <LastTime data={sortedHistoricDays} taskName={task} />
+                    <Count data={sortedByDate} taskName={task} />
+                    <Streak data={sortedByDate} taskName={task} />
+                    <LastTime data={sortedByDate} taskName={task} />
                   </span>
                 );
               })}
           </div>
         </div>
 
-        <h2>TEST</h2>
+        {/*  <h2>TEST</h2>
         {topThreeTasks.map((task) => (
-          <LineChart key={task} data={sortedHistoricDays} task={task} />
+          <LineChart key={task} data={sortedByDate} task={task} />
         ))}
 
         <h2>Your 3 most frequent tasks</h2>
         {topThreeTasks.map((task) => (
-          <BarChart key={task} data={sortedHistoricDays} task={task} />
-        ))}
+          <BarChart key={task} data={sortedByDate} task={task} />
+        ))} */}
       </main>
       <Footer />
     </>
@@ -211,3 +203,32 @@ const Page = () => {
 };
 
 export default Page;
+
+function getSortedHistoricDays(dataHistoric: HistoricData | null) {
+  if (!dataHistoric) return [];
+  return Object.entries(dataHistoric)
+    .filter(([_, historicDay]) => historicDay.date)
+    .map(([date, historicDay]) => ({ date, historicDay }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .map(({ historicDay }) => historicDay);
+}
+function sortByHowOften(tasks: string[], data: HistoricData): string[] {
+  const taskCounts: { [key: string]: number } = {};
+
+  // Compter le nombre d'occurrences de chaque tâche
+  for (const date in data) {
+    const day = data[date];
+    for (const taskId in day) {
+      const task = day[taskId];
+      if (task.name && task.name !== "date" && tasks.includes(task.name)) {
+        if (!taskCounts[task.name]) {
+          taskCounts[task.name] = 0;
+        }
+        taskCounts[task.name]++;
+      }
+    }
+  }
+
+  // Trier les tâches par nombre d'occurrences
+  return tasks.sort((a, b) => (taskCounts[b] || 0) - (taskCounts[a] || 0));
+}

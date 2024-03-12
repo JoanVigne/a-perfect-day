@@ -7,7 +7,7 @@ const Count = ({ data, taskName }: { data: any; taskName: string }) => {
     if (data) {
       countHowManyTimes(data, taskName);
     }
-  });
+  }, [data]);
   function countHowManyTimes(data: any, taskName: string) {
     const idOfTask = findTask(data, taskName);
     if (!idOfTask) {
@@ -20,7 +20,6 @@ const Count = ({ data, taskName }: { data: any; taskName: string }) => {
         times++;
       }
     });
-    console.log("count : ", times);
     setCount(times);
     return times;
   }

@@ -10,11 +10,13 @@
   padding: 5px;
   border-radius: 5px;
   border: 1px solid var(--color-white);
-  max-width: 30%;
-  min-width: 140px;
+  width: 30%;
 }
 .task-stat-card h3 {
   font-size: 20px;
+  height: 50px;
+  word-wrap: break-word;
+  overflow: scroll;
 }
 .task-stat-card .img-explication {
   display: flex;

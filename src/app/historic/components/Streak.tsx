@@ -30,7 +30,6 @@ const Streak = ({ data, taskName }: { data: any; taskName: string }) => {
     if (consecutiveDays > highestScore) {
       highestScore = consecutiveDays;
     }
-    console.log("highest score : ", highestScore);
     setStreak(highestScore);
     return highestScore;
   }

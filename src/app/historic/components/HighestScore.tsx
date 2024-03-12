@@ -27,7 +27,7 @@ const HighestScore = ({ data, taskName }: { data: any; taskName: string }) => {
         if (thisDayCount > highestCount) {
           highestCount = thisDayCount;
           unitValue = day[idOfTask].unit;
-          highestScoreDate = day.date.split("T")[0].substring(2);
+          highestScoreDate = day.date.split("T")[0].substring(5);
         }
       }
     });

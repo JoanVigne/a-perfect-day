@@ -8,8 +8,6 @@ const LastTime = ({ data, taskName }: { data: any; taskName: string }) => {
     findLastTimePerformed(taskName);
   }, [data]);
   function findLastTimePerformed(taskName: string) {
-    console.log("data : ", data);
-    console.log(" task : ", taskName);
     const idTask = findTask(data, taskName);
     if (!idTask) {
       console.log(idTask);
@@ -27,7 +25,7 @@ const LastTime = ({ data, taskName }: { data: any; taskName: string }) => {
         if (isYesterday(dateSplit)) {
           lastTimePerformed = "yesterday";
         } else {
-          lastTimePerformed = dateSplit.substring(2);
+          lastTimePerformed = dateSplit.substring(5);
         }
         break; // Sortir de la boucle une fois que la dernière date est trouvée
       }
