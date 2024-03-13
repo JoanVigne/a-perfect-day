@@ -84,13 +84,6 @@ const Today: React.FC<TodayProps> = ({
 
   return (
     <div className="today-list">
-      {/* <button
-        onClick={() => {
-          sendListToUserTodayList();
-        }}
-      >
-        Test
-      </button> */}
       <ul>
         {taskList &&
           Object.values(taskList).map((item, index) => {

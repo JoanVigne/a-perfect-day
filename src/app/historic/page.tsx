@@ -17,6 +17,7 @@ import LastTime from "./components/LastTime";
 import HighestScore from "./components/HighestScore";
 import Header from "@/components/Header";
 import { findTasksByType } from "./utils/utils";
+import PreviousDay from "./components/PreviousDay";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -196,6 +197,11 @@ const Page = () => {
         {topThreeTasks.map((task) => (
           <BarChart key={task} data={sortedByDate} task={task} />
         ))} */}
+        <div className="container">
+          <h2>Change a data in my historic</h2>
+          <p>par task ? par date ? </p>
+          {dataHistoric && <PreviousDay data={dataHistoric} date="rien" />}
+        </div>
       </main>
       <Footer />
     </>

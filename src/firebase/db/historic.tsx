@@ -60,4 +60,43 @@ const sendToHistoric = async (data: DataObject, userId: string) => {
   console.log("historic est mis a jour");
 };
 
-export { sendToHistoric };
+const updateHistoric = async (updatedData: DataObject, userId: string) => {
+  const { ref, snapShot } = await checkDB("historic", userId);
+  if (!snapShot.exists()) {
+    console.log("L'historique n'existe pas pour cet utilisateur.");
+    return;
+  }
+
+  const historicData = snapShot.data();
+  if (!historicData) {
+    console.log("Erreur lors de la récupération des données historiques.");
+    return;
+  }
+
+  const historicDataDate = historicData.date?.substring(0, 10);
+  const updatedDataDate = updatedData.date.substring(0, 10);
+
+  if (historicDataDate !== updatedDataDate) {
+    console.log("La date spécifiée n'existe pas dans l'historique.");
+    return;
+  }
+
+  const updatedHistoric = {
+    ...historicData,
+    [updatedDataDate]: {
+      ...updatedData,
+    },
+  };
+
+  console.log("updated DATA : ", updatedHistoric);
+  return;
+
+  await setDoc(ref, updatedHistoric);
+  localStorage.setItem("historic", JSON.stringify(updatedHistoric));
+  console.log(
+    "Historique mis à jour pour la date spécifiée :",
+    updatedDataDate
+  );
+};
+
+export { sendToHistoric, updateHistoric };

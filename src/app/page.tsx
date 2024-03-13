@@ -15,6 +15,7 @@ import { firebaseApp } from "@/firebase/config";
 import Lists from "@/components/Lists";
 import Header from "@/components/Header";
 import TemporaryMessage from "./utils/message";
+import Link from "next/link";
 
 interface UserData {
   email: string;
@@ -203,7 +204,7 @@ export default function Home() {
           test
         </button> */}
         <div className="container">
-          <h2>Today</h2>
+          <h2>Routine</h2>
           <Today
             list={todayList}
             handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
@@ -211,6 +212,8 @@ export default function Home() {
             userId={user.uid}
           />
           <TemporaryMessage message={messagelist} />
+
+          <Link href="/historic">historic</Link>
         </div>
         <div className="container">
           <h2>Custom tasks</h2>
