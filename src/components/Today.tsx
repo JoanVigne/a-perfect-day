@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
 import TemporaryMessage from "@/app/utils/message";
+import { getItemFromLocalStorage } from "@/app/utils/localstorage";
 
 interface Task {
   unit: boolean | string;
@@ -70,10 +71,14 @@ const Today: React.FC<TodayProps> = ({
 
   // que dans le localStorage
   const handleSave = (itemId: string) => {
+    const list = getItemFromLocalStorage("todayList");
+    setTaskList(list);
+
+    console.log("SAVED ");
     const updatedList = {
-      ...taskList,
+      ...list,
       [itemId]: {
-        ...taskList[itemId],
+        ...list[itemId],
         count: countInputValues[itemId] || "0",
       },
     };
@@ -191,13 +196,6 @@ const Today: React.FC<TodayProps> = ({
         userInfo={userInfo}
         /*        functionSetUserInfo={functionSetUserInfo} */
       />
-
-      {/*      <button className="add" onClick={sendListToUserTodayList}>
-        save to db(if you logout)
-      </button> */}
-      {/*     <p className="message-small"> {messageInfoDB}</p> */}
-
-      {/*    <TodaySaveList taskList={taskList} userid={userId} /> */}
     </div>
   );
 };

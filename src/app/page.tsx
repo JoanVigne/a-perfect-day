@@ -16,6 +16,7 @@ import Lists from "@/components/Lists";
 import Header from "@/components/Header";
 import TemporaryMessage from "./utils/message";
 import Link from "next/link";
+import { getItemFromLocalStorage } from "./utils/localstorage";
 
 interface UserData {
   email: string;
@@ -140,11 +141,13 @@ export default function Home() {
   }
 
   const handleAddTaskToTodayList = (task: Task) => {
-    if (typeof todayList !== "object" || Array.isArray(todayList)) {
-      console.error("todayList is not an object.");
+    const list = getItemFromLocalStorage("todayList") as { [key: string]: any };
+    setTodayList(list);
+    if (typeof list !== "object" || Array.isArray(list)) {
+      console.error("list is not an object.");
       return;
     }
-    const isTaskAlreadyExists = Object.values(todayList).some(
+    const isTaskAlreadyExists = Object.values(list).some(
       (existingTask: Task) =>
         existingTask.name === task.name || existingTask.id === task.id
     );
@@ -153,12 +156,13 @@ export default function Home() {
       setMessagelist(`"${task.name}" is already in the list`);
       return;
     }
-    const updatedList = { ...todayList };
+    const updatedList = { ...list };
     updatedList[task.id] = task;
     setTodayList(updatedList);
     localStorage.setItem("todayList", JSON.stringify(updatedList));
     setMessagelist(null);
   };
+
   const handleRemoveTaskFromTodayList = (itemId: string) => {
     const updatedList = { ...todayList };
     delete updatedList[itemId];
