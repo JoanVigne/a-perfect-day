@@ -10,7 +10,7 @@ import BarChart from "./components/BarChart";
 import Footer from "@/components/Footer";
 import { getItemFromLocalStorage } from "../utils/localstorage";
 import LineChart from "./components/LineChart";
-import { useRouter } from "next/navigation";
+
 import Streak from "./components/Streak";
 import Count from "./components/Count";
 import LastTime from "./components/LastTime";
@@ -18,6 +18,7 @@ import HighestScore from "./components/HighestScore";
 import Header from "@/components/Header";
 import { findTasksByType } from "./utils/utils";
 import PreviousDay from "./components/PreviousDay";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -51,21 +52,23 @@ const Page = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [dataHistoric, setDataHistoric] = useState<HistoricData | null>(null);
   const router = useRouter();
+
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   useEffect(
     () => {
       if (user == null || user?.uid == null || user?.uid == undefined) {
-        return router.push("/connect");
+        router.push("/connect");
       } else {
         fetchData();
       }
-
       const userInfoLocal = getItemFromLocalStorage("users");
       setUserInfo(userInfoLocal);
+      const data = getItemFromLocalStorage("historic");
+      setDataHistoric(data);
     },
     [
-      /* user.uid */
+      /* user */
     ]
   );
 

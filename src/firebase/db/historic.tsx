@@ -13,6 +13,13 @@ interface DataObject {
   date: string;
   [key: string]: Task | any;
 }
+interface HistoricData {
+  [activityId: string]: Task | any;
+}
+
+interface Historic {
+  [date: string]: HistoricData;
+}
 
 const sendToHistoric = async (data: DataObject, userId: string) => {
   const { ref, snapShot } = await checkDB("historic", userId);
@@ -58,6 +65,7 @@ const sendToHistoric = async (data: DataObject, userId: string) => {
   await setDoc(ref, updatedData);
   localStorage.setItem("historic", JSON.stringify(updatedData));
   console.log("historic est mis a jour");
+  return "Data sent to historic DB";
 };
 
 const updateHistoric = async (updatedData: DataObject, userId: string) => {
@@ -98,5 +106,20 @@ const updateHistoric = async (updatedData: DataObject, userId: string) => {
     updatedDataDate
   );
 };
-
-export { sendToHistoric, updateHistoric };
+async function updateOneDay(day: any, userId: string) {
+  // a faire
+}
+async function updateAllHistoric(data: Historic, userId: string) {
+  console.log("LES DATA DANS UPDATEDALLHISTORIC: ", data);
+  return;
+  // any a changer
+  const { ref, snapShot } = await checkDB("historic", userId);
+  if (!snapShot.exists()) {
+    console.log("L'historique n'existe pas pour cet utilisateur.");
+    return;
+  }
+  await setDoc(ref, data);
+  localStorage.setItem("historic", JSON.stringify(data));
+  return "Data sent to historic DB";
+}
+export { sendToHistoric, updateAllHistoric };

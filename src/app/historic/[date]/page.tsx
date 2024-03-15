@@ -1,7 +1,7 @@
 "use client";
 import { getItemFromLocalStorage } from "@/app/utils/localstorage";
 import { useAuthContext } from "@/context/AuthContext";
-import { sendToHistoric, updateHistoric } from "@/firebase/db/historic";
+import { updateAllHistoric } from "@/firebase/db/historic";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -20,15 +20,17 @@ interface Task {
 }
 
 interface HistoricData {
-  [activityId: string]: Task | string;
+  [activityId: string]: Task | any;
+}
+
+interface Historic {
+  [date: string]: HistoricData;
 }
 
 const Page = () => {
   const date = window.location.pathname.split("/")[2]; // On obtient la date dans le format YYYY-MM-DD
   const { user } = useAuthContext() as { user: UserData };
-  const [historic, setHistoric] = useState<{
-    [date: string]: HistoricData;
-  } | null>(null);
+  const [historic, setHistoric] = useState<Historic | null>(null);
 
   useEffect(() => {
     console.log("Date extraite des paramètres d'URL :", date);
@@ -69,14 +71,16 @@ const Page = () => {
     };
     console.log("updated historic  :", updatedHistoric);
 
-    return;
     setHistoric(updatedHistoric);
   };
   // Retour et send to db
   function backAndSendToDB() {
-    return;
-    updateHistoric(historic, user.uid);
+    if (!historic) {
+      return;
+    }
+    updateAllHistoric(historic, user.uid);
     localStorage.setItem("historic", JSON.stringify(historic));
+    window.location.href = "/historic";
   }
   return (
     <div>
@@ -131,9 +135,11 @@ const Page = () => {
             </div>
           );
         })}
-      <Link href="/historic" onClick={backAndSendToDB}>
-        back and save
+      <button onClick={backAndSendToDB}>SAVE AND BACK</button>
+      {/* <Link href="/historic" onClick={backAndSendToDB}>
+        Save
       </Link>
+      <Link href="/historic">Cancel</Link> */}
     </div>
   );
 };

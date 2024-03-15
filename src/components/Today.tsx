@@ -174,6 +174,7 @@ const Today: React.FC<TodayProps> = ({
                     onClick={() => {
                       // remove de la list de la props ...
                       handleRemoveTaskFromTodayList(item.id);
+                      setClickedIndex(null);
                     }}
                   >
                     <img src="./red-bin.png" alt="remove" />
