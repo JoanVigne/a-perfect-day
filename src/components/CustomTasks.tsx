@@ -4,10 +4,10 @@ import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import FormCustomTask from "./FormCustomTask";
 import { removeFromCustom } from "@/firebase/db/custom";
 import Load from "./Load";
-import TemporaryMessage from "@/app/utils/message";
+import TemporaryMessage from "./TemporaryMessage";
 
 interface CustomTasksProps {
-  handleAddTaskToTodayList: (task: Task) => void;
+  handleAddTask: (task: Task) => void;
   userId: string;
 }
 interface Task {
@@ -18,10 +18,7 @@ interface Task {
   count: any;
   unit: any;
 }
-const CustomTasks: React.FC<CustomTasksProps> = ({
-  handleAddTaskToTodayList,
-  userId,
-}) => {
+const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
   const [customTasks, setCustomTasks] = useState<Task[]>([]);
 
   const [messageCustom, setMessageCustom] = useState<string | null>(null);
@@ -110,20 +107,23 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                   ?
                 </button>
                 {clickedItemIndex === index && (
-                  <TemporaryMessage message={messageAdded} />
+                  <TemporaryMessage
+                    message={messageAdded}
+                    type="message-small"
+                  />
                 )}
               </h4>
 
               <img
                 onClick={() => {
-                  handleAddTaskToTodayList(customTask);
+                  handleAddTask(customTask);
                   setClickedItemIndex((prevIndex) =>
                     prevIndex === index ? null : index
                   );
 
                   setMessageAdded("added!");
                 }}
-                src="./add.png"
+                src="/add.png"
                 alt="add"
                 className="add-button"
               />
@@ -141,7 +141,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
                   );
                 }}
               >
-                <img src="./red-bin.png" alt="remove" />
+                <img src="/red-bin.png" alt="remove" />
               </span>
               {clickedItemIndex === index && taskToRemove && (
                 <div className="modal-remove">
@@ -171,7 +171,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({
           </li>
         ))
       )}
-      <TemporaryMessage message={messageCustom} />
+      <TemporaryMessage message={messageCustom} type="message-small" />
       <FormCustomTask updateCustomTasks={updateCustomTasks} />
     </ul>
   );

@@ -1,8 +1,13 @@
 "use client";
+import TemporaryMessage from "../../../components/TemporaryMessage";
 import Link from "next/link";
 
-import React from "react";
+import React, { useState } from "react";
+import Calendar from "react-calendar";
 
+type ValuePiece = Date | null;
+
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 interface Task {
   id: string;
   name: string;
@@ -23,17 +28,42 @@ interface Props {
 }
 
 const PreviousDay: React.FC<Props> = ({ date, data }) => {
+  // calendar :
+  const [value, onChange] = useState<Value>(new Date());
+  //
+  const [message, setMessage] = useState<string | null>(null);
+  const handleClick = (value: Date) => {
+    const selectedDate = value.toISOString().split("T")[0];
+    const todayDate = new Date().toISOString().split("T")[0];
+
+    if (selectedDate === todayDate) {
+      setMessage("Its today date");
+      return;
+    }
+    if (selectedDate > todayDate) {
+      setMessage("cannot change the futur !");
+      return;
+    }
+
+    const formattedDate = value.toISOString().split("T")[0];
+    window.location.href = `/historic/${formattedDate}`;
+  };
+  const today = new Date();
+  const todayDate = today.toISOString().split("T")[0];
   return (
-    <ul className="">
-      {data &&
-        Object.keys(data).map((d: string) => {
-          return (
-            <li key={d}>
-              <Link href={`/historic/${d}`}>{d}</Link>
-            </li>
-          );
-        })}
-    </ul>
+    <div>
+      <TemporaryMessage message={message} type="message-error" />
+      <Calendar
+        onChange={onChange}
+        value={value}
+        tileClassName={({ date }) =>
+          `${data[date.toISOString().split("T")[0]] ? "has-data" : ""} ${
+            date.toISOString().split("T")[0] === todayDate ? "today" : ""
+          }`
+        }
+        onClickDay={(value) => handleClick(value)}
+      />
+    </div>
   );
 };
 

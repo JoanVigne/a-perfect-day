@@ -111,8 +111,6 @@ async function updateOneDay(day: any, userId: string) {
 }
 async function updateAllHistoric(data: Historic, userId: string) {
   console.log("LES DATA DANS UPDATEDALLHISTORIC: ", data);
-  return;
-  // any a changer
   const { ref, snapShot } = await checkDB("historic", userId);
   if (!snapShot.exists()) {
     console.log("L'historique n'existe pas pour cet utilisateur.");

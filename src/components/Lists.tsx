@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
-import TemporaryMessage from "@/app/utils/message";
+
 import { sendToUsers } from "@/firebase/db/users";
 import Load from "./Load";
+import TemporaryMessage from "./TemporaryMessage";
 
 interface UserInfo {
   nickname: string;
@@ -124,7 +125,7 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
               <p>Add some tasks from the lists below</p>
             ) : (
               <form action="" onSubmit={createANewFavoriteList}>
-                <TemporaryMessage message={message} />
+                <TemporaryMessage message={message} type="message-small" />
 
                 <input
                   type="text"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
-import TemporaryMessage from "@/app/utils/message";
+import TemporaryMessage from "./TemporaryMessage";
 import { getItemFromLocalStorage } from "@/app/utils/localstorage";
 
 interface Task {
@@ -73,8 +73,6 @@ const Today: React.FC<TodayProps> = ({
   const handleSave = (itemId: string) => {
     const list = getItemFromLocalStorage("todayList");
     setTaskList(list);
-
-    console.log("SAVED ");
     const updatedList = {
       ...list,
       [itemId]: {
@@ -128,7 +126,10 @@ const Today: React.FC<TodayProps> = ({
                       ?
                     </button>
                     {clickedItemId === item.id && (
-                      <TemporaryMessage message={messageSaved} />
+                      <TemporaryMessage
+                        message={messageSaved}
+                        type="message-small"
+                      />
                     )}
                   </h4>{" "}
                   <div className="count">

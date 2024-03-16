@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 
 export default function TemporaryMessage({
   message,
+  type,
 }: {
   message: string | null;
+  type: string | "";
 }) {
   const [showMessage, setShowMessage] = useState(false);
 
@@ -19,7 +21,5 @@ export default function TemporaryMessage({
     }
   }, [message]);
 
-  return showMessage && <small className="message-small">{message}</small>;
+  return showMessage && <small className={type}>{message}</small>;
 }
-
-// Exemple d'utilisation :

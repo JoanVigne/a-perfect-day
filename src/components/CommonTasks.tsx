@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
-import TemporaryMessage from "@/app/utils/message";
+import TemporaryMessage from "./TemporaryMessage";
 
 interface CommonTasksProps {
-  handleAddTaskToTodayList: (task: Task) => void;
+  handleAddTask: (task: Task) => void;
 }
 interface Task {
   id: string;
@@ -14,9 +14,7 @@ interface Task {
   count: any;
   unit: any;
 }
-const CommonTasks: React.FC<CommonTasksProps> = ({
-  handleAddTaskToTodayList,
-}) => {
+const CommonTasks: React.FC<CommonTasksProps> = ({ handleAddTask }) => {
   const [commonTasks, setCommonTasks] = useState<Task[]>([]);
   const [messageAdded, setMessageAdded] = useState("");
   const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
@@ -54,16 +52,19 @@ const CommonTasks: React.FC<CommonTasksProps> = ({
                   {"?"}
                 </button>
                 {clickedItemIndex === index && (
-                  <TemporaryMessage message={messageAdded} />
+                  <TemporaryMessage
+                    message={messageAdded}
+                    type="message-small"
+                  />
                 )}
               </h4>
 
               <img
-                src="./add.png"
+                src="/add.png"
                 className="add-button"
                 alt="add"
                 onClick={() => {
-                  handleAddTaskToTodayList(commonTask);
+                  handleAddTask(commonTask);
                   setClickedItemIndex((prevIndex) =>
                     prevIndex === index ? null : index
                   );

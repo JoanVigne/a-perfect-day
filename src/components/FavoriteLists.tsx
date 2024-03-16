@@ -1,8 +1,9 @@
 import { getItemFromLocalStorage } from "@/app/utils/localstorage";
-import TemporaryMessage from "@/app/utils/message";
+
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";
 import React, { useEffect, useState } from "react";
+import TemporaryMessage from "./TemporaryMessage";
 
 interface Props {
   deleteOnOff: boolean;
@@ -129,7 +130,7 @@ const FavoriteLists: React.FC<Props> = ({
           ) : (
             ""
           )}
-          <TemporaryMessage message={messageDelete} />
+          <TemporaryMessage message={messageDelete} type="message-error" />
         </div>
       </div>
     </>

@@ -14,7 +14,7 @@ import Loading from "./loading";
 import { firebaseApp } from "@/firebase/config";
 import Lists from "@/components/Lists";
 import Header from "@/components/Header";
-import TemporaryMessage from "./utils/message";
+import TemporaryMessage from "../components/TemporaryMessage";
 import Link from "next/link";
 import { getItemFromLocalStorage } from "./utils/localstorage";
 
@@ -215,20 +215,20 @@ export default function Home() {
             userInfo={userInfo && userInfo}
             userId={user.uid}
           />
-          <TemporaryMessage message={messagelist} />
+          <TemporaryMessage message={messagelist} type="message-small" />
 
           <Link href="/historic">historic</Link>
         </div>
         <div className="container">
           <h2>Custom tasks</h2>
           <CustomTasks
-            handleAddTaskToTodayList={handleAddTaskToTodayList}
+            handleAddTask={handleAddTaskToTodayList}
             userId={user?.uid}
           />
         </div>
         <div className="container">
           <h2>Common tasks</h2>
-          <CommonTasks handleAddTaskToTodayList={handleAddTaskToTodayList} />
+          <CommonTasks handleAddTask={handleAddTaskToTodayList} />
         </div>
 
         {userInfo && (
