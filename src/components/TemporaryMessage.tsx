@@ -21,5 +21,9 @@ export default function TemporaryMessage({
     }
   }, [message]);
 
-  return showMessage && <small className={type}>{message}</small>;
+  return (
+    showMessage && (
+      <span className={"temporary-message " + type}>{message}</span>
+    )
+  );
 }

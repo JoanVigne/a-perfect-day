@@ -52,7 +52,6 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
   const todayDate = today.toISOString().split("T")[0];
   return (
     <div>
-      <TemporaryMessage message={message} type="message-error" />
       <Calendar
         onChange={onChange}
         value={value}
@@ -63,6 +62,7 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
         }
         onClickDay={(value) => handleClick(value)}
       />
+      <TemporaryMessage message={message} type="message-error" />
     </div>
   );
 };

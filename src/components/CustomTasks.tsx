@@ -5,6 +5,7 @@ import FormCustomTask from "./FormCustomTask";
 import { removeFromCustom } from "@/firebase/db/custom";
 import Load from "./Load";
 import TemporaryMessage from "./TemporaryMessage";
+import TaskDisplay from "./TaskDisplay";
 
 interface CustomTasksProps {
   handleAddTask: (task: Task) => void;
@@ -52,8 +53,9 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
 
   // supprimer une custom :
   const [taskToRemove, setTaskToRemove] = useState<Task | null>(null);
-  const handleRemoveTask = (task: Task) => {
+  const handleRemoveTask = (task: Task, index: number) => {
     console.log("task ", task);
+    setClickedItemIndex((prevIndex) => (prevIndex === index ? null : index));
     setTaskToRemove(task);
     return;
   };
@@ -87,12 +89,9 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
       ) : (
         customTasks &&
         Object.values(customTasks).map((customTask, index) => (
-          <li className="task" key={index}>
+          /*           <li className="task" key={index}>
             <div
               className="title-inputs"
-              /* onClick={() => {
-                  handleAddTaskToTodayList(customTask);
-                }} */
             >
               <h4>
                 {customTask.name}
@@ -168,7 +167,41 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
                 </div>
               )}
             </div>
-          </li>
+          </li> */
+          <div key={index}>
+            <TaskDisplay
+              task={customTask}
+              inputCountUnit={false}
+              inputSave={true}
+              theFunction={handleAddTask}
+              remove={true}
+              removeConfirmation={() => handleRemoveTask(customTask, index)}
+            />
+            {clickedItemIndex === index && taskToRemove && (
+              <div className="modal-remove">
+                <div className="modal-content">
+                  <p>
+                    Are you sure you want to delete "{customTask.name}" for ever
+                    ?
+                  </p>
+                  <div className="modal-buttons">
+                    <button
+                      onClick={handleConfirmRemoveTask}
+                      className="confirm"
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      onClick={() => setTaskToRemove(null)}
+                      className="cancel"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         ))
       )}
       <TemporaryMessage message={messageCustom} type="message-small" />

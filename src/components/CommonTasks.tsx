@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
 import TemporaryMessage from "./TemporaryMessage";
+import TaskDisplay from "./TaskDisplay";
 
 interface CommonTasksProps {
   handleAddTask: (task: Task) => void;
@@ -37,7 +38,7 @@ const CommonTasks: React.FC<CommonTasksProps> = ({ handleAddTask }) => {
     <ul>
       {commonTasks &&
         commonTasks.map((commonTask, index) => (
-          <li className="task" key={index}>
+          /*  <li className="task" key={index}>
             <div className="title-inputs">
               <h4>
                 {commonTask.name}
@@ -78,7 +79,17 @@ const CommonTasks: React.FC<CommonTasksProps> = ({ handleAddTask }) => {
               <h4 className="description">{commonTask.description}</h4>
               <p>{commonTask.details}</p>
             </div>
-          </li>
+          </li> */
+          <div key={index}>
+            <TaskDisplay
+              task={commonTask}
+              theFunction={handleAddTask}
+              inputCountUnit={false}
+              inputSave={true}
+              remove={false}
+              removeConfirmation={false}
+            />
+          </div>
         ))}
     </ul>
   );
