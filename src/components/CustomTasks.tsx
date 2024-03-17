@@ -24,7 +24,6 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
 
   const [messageCustom, setMessageCustom] = useState<string | null>(null);
 
-  const [messageAdded, setMessageAdded] = useState("");
   const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
 
   const updateCustomTasks = (newCustomTasks: Task[]) => {
@@ -47,9 +46,6 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
 
     fetchData();
   }, []);
-
-  // ouvrir et fermer la description :
-  /*   const [clickedIndex, setClickedIndex] = useState<number | null>(null); */
 
   // supprimer une custom :
   const [taskToRemove, setTaskToRemove] = useState<Task | null>(null);
@@ -88,100 +84,23 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
       ) : (
         customTasks &&
         Object.values(customTasks).map((customTask, index) => (
-          /*           <li className="task" key={index}>
-            <div
-              className="title-inputs"
-            >
-              <h4>
-                {customTask.name}
-                <button
-                  className="details"
-                  onClick={() => {
-                    setClickedIndex((prevIndex) =>
-                      prevIndex === index ? null : index
-                    );
-                  }}
-                >
-                  ?
-                </button>
-                {clickedItemIndex === index && (
-                  <TemporaryMessage
-                    message={messageAdded}
-                    type="message-small"
-                  />
-                )}
-              </h4>
-
-              <img
-                onClick={() => {
-                  handleAddTask(customTask);
-                  setClickedItemIndex((prevIndex) =>
-                    prevIndex === index ? null : index
-                  );
-
-                  setMessageAdded("added!");
-                }}
-                src="/add.png"
-                alt="add"
-                className="add-button"
-              />
-            </div>
-            <div className={clickedIndex === index ? "active" : "hidden"}>
-              <h4 className="description">{customTask.description}</h4>
-              <p>{customTask.details}</p>
-
-              <span
-                className="remove"
-                onClick={() => {
-                  handleRemoveTask(customTask);
-                  setClickedItemIndex((prevIndex) =>
-                    prevIndex === index ? null : index
-                  );
-                }}
-              >
-                <img src="/red-bin.png" alt="remove" />
-              </span>
-              {clickedItemIndex === index && taskToRemove && (
-                <div className="modal-remove">
-                  <div className="modal-content">
-                    <p>
-                      Are you sure you want to delete "{customTask.name}" for
-                      ever ?
-                    </p>
-                    <div className="modal-buttons">
-                      <button
-                        onClick={handleConfirmRemoveTask}
-                        className="confirm"
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        onClick={() => setTaskToRemove(null)}
-                        className="cancel"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </li> */
           <div key={index}>
             <TaskDisplay
               task={customTask}
               inputCountUnit={false}
-              inputSave={true}
+              inputAdd={true}
               theFunction={handleAddTask}
               remove={true}
               removeConfirmation={() => handleRemoveTask(customTask, index)}
+              handleCountInputChange={false}
+              handleTaskCompletionToggle={false}
             />
             {clickedItemIndex === index && taskToRemove && (
               <div className="modal-remove">
                 <div className="modal-content">
                   <p>
-                    Are you sure you want to delete "{customTask.name}" for ever
-                    ?
+                    Are you sure you want to delete "{customTask.name}" for
+                    ever?
                   </p>
                   <div className="modal-buttons">
                     <button

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
 import TemporaryMessage from "./TemporaryMessage";
 import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import TaskDisplay from "./TaskDisplay";
 
 interface Task {
   unit: boolean | string;
@@ -103,90 +104,110 @@ const Today: React.FC<TodayProps> = ({
               return null;
             }
             return (
-              <li
-                key={item.id}
-                className={
-                  item.unit === false || item.count === "0"
-                    ? "task"
-                    : "task task-done"
-                }
-              >
-                <div className="title-inputs">
-                  <h4>
-                    {item.name}
+              <div key={index}>
+                <TaskDisplay
+                  task={item}
+                  inputCountUnit={true}
+                  inputAdd={false}
+                  theFunction={() => {
+                    handleSave(item.id);
+                    setClickedItemId(item.id);
+                  }}
+                  remove={true}
+                  removeConfirmation={() => {
+                    // remove de la list de la props ...
+                    handleRemoveTaskFromTodayList(item.id);
+                    setClickedIndex(null);
+                  }}
+                  handleCountInputChange={handleCountInputChange} // Ajout de cette prop
+                  handleTaskCompletionToggle={handleTaskCompletionToggle}
+                />
+                {/* 
+                <li
+                  key={item.id}
+                  className={
+                    item.unit === false || item.count === "0"
+                      ? "task"
+                      : "task task-done"
+                  }
+                >
+                  <div className="title-inputs">
+                    <h4>
+                      {item.name}
 
-                    <button
-                      className="details"
-                      onClick={() => {
-                        setClickedIndex((prevIndex) =>
-                          prevIndex === index ? null : index
-                        );
-                      }}
-                    >
-                      ?
-                    </button>
-                    {clickedItemId === item.id && (
-                      <TemporaryMessage
-                        message={messageSaved}
-                        type="message-small"
-                      />
-                    )}
-                  </h4>{" "}
-                  <div className="count">
-                    {typeof item.unit === "boolean" ? (
                       <button
+                        className="details"
                         onClick={() => {
-                          handleTaskCompletionToggle(item.id);
-                          setClickedItemId(item.id);
+                          setClickedIndex((prevIndex) =>
+                            prevIndex === index ? null : index
+                          );
                         }}
-                        className={item.unit === false ? "save" : "undo"}
                       >
-                        {item.unit === false ? "Done?" : "undo"}
+                        ?
                       </button>
-                    ) : (
-                      <>
-                        <div className="container-count-unit">
-                          <input
-                            type="number"
-                            name={`count-${item.id}`}
-                            id={`count-${item.id}`}
-                            value={countInputValues[item.id] || ""}
-                            onChange={(e) =>
-                              handleCountInputChange(item.id, e.target.value)
-                            }
-                            placeholder={String(item.count)}
-                          />
-                          <p className="unit"> {item.unit}</p>
-                        </div>
+                      {clickedItemId === item.id && (
+                        <TemporaryMessage
+                          message={messageSaved}
+                          type="message-small"
+                        />
+                      )}
+                    </h4>{" "}
+                    <div className="count">
+                      {typeof item.unit === "boolean" ? (
                         <button
-                          className="save"
                           onClick={() => {
-                            handleSave(item.id);
+                            handleTaskCompletionToggle(item.id);
                             setClickedItemId(item.id);
                           }}
+                          className={item.unit === false ? "save" : "undo"}
                         >
-                          save
+                          {item.unit === false ? "Done?" : "undo"}
                         </button>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <div className="container-count-unit">
+                            <input
+                              type="number"
+                              name={`count-${item.id}`}
+                              id={`count-${item.id}`}
+                              value={countInputValues[item.id] || ""}
+                              onChange={(e) =>
+                                handleCountInputChange(item.id, e.target.value)
+                              }
+                              placeholder={String(item.count)}
+                            />
+                            <p className="unit"> {item.unit}</p>
+                          </div>
+                          <button
+                            className="save"
+                            onClick={() => {
+                              handleSave(item.id);
+                              setClickedItemId(item.id);
+                            }}
+                          >
+                            save
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <div className={clickedIndex === index ? "active" : "hidden"}>
-                  <h4>{item.description}</h4>
-                  <p>{item.details}</p>
-                  <span
-                    className="remove"
-                    onClick={() => {
-                      // remove de la list de la props ...
-                      handleRemoveTaskFromTodayList(item.id);
-                      setClickedIndex(null);
-                    }}
-                  >
-                    <img src="./red-bin.png" alt="remove" />
-                  </span>
-                </div>
-              </li>
+                  <div className={clickedIndex === index ? "active" : "hidden"}>
+                    <h4>{item.description}</h4>
+                    <p>{item.details}</p>
+                    <span
+                      className="remove"
+                      onClick={() => {
+                        // remove de la list de la props ...
+                        handleRemoveTaskFromTodayList(item.id);
+                        setClickedIndex(null);
+                      }}
+                    >
+                      <img src="./red-bin.png" alt="remove" />
+                    </span>
+                  </div>
+                </li> */}
+              </div>
             );
           })}
       </ul>

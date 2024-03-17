@@ -9,27 +9,25 @@ interface Task {
   unit: any;
 }
 interface Props {
-  task: Task;
-  inputCountUnit: boolean;
-  inputSave: boolean;
-  theFunction: any;
-  remove: boolean;
-  removeConfirmation: any;
+  task: Task; // task = data d'une task.
+  inputCountUnit: boolean; // inputCountUnit = les entry pour changer les values
+  inputAdd: boolean; // inputAdd = le button pour save ou add a une liste
+  remove: boolean; // remove = display la petite corbeille
+  theFunction: any; // thefunction = la functions rattaché a cette task
+  removeConfirmation: any; // removeConfirmation = la fonction pour remove
+  handleCountInputChange: any; // handleCountInputChange = pour changement les valeurs de counts
+  handleTaskCompletionToggle: any; // handleTaskCompletionToggle = pour gerer true et false sur unit true/false
 }
 const TaskDisplay: React.FC<Props> = ({
   task,
   inputCountUnit,
-  inputSave,
+  inputAdd,
   theFunction,
   remove,
   removeConfirmation,
+  handleCountInputChange,
+  handleTaskCompletionToggle,
 }) => {
-  // task = data d'une task.
-  // functions = la ou les functions rattaché a cette task ?
-  // inputCountUnit = les entry pour changer les values
-  // inputSave = le button pour save ou add a une liste
-  // remove = display la petite corbeille
-  // removeConfirmation = la fonction pour remove
   const [messageAdded, setMessageAdded] = useState("");
 
   const [toggleDetails, settoggleDetails] = useState("hidden");
@@ -42,7 +40,11 @@ const TaskDisplay: React.FC<Props> = ({
   }
 
   return (
-    <li className="task">
+    <li
+      className={
+        task.unit === false || task.count === "0" ? "task" : "task task-done"
+      }
+    >
       <div className="title-inputs">
         <h4>
           {task.name}{" "}
@@ -51,18 +53,43 @@ const TaskDisplay: React.FC<Props> = ({
           </button>
           <TemporaryMessage message={messageAdded} type="message-small" />
         </h4>
-        {inputCountUnit && (
+        {inputCountUnit && typeof task.unit !== "boolean" && (
           <div className="count">
             <div className="container-count-unit">
-              <input type="text" className="count" />
+              <input
+                type="number"
+                id={"count-" + task.id}
+                name={"count-" + task.id}
+                placeholder={task.count}
+                onChange={
+                  (e) => handleCountInputChange(task.id, e.target.value) // Appel de la fonction à partir de la prop
+                }
+              />
               <p className="unit">{task.unit}</p>
             </div>
-            <button className="save" onClick={() => theFunction(task)}>
+            <button
+              className="save"
+              onClick={() => {
+                theFunction(), setMessageAdded("saved !");
+              }}
+            >
               save
             </button>
           </div>
         )}
-        {inputSave && (
+        {inputCountUnit && typeof task.unit === "boolean" && (
+          <div className="count">
+            <button
+              onClick={() => {
+                handleTaskCompletionToggle(task.id);
+              }}
+              className={task.unit === false ? "save" : "undo"}
+            >
+              {task.unit === false ? "Done?" : "undo"}
+            </button>
+          </div>
+        )}
+        {inputAdd && (
           <img
             src="/add.png"
             alt="add"
