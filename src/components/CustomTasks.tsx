@@ -49,12 +49,11 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
   }, []);
 
   // ouvrir et fermer la description :
-  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+  /*   const [clickedIndex, setClickedIndex] = useState<number | null>(null); */
 
   // supprimer une custom :
   const [taskToRemove, setTaskToRemove] = useState<Task | null>(null);
   const handleRemoveTask = (task: Task, index: number) => {
-    console.log("task ", task);
     setClickedItemIndex((prevIndex) => (prevIndex === index ? null : index));
     setTaskToRemove(task);
     return;

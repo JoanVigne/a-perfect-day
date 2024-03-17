@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import TemporaryMessage from "./TemporaryMessage";
 interface Task {
   id: string;
   name: string;
@@ -28,6 +29,9 @@ const TaskDisplay: React.FC<Props> = ({
   // inputCountUnit = les entry pour changer les values
   // inputSave = le button pour save ou add a une liste
   // remove = display la petite corbeille
+  // removeConfirmation = la fonction pour remove
+  const [messageAdded, setMessageAdded] = useState("");
+
   const [toggleDetails, settoggleDetails] = useState("hidden");
   function openDetails() {
     if (toggleDetails === "hidden") {
@@ -45,6 +49,7 @@ const TaskDisplay: React.FC<Props> = ({
           <button onClick={openDetails} className="details">
             ?
           </button>
+          <TemporaryMessage message={messageAdded} type="message-small" />
         </h4>
         {inputCountUnit && (
           <div className="count">
@@ -62,7 +67,9 @@ const TaskDisplay: React.FC<Props> = ({
             src="/add.png"
             alt="add"
             className="add-button"
-            onClick={() => theFunction(task)}
+            onClick={() => {
+              theFunction(task), setMessageAdded("added !");
+            }}
           />
         )}
       </div>
