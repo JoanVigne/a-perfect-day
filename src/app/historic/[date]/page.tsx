@@ -148,13 +148,7 @@ const Page = () => {
     <>
       <div className="container">
         <h2>Date : {date}</h2>
-        <button
-          onClick={() => {
-            console.log("historic : ", historic);
-          }}
-        >
-          TEST{" "}
-        </button>
+
         {historic &&
           historic[date] &&
           Object.values(historic[date]).map((e: Task | string, index) => {
