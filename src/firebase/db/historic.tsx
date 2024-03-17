@@ -118,6 +118,7 @@ async function updateAllHistoric(data: Historic, userId: string) {
   }
   await setDoc(ref, data);
   localStorage.setItem("historic", JSON.stringify(data));
+  console.log("Data supposed sent to DB and LOCALSTORAGE");
   return "Data sent to historic DB";
 }
 export { sendToHistoric, updateAllHistoric };

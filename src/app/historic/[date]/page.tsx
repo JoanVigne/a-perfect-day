@@ -94,11 +94,11 @@ const Page = () => {
     setHistoric(updatedHistoric);
   };
   // Retour et send to db
-  function backAndSendToDB() {
+  async function backAndSendToDB() {
     if (!historic) {
       return;
     }
-    updateAllHistoric(historic, user.uid);
+    await updateAllHistoric(historic, user.uid);
     // localstorage deja updated dans updateAllHistoric
     window.location.href = "/historic";
   }
@@ -118,7 +118,7 @@ const Page = () => {
     const newHistoric = { ...historic };
     newHistoric[date][task.id] = task;
 
-    console.log("newHistoric", newHistoric[date]);
+    console.log("new liste :", newHistoric[date]);
     setHistoric(newHistoric);
     setMessagelist(null);
     return newHistoric;
@@ -148,6 +148,13 @@ const Page = () => {
     <>
       <div className="container">
         <h2>Date : {date}</h2>
+        <button
+          onClick={() => {
+            console.log("historic : ", historic);
+          }}
+        >
+          TEST{" "}
+        </button>
         {historic &&
           historic[date] &&
           Object.values(historic[date]).map((e: Task | string, index) => {
