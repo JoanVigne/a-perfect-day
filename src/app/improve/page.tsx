@@ -1,5 +1,6 @@
+"use client";
 import Footer from "@/components/Footer";
-import React from "react";
+import React, { useEffect } from "react";
 
 const page = () => {
   return (
