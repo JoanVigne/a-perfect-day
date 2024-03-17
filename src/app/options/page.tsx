@@ -6,7 +6,6 @@ import React, { useEffect, useState } from "react";
 import { getItemFromLocalStorage } from "../utils/localstorage";
 import { sendToUsers } from "@/firebase/db/users";
 import { getAuth, signOut } from "firebase/auth";
-import TemporaryMessage from "../utils/message";
 
 interface UserData {
   email: string;
