@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import { useAuthContext } from "@/context/AuthContext";
 import React, { useEffect, useState } from "react";
 import CustomChallenges from "./components/CustomChallenges";
+import { getItemFromLocalStorage } from "../utils/localstorage";
+import TemporaryMessage from "@/components/TemporaryMessage";
 
 interface UserData {
   email: string;
@@ -16,13 +18,41 @@ interface Task {
   count: number | string;
   name: string;
   id: string;
+  [key: string]: any;
 }
 const page = () => {
   const { user } = useAuthContext() as { user: UserData };
+  const [message, setMessage] = useState("");
   const [perfTask, setPerfTask] = useState<{ [key: string]: Task }>();
   function handleAddChallToPerfList(task: any) {
     console.log("fonction handleAddTaskToPerfList", task);
+    const list = getItemFromLocalStorage("challenges") as {
+      [key: string]: any;
+    };
+    if (!list) {
+      console.log("nothing in storage challenges");
+    }
+    setPerfTask(list);
+    if (typeof list !== "object" || Array.isArray(list)) {
+      console.error("list is not an object.");
+      return;
+    }
+    const isTaskAlreadyExists = Object.values(list).some(
+      (existingTask: Task) =>
+        existingTask.name === task.name || existingTask.id === task.id
+    );
+
+    if (isTaskAlreadyExists) {
+      setMessage(`"${task.name}" is already in the list`);
+      return;
+    }
+    const updatedList = { ...list };
+    updatedList[task.id] = task;
+    setPerfTask(updatedList);
+    localStorage.setItem("challenges", JSON.stringify(updatedList));
+    setMessage("");
   }
+
   return (
     <div>
       <h1>IMPROVE</h1>
@@ -53,6 +83,7 @@ const page = () => {
                 </div>
               );
             })}
+          <TemporaryMessage message={message} type="error-message" />
           <p>
             nouvelle liste de chose auquel on a envie de voir la meilleur perf
           </p>

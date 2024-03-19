@@ -19,6 +19,7 @@ interface Task {
   details: string;
   count: any;
   unit: any;
+  [key: string]: any;
 }
 const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
   const [customChall, setCustomChall] = useState<Task[]>([]);

@@ -13,6 +13,7 @@ interface Chall {
   details: string;
   count: any;
   unit: any;
+  [key: string]: any;
 }
 const Chall: React.FC<Props> = ({ chall, updateCustomChall }) => {
   const [toggleDetails, settoggleDetails] = useState("hidden");
