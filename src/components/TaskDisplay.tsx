@@ -42,7 +42,11 @@ const TaskDisplay: React.FC<Props> = ({
   return (
     <li
       className={
-        task.unit === false || task.count === "0" ? "task" : "task task-done"
+        inputAdd
+          ? "task"
+          : task.unit === false || task.count === "0"
+          ? "task"
+          : "task task-done"
       }
     >
       <div className="title-inputs">

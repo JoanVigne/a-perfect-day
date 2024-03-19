@@ -31,3 +31,8 @@ button:active {
 .add-button:active {
   animation: pulseAnimation 0.3s;
 }
+
+/*  rotation button show fav list */
+.rotate {
+  transform: translateX(-10%) rotate(-90deg);
+}

@@ -69,13 +69,13 @@ const FavoriteLists: React.FC<Props> = ({
     <>
       <div className="favorite-lists">
         <h3>
-          Favorite lists :{" "}
-          <button
-            className={`${showFav ? "hide" : "add"}`}
+          Favorite lists
+          <img
             onClick={() => setShowFav(!showFav)}
-          >
-            {showFav ? "Hide favorites" : "Show favorites"}
-          </button>
+            className={showFav ? "icon" : "icon rotate"}
+            src="./icon/arrow-down.png"
+            alt="show"
+          />
         </h3>
         <div className={`excisting-favorites ${showFav ? "active" : "hidden"}`}>
           <ul>

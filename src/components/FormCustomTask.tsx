@@ -106,13 +106,13 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
   return (
     <>
       <h3>
-        Create a new task :{" "}
-        <button
-          className={`${showForm ? "hide" : "add"}`}
+        Create a new task
+        <img
           onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? "Hide Form" : "New task"}
-        </button>
+          className={showForm ? "icon" : "icon rotate"}
+          src="./icon/arrow-down.png"
+          alt="show"
+        />
       </h3>
 
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>

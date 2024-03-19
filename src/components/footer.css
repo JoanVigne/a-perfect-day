@@ -20,5 +20,6 @@ footer ul li {
 }
 
 footer .active {
-  color: red;
+  color: var(--color-active-link);
+  text-decoration: underline;
 }

@@ -1,18 +1,77 @@
 "use client";
+import CustomTasks from "@/components/CustomTasks";
 import Footer from "@/components/Footer";
-import React, { useEffect } from "react";
+import { useAuthContext } from "@/context/AuthContext";
+import React, { useEffect, useState } from "react";
+import CustomChallenges from "./components/CustomChallenges";
 
+interface UserData {
+  email: string;
+  uid: string;
+}
+interface Task {
+  unit: boolean | string;
+  details: string;
+  description: string;
+  count: number | string;
+  name: string;
+  id: string;
+}
 const page = () => {
+  const { user } = useAuthContext() as { user: UserData };
+  const [perfTask, setPerfTask] = useState<{ [key: string]: Task }>();
+  function handleAddChallToPerfList(task: any) {
+    console.log("fonction handleAddTaskToPerfList", task);
+  }
   return (
     <div>
       <h1>IMPROVE</h1>
       <div className="container">
-        <p>here the list of the stuff you wanna improve</p>
+        <h2>Personal Records :</h2>
         <ul>
-          <li className="task">une task</li>
+          {perfTask &&
+            Object.values(perfTask).map((item, index) => {
+              if (Object.keys(perfTask).length <= 0) {
+                return (
+                  <p key={index}>
+                    Your list is empty. You can add some tasks from the common
+                    task list, or from your custom task list.
+                  </p>
+                );
+              }
+              // Si la clé est "date", on ne l'affiche pas
+              if (typeof item === "string") {
+                console.log('item === "string"');
+                return null;
+              }
+              return (
+                <div key={index}>
+                  {" "}
+                  <li className="task">
+                    <h3>un item</h3> score <button>I improved !</button>
+                  </li>
+                </div>
+              );
+            })}
+          <p>
+            nouvelle liste de chose auquel on a envie de voir la meilleur perf
+          </p>
         </ul>
       </div>
-
+      <div className="container">
+        <h2>My Challenges</h2>
+        <CustomChallenges
+          handleAddChall={handleAddChallToPerfList}
+          userId={user?.uid}
+        />
+      </div>
+      <div className="container">
+        <h2>My customs from "routine"</h2>
+        <CustomTasks
+          handleAddTask={handleAddChallToPerfList}
+          userId={user?.uid}
+        />
+      </div>
       <div className="container">
         <p>LIENS VERS charts of progression of stuff improvement</p>
       </div>

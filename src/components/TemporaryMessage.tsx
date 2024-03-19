@@ -5,7 +5,7 @@ export default function TemporaryMessage({
   type,
 }: {
   message: string | null;
-  type: string | "";
+  type: string | ""; // "message-small" ou ...
 }) {
   const [showMessage, setShowMessage] = useState(false);
 

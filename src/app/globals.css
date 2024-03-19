@@ -11,6 +11,7 @@
   --color-dark-green: rgba(1, 107, 1, 1);
   --color-green: rgb(3 143 3);
   --color-red: rgb(199 0 0);
+  --color-active-link: rgb(45, 170, 170);
 }
 
 * {
@@ -54,6 +55,9 @@ h3 {
 
 h3 {
   font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .smaller-container {
@@ -92,6 +96,7 @@ h3 {
 .remove img {
   width: 25px;
   height: 25px;
+  transition: all 1s;
 }
 
 .message-error,

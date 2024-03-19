@@ -152,9 +152,18 @@ const Page = () => {
                 );
               })}
           </div>
-          <button onClick={() => setShowAllNB(!showAllNonBoolean)}>
+          {/*           <button onClick={() => setShowAllNB(!showAllNonBoolean)}>
             {showAllNonBoolean ? "v" : "^"}
-          </button>
+            
+          </button> */}
+          <h3>
+            <img
+              onClick={() => setShowAllNB(!showAllNonBoolean)}
+              className={showAllNonBoolean ? "icon" : "icon rotate"}
+              src="./icon/arrow-down.png"
+              alt="show"
+            />
+          </h3>
           <div className="task-stat-container">
             {showAllNonBoolean &&
               remainingNonBooleanTasks.map((task) => {
