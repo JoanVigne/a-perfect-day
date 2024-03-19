@@ -3,10 +3,7 @@ import { checkDB } from "./db";
 
 async function sendToUsers(data: any, userId: string) {
   const { ref, snapShot } = await checkDB("users", userId);
-  /* if (!snapShot.exists()) {
-    //! Traitez le cas où l'id du user n'existe pas
-    await setDoc(ref, {});
-  } */
+
   const userData = snapShot.data();
   if (!userData) {
     console.log("no user found in db");
