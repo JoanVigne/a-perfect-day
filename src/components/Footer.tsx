@@ -1,8 +1,10 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import "./footer.css";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const pathname = usePathname();
   // a refaire avec plus de next
   const [activeLink, setActiveLink] = useState<string>("");
 
@@ -15,33 +17,26 @@ const Footer = () => {
     <footer>
       <nav>
         <ul>
-          <li
-            className={
-              activeLink === "/" || currentPath === "/" ? "active" : ""
-            }
-            onClick={() => handleLinkClick("/")}
-          >
-            <Link href="/">Routine</Link>
+          <li>
+            <Link href="/" className={pathname == "/" ? "active" : ""}>
+              Routine
+            </Link>
           </li>
-          <li
-            className={
-              activeLink === "/improve" || currentPath === "/improve"
-                ? "active"
-                : ""
-            }
-            onClick={() => handleLinkClick("/improve")}
-          >
-            <Link href="/improve">Improve</Link>
+          <li>
+            <Link
+              href="/improve"
+              className={pathname == "/improve" ? "active" : ""}
+            >
+              Improve
+            </Link>
           </li>
-          <li
-            className={
-              activeLink === "/historic" || currentPath === "/historic"
-                ? "active"
-                : ""
-            }
-            onClick={() => handleLinkClick("/historic")}
-          >
-            <Link href="/historic">Historic</Link>
+          <li>
+            <Link
+              href="/historic"
+              className={pathname == "/historic" ? "active" : ""}
+            >
+              Historic
+            </Link>
           </li>
         </ul>
       </nav>

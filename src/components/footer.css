@@ -5,18 +5,22 @@ footer {
   width: 100%;
   background-color: #333;
   color: #fff;
+  height: 60px;
+}
+nav {
+  height: 100%;
 }
 footer ul {
   display: flex;
   justify-content: space-around;
-  padding: 0;
-  margin: 0;
-  /*   POUR LINSTANT */
-  flex-wrap: wrap;
+  align-items: center;
+  height: 100%;
 }
-
-footer ul li {
-  padding: 20px;
+footer ul li,
+footer ul li a {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 footer .active {
