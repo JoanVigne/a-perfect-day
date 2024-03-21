@@ -4,6 +4,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";
 import React, { useEffect, useState } from "react";
 import TemporaryMessage from "./TemporaryMessage";
+import OpenIcon from "./OpenIcon";
 
 interface Props {
   deleteOnOff: boolean;
@@ -70,15 +71,25 @@ const FavoriteLists: React.FC<Props> = ({
       <div className="favorite-lists">
         <h3>
           Favorite lists
-          <img
-            onClick={() => setShowFav(!showFav)}
-            className={showFav ? "icon" : "icon rotate"}
-            src="./icon/arrow-down.png"
-            alt="show"
-          />
+          <OpenIcon show={showFav} setShow={setShowFav} />
         </h3>
         <div className={`excisting-favorites ${showFav ? "active" : "hidden"}`}>
           <ul>
+            {setTodayList ? (
+              <li>
+                Current list
+                <button
+                  className="previous"
+                  onClick={() => {
+                    location.reload();
+                  }}
+                >
+                  Use
+                </button>
+              </li>
+            ) : (
+              ""
+            )}
             {userInfo &&
               Object.keys(userInfo.lists).map(
                 (listName: string, index: number) => {
@@ -118,18 +129,7 @@ const FavoriteLists: React.FC<Props> = ({
                 }
               )}
           </ul>
-          {setTodayList ? (
-            <button
-              className="add"
-              onClick={() => {
-                location.reload();
-              }}
-            >
-              use the previous list
-            </button>
-          ) : (
-            ""
-          )}
+
           <TemporaryMessage message={messageDelete} type="message-error" />
         </div>
       </div>

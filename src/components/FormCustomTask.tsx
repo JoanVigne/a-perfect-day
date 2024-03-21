@@ -1,6 +1,7 @@
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToCustom } from "@/firebase/db/custom";
 import React, { useState } from "react";
+import OpenIcon from "./OpenIcon";
 
 interface FormCustomTaskProps {
   updateCustomTasks: (newCustomTasks: Task[]) => void;
@@ -77,6 +78,12 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
     if (alreadyInLocal) {
       return;
     }
+    console.log("unit : ", task.unit);
+    console.log("Typeof ", typeof task.unit);
+    if (task.unit !== false && task.count === "") {
+      console.log("dedans ! ");
+      task.count = "0";
+    }
     console.log("taskname ", task.name);
     sendToCustom(task, user.uid);
     const newLocalStorage = {
@@ -107,12 +114,7 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
     <>
       <h3>
         Create a new task
-        <img
-          onClick={() => setShowForm(!showForm)}
-          className={showForm ? "icon" : "icon rotate"}
-          src="./icon/arrow-down.png"
-          alt="show"
-        />
+        <OpenIcon show={showForm} setShow={setShowForm} />
       </h3>
 
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>
@@ -148,27 +150,30 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
               />
             </div>
             <label htmlFor="unit">Unit (boolean or string):</label>
-            <div className="option">
-              <input
-                type="radio"
-                id="boolean"
-                name="unit"
-                value="false"
-                checked={isBooleanSelected}
-                onChange={handleOptionChange}
-              />
-              <label htmlFor="boolean">Boolean</label>
-            </div>
-            <div className="option">
-              <input
-                type="radio"
-                id="other"
-                name="unit"
-                value=""
-                checked={!isBooleanSelected}
-                onChange={handleOptionChange}
-              />
-              <label htmlFor="other">Other</label>
+            <div className="container-options">
+              {" "}
+              <div className="option">
+                <input
+                  type="radio"
+                  id="boolean"
+                  name="unit"
+                  value="false"
+                  checked={isBooleanSelected}
+                  onChange={handleOptionChange}
+                />
+                <label htmlFor="boolean">Boolean</label>
+              </div>
+              <div className="option">
+                <input
+                  type="radio"
+                  id="other"
+                  name="unit"
+                  value=""
+                  checked={!isBooleanSelected}
+                  onChange={handleOptionChange}
+                />
+                <label htmlFor="other">Other</label>
+              </div>
             </div>
 
             {!isBooleanSelected && (

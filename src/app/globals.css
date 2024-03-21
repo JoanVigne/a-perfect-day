@@ -78,8 +78,16 @@ h3 {
   color: var(--color-white);
   background-color: var(--color-green);
 }
+.previous {
+  padding: 2px;
+  margin: 1px;
+  color: var(--color-white);
+  background-color: var(--color-red);
+}
+
 .cancel,
 .back {
+  color: var(--color-white);
   background-color: var(--color-black);
   padding: 5px;
 }
