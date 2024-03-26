@@ -7,22 +7,17 @@ import TemporaryMessage from "@/components/TemporaryMessage";
 import Load from "@/components/Load";
 import Chall from "./Chall";
 import FormCustomChall from "./FormCustomChall";
+import { getItemFromLocalStorage } from "@/app/utils/localstorage";
 
 interface Props {
   handleAddChall: any;
   userId: string;
 }
 interface Task {
-  id: string;
-  name: string;
-  description: string;
-  details: string;
-  count: any;
-  unit: any;
   [key: string]: any;
 }
 const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
-  const [customChall, setCustomChall] = useState<Task[]>([]);
+  const [customChall, setCustomChall] = useState<{ [key: string]: any }>({});
   const fakeList = {
     "052432wee1..1dj4": {
       details: "La maniére la plus propre possible",
@@ -49,8 +44,35 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
   const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
 
   const updateCustomChall = (newChall: Task[]) => {
-    setCustomChall(newChall);
-    localStorage.setItem("challenges", JSON.stringify(newChall));
+    console.log("new chall dans updatecustomchall : ", newChall);
+    let list = getItemFromLocalStorage("challenges");
+    setCustomChall(list);
+
+    if (typeof list !== "object" || Array.isArray(list)) {
+      console.log("type of : ", typeof list);
+      console.error("List is not an object.");
+      return;
+    }
+    if (list === null) {
+      list = {};
+    }
+    console.log("listf : ", list);
+
+    const isTaskAlreadyExists = Object.values(list).some(
+      (existingTask: Task) => existingTask.id === newChall.id
+    );
+
+    if (isTaskAlreadyExists) {
+      setMessageCustom(`already exists in the list`);
+      return;
+    }
+    const updatedList = { ...list, [newChall.id]: newChall };
+    console.log("UPDATED LIST :", updatedList);
+
+    setCustomChall(updatedList);
+    localStorage.setItem("challenges", JSON.stringify(updatedList));
+
+    setMessageCustom(null);
   };
 
   const [loadingTasks, setLoadingTasks] = useState(true);

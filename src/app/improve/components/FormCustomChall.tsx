@@ -1,113 +1,108 @@
-import TemporaryMessage from "@/components/TemporaryMessage";
-import { useAuthContext } from "@/context/AuthContext";
-import { sendToCustom } from "@/firebase/db/custom";
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 
-interface Props {
-  updateChallenges: any;
+interface Field {
+  key: string;
+  value: string;
 }
 
-interface Task {
-  [key: string]: any; // Champ personnalisable
+interface Props {
+  updateChallenges: (data: Record<string, string>) => void;
 }
 
 const FormCustomChall: React.FC<Props> = ({ updateChallenges }) => {
-  const { user } = useAuthContext() as { user: { uid: string } };
-  const [message, setMessage] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  // task
-  const [task, setTask] = useState<Task>({
-    id: Math.random().toString(36),
-    name: "",
-  });
-  // Définir un tableau de champs personnalisables
-  const [customFields, setCustomFields] = useState<
-    Array<{ label: string; name: string }>
-  >([]);
+  const [fields, setFields] = useState<Field[]>([{ key: "", value: "" }]);
+
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    index: number,
+    event: ChangeEvent<HTMLInputElement>
   ) => {
-    const { name, value } = e.target;
-    setTask({ ...task, [name]: value });
+    const values = [...fields];
+    if (event.target.name === "key") {
+      values[index].key = event.target.value.replace(/\s+/g, "_"); // Remplacer les espaces par des underscores
+    } else {
+      values[index].value = event.target.value;
+    }
+    setFields(values);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // if customfieldX est vide alors on l'enleve
-    console.log("task dans le handlesubmit de formCustomChall : ", task);
-
-    /*  updateChallenges ? */
-    // Envoyer les données à la fonction sendToCustom
-    /*     sendToCustom(task, user.uid); */
-
-    // Reset du formulaire, message, etc.
-    setCustomFields([]);
-    setTask({
-      id: Math.random().toString(36),
-    });
-    setMessage("New task created !");
-  };
-
-  // Fonction pour ajouter un nouveau champ personnalisable
   const handleAddField = () => {
-    const newFieldLabel = `Custom Field ${customFields.length + 1}`;
-    const newFieldName = `customField${customFields.length + 1}`;
-    setCustomFields([
-      ...customFields,
-      { label: newFieldLabel, name: newFieldName },
-    ]);
-    setTask({ ...task, [newFieldName]: "" });
+    const values = [...fields];
+    values.push({ key: "", value: "" });
+    setFields(values);
+  };
+
+  const handleRemoveField = (index: number) => {
+    const values = [...fields];
+    values.splice(index, 1);
+    setFields(values);
+  };
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    const result: { [key: string]: string } = {};
+    fields.forEach((field, index) => {
+      if (index === 0) {
+        // Utilisez field.key pour capturer le nom
+        result["name"] = field.value;
+      } else {
+        result[field.key] = field.value;
+      }
+    });
+    result["id"] = Math.random().toString(36);
+    console.log(result);
+    // Envoyer les données où vous en avez besoin
+    updateChallenges(result);
   };
 
   return (
-    <>
-      <h3>
-        Create a new task
-        <img
-          onClick={() => setShowForm(!showForm)}
-          className={showForm ? "icon" : "icon rotate"}
-          src="./icon/arrow-down.png"
-          alt="show"
+    <form onSubmit={handleSubmit}>
+      <div className="container-key-value">
+        <label htmlFor="name">Name</label>
+        <input
+          type="text"
+          placeholder="Enter a name"
+          value={fields[0].value}
+          onChange={(e) => handleChange(0, e)}
+          name="name"
         />
-      </h3>
-
-      <div className={showForm ? "cont-form active" : "cont-form hidden"}>
-        <div className="container-form">
-          <form className="add-custom-task" onSubmit={handleSubmit}>
-            {Object.keys(task).map((field, index) => {
-              if (field === "id") return ""; // Exclure le champ "id" de l'affichage
-              return (
-                <div key={index}>
-                  <label htmlFor={field}>{field}:</label>
-                  <input
-                    type="text"
-                    id={field}
-                    name={field}
-                    value={task[field]}
-                    onChange={handleChange}
-                    placeholder={`Enter ${field}`}
-                  />
-                </div>
-              );
-            })}
-
-            {/* Bouton pour ajouter un autre champ personnalisé */}
-            <button className="add" type="button" onClick={handleAddField}>
-              Add an other input
-            </button>
-            <TemporaryMessage message={message} type="small-message" />
-
-            {task && Object.keys(task).length > 2 && (
-              <button className="add" type="submit">
-                Create Task
-              </button>
-            )}
-          </form>
-        </div>
       </div>
-    </>
+      {/* Rendu des autres entrées */}
+      {fields.slice(1).map((field, index) => (
+        <div key={index} className="container-key-value">
+          <input
+            type="text"
+            placeholder="Enter key"
+            value={field.key}
+            onChange={(e) => handleChange(index + 1, e)}
+            name="key"
+          />
+          <input
+            type="text"
+            placeholder="Enter value"
+            value={field.value}
+            onChange={(e) => handleChange(index + 1, e)}
+            name="value"
+          />
+
+          <img
+            src="/red-bin.png"
+            alt="remove"
+            onClick={() => handleRemoveField(index + 1)}
+          />
+        </div>
+      ))}
+
+      <div onClick={handleAddField}>
+        <img src="/add.png" alt="add" className="add-button" />
+        Add Field
+      </div>
+
+      {fields.some((field) => fields[0].value !== "") && (
+        <button type="submit" className="add">
+          Submit
+        </button>
+      )}
+    </form>
   );
 };
 

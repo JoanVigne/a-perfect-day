@@ -91,3 +91,8 @@ form label {
 .container-new-fav-list .container-column .custom {
   border-right: 2px var(--color-black) solid;
 }
+
+.container-key-value {
+  display: flex;
+  align-items: center;
+}
