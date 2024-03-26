@@ -6,7 +6,7 @@ import { removeFromCustom } from "@/firebase/db/custom";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import Load from "@/components/Load";
 import Chall from "./Chall";
-import FormCustonChall from "./FormCustonChall";
+import FormCustomChall from "./FormCustomChall";
 
 interface Props {
   handleAddChall: any;
@@ -68,10 +68,15 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
         setLoadingTasks(false);
       }
     };
-
-    fetchData();
+    setCustomChall(Object.values(fakeList));
+    setLoadingTasks(false);
+    // A FETCH QUAND ON A LA DB
+    /*  fetchData(); */
   }, []);
-
+  // a virer quand fetch ok
+  useEffect(() => {
+    console.log("customchall : ", customChall);
+  }, [customChall]);
   // supprimer une custom :
   const [taskToRemove, setTaskToRemove] = useState<Task | null>(null);
   const handleRemoveTask = (task: Task, index: number) => {
@@ -107,8 +112,8 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
       {loadingTasks ? (
         <Load />
       ) : (
-        fakeList &&
-        Object.values(fakeList).map((chall, index) => (
+        customChall &&
+        Object.values(customChall).map((chall, index) => (
           <div key={index}>
             <Chall chall={chall} updateCustomChall={handleAddChall} />
             {clickedItemIndex === index && taskToRemove && (
@@ -138,7 +143,7 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
         ))
       )}
       <TemporaryMessage message={messageCustom} type="message-small" />
-      <FormCustonChall updateChallenges={updateCustomChall} />
+      <FormCustomChall updateChallenges={updateCustomChall} />
     </ul>
   );
 };

@@ -23,16 +23,18 @@ interface Task {
 const page = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [message, setMessage] = useState("");
-  const [perfTask, setPerfTask] = useState<{ [key: string]: Task }>();
+  const [perfList, setperfList] = useState<{ [key: string]: Task }>();
+
   function handleAddChallToPerfList(task: any) {
     console.log("fonction handleAddTaskToPerfList", task);
-    const list = getItemFromLocalStorage("challenges") as {
+    let list = getItemFromLocalStorage("challenges") as {
       [key: string]: any;
     };
     if (!list) {
       console.log("nothing in storage challenges");
+      list = {};
     }
-    setPerfTask(list);
+    setperfList(list);
     if (typeof list !== "object" || Array.isArray(list)) {
       console.error("list is not an object.");
       return;
@@ -48,7 +50,7 @@ const page = () => {
     }
     const updatedList = { ...list };
     updatedList[task.id] = task;
-    setPerfTask(updatedList);
+    setperfList(updatedList);
     localStorage.setItem("challenges", JSON.stringify(updatedList));
     setMessage("");
   }
@@ -59,9 +61,9 @@ const page = () => {
       <div className="container">
         <h2>Personal Records :</h2>
         <ul>
-          {perfTask &&
-            Object.values(perfTask).map((item, index) => {
-              if (Object.keys(perfTask).length <= 0) {
+          {perfList &&
+            Object.values(perfList).map((item, index) => {
+              if (Object.keys(perfList).length <= 0) {
                 return (
                   <p key={index}>
                     Your list is empty. You can add some tasks from the common
@@ -78,7 +80,7 @@ const page = () => {
                 <div key={index}>
                   {" "}
                   <li className="task">
-                    <h3>un item</h3> score <button>I improved !</button>
+                    <h3>{item.name}</h3> score <button>I improved !</button>
                   </li>
                 </div>
               );
