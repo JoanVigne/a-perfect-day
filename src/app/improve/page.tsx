@@ -27,11 +27,11 @@ const page = () => {
 
   function handleAddChallToPerfList(task: any) {
     console.log("fonction handleAddTaskToPerfList", task);
-    let list = getItemFromLocalStorage("challenges") as {
+    let list = getItemFromLocalStorage("customChall") as {
       [key: string]: any;
     };
     if (!list) {
-      console.log("nothing in storage challenges");
+      console.log("nothing in storage customChall");
       list = {};
     }
     setperfList(list);
@@ -51,7 +51,7 @@ const page = () => {
     const updatedList = { ...list };
     updatedList[task.id] = task;
     setperfList(updatedList);
-    localStorage.setItem("challenges", JSON.stringify(updatedList));
+    localStorage.setItem("customChall", JSON.stringify(updatedList));
     setMessage("");
   }
 

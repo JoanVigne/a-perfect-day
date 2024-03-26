@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
-
-import { removeFromCustom } from "@/firebase/db/custom";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import Load from "@/components/Load";
 import Chall from "./Chall";
@@ -43,9 +40,9 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
 
   const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
 
-  const updateCustomChall = (newChall: Task[]) => {
+  const updateCustomChall = (newChall: Task) => {
     console.log("new chall dans updatecustomchall : ", newChall);
-    let list = getItemFromLocalStorage("challenges");
+    let list = getItemFromLocalStorage("customChall");
     setCustomChall(list);
 
     if (typeof list !== "object" || Array.isArray(list)) {
@@ -59,9 +56,9 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
     console.log("listf : ", list);
 
     const isTaskAlreadyExists = Object.values(list).some(
-      (existingTask: Task) => existingTask.id === newChall.id
+      (existingTask: Task | any) => existingTask?.name === newChall.name
     );
-
+    console.log("isTaskAlreadyExists", isTaskAlreadyExists);
     if (isTaskAlreadyExists) {
       setMessageCustom(`already exists in the list`);
       return;
@@ -70,7 +67,7 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
     console.log("UPDATED LIST :", updatedList);
 
     setCustomChall(updatedList);
-    localStorage.setItem("challenges", JSON.stringify(updatedList));
+    localStorage.setItem("customChall", JSON.stringify(updatedList));
 
     setMessageCustom(null);
   };
@@ -80,7 +77,7 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
     const fetchData = async () => {
       try {
         const fetching = await fetchOnlyThisIdToLocalStorage(
-          "challenges",
+          "customChall",
           userId
         );
         setCustomChall(fetching);
@@ -90,15 +87,17 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
         setLoadingTasks(false);
       }
     };
-    setCustomChall(Object.values(fakeList));
+    // EN ATTENDANT FETCH DB
+    const local = localStorage.getItem("customChall");
+    if (local === null) {
+      return;
+    }
+    setCustomChall(JSON.parse(local));
     setLoadingTasks(false);
     // A FETCH QUAND ON A LA DB
     /*  fetchData(); */
   }, []);
-  // a virer quand fetch ok
-  useEffect(() => {
-    console.log("customchall : ", customChall);
-  }, [customChall]);
+
   // supprimer une custom :
   const [taskToRemove, setTaskToRemove] = useState<Task | null>(null);
   const handleRemoveTask = (task: Task, index: number) => {
@@ -164,8 +163,9 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
           </div>
         ))
       )}
+
+      <FormCustomChall updateCustomChall={updateCustomChall} />
       <TemporaryMessage message={messageCustom} type="message-small" />
-      <FormCustomChall updateChallenges={updateCustomChall} />
     </ul>
   );
 };

@@ -6,10 +6,10 @@ interface Field {
 }
 
 interface Props {
-  updateChallenges: (data: Record<string, string>) => void;
+  updateCustomChall: any;
 }
 
-const FormCustomChall: React.FC<Props> = ({ updateChallenges }) => {
+const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
   const [fields, setFields] = useState<Field[]>([{ key: "", value: "" }]);
 
   const handleChange = (
@@ -51,7 +51,7 @@ const FormCustomChall: React.FC<Props> = ({ updateChallenges }) => {
     result["id"] = Math.random().toString(36);
     console.log(result);
     // Envoyer les données où vous en avez besoin
-    updateChallenges(result);
+    updateCustomChall(result);
   };
 
   return (
