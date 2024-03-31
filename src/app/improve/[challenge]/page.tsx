@@ -1,5 +1,6 @@
 "use client";
 import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import OpenIcon from "@/components/OpenIcon";
 import React, { useEffect, useState } from "react";
 
 const Page = () => {
@@ -32,33 +33,67 @@ const Page = () => {
     setThisChall(newChall);
     console.log("newChall", newChall);
   }
-
+  const [showForm, setShowForm] = useState(false);
   return (
     <div>
-      <h1>Page</h1>
       {thisChall && (
         <div className="challenge">
           <div>
-            <h2>{thisChall.name}</h2>
-            <p>{thisChall.description}</p>
+            <h1> {thisChall.name}</h1>
+
+            <h3>
+              Value you are gonna improve :
+              <select name="" id="">
+                <option value="">{thisChall.selectedImprovement}</option>
+                {Object.entries(thisChall).map(([key, value]) => {
+                  if (
+                    key === "id" ||
+                    key === "name" ||
+                    key === thisChall.selectedImprovement ||
+                    key === "selectedImprovement"
+                  ) {
+                    return null;
+                  }
+                  return (
+                    <>
+                      <option value="">
+                        {key}: {String(value)}
+                      </option>
+                    </>
+                  );
+                })}
+              </select>
+            </h3>
           </div>
-          <div className="additional-properties">
-            {Object.entries(thisChall).map(([key, value]) => {
-              if (key === "id") {
-                return null;
-              }
-              return (
-                <div key={key}>
-                  <label>{key}</label>
-                  <input
-                    type="text"
-                    value={value as string}
-                    onChange={(e) => handleInputChange(key, e.target.value)}
-                  />
-                  <button onClick={() => handleDeleteInput(key)}>Delete</button>
-                </div>
-              );
-            })}
+
+          <h3>
+            Modify this challenge
+            <OpenIcon show={showForm} setShow={setShowForm} />
+          </h3>
+
+          <div className={showForm ? "cont-form active" : "cont-form hidden"}>
+            <div className="additional-properties">
+              {Object.entries(thisChall).map(([key, value]) => {
+                if (key === "id") {
+                  return null;
+                }
+                return (
+                  <div key={key}>
+                    <label>{key}</label>
+                    <input
+                      type="text"
+                      value={value as string}
+                      onChange={(e) => handleInputChange(key, e.target.value)}
+                    />
+                    {key !== "name" && (
+                      <button onClick={() => handleDeleteInput(key)}>
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

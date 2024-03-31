@@ -14,7 +14,7 @@ const OpenIcon: React.FC<Props> = ({ show, setShow }) => {
       onClick={() => setShow(!show)}
       style={iconStyles}
       className={show ? "icon" : "icon rotate"}
-      src="./icon/arrow-down.png"
+      src="/icon/arrow-down.png"
       alt="show"
     />
   );
