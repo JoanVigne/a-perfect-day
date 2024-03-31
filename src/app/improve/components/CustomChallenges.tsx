@@ -4,7 +4,7 @@ import TemporaryMessage from "@/components/TemporaryMessage";
 import Load from "@/components/Load";
 import Chall from "./Chall";
 import FormCustomChall from "./FormCustomChall";
-import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
 import ChallengeDisplay from "./ChallengeDisplay";
 
 interface Props {

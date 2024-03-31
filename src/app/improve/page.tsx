@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { useAuthContext } from "@/context/AuthContext";
 import React, { useEffect, useState } from "react";
 import CustomChallenges from "./components/CustomChallenges";
-import { getItemFromLocalStorage } from "../utils/localstorage";
+import { getItemFromLocalStorage } from "../../utils/localstorage";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import Link from "next/link";
 

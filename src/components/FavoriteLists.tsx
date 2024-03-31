@@ -1,4 +1,4 @@
-import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
 
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";

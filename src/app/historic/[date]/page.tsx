@@ -1,5 +1,5 @@
 "use client";
-import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
 import CommonTasks from "@/components/CommonTasks";
 import CustomTasks from "@/components/CustomTasks";
 import TemporaryMessage from "@/components/TemporaryMessage";

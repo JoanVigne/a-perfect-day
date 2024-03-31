@@ -1,16 +1,27 @@
 "use client";
-import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
+import Footer from "@/components/Footer";
 import OpenIcon from "@/components/OpenIcon";
 import React, { useEffect, useState } from "react";
+import ModifyChallForm from "./components/ModifyChallForm";
 
 const Page = () => {
-  const slug = window.location.pathname.split("/").pop();
-  console.log("slug", slug);
+  const [showForm, setShowForm] = useState(false);
+  const [slug, setSlug] = useState<string | null>(null);
   const [thisChall, setThisChall] = useState<any>(null);
 
   useEffect(() => {
-    getThisChall();
+    const pathslug = window.location.pathname.split("/").pop();
+    if (pathslug) {
+      setSlug(pathslug);
+    }
   }, []);
+
+  useEffect(() => {
+    if (slug) {
+      getThisChall();
+    }
+  }, [slug]);
 
   const getThisChall = () => {
     const customchall = getItemFromLocalStorage("customChall");
@@ -24,16 +35,20 @@ const Page = () => {
     });
   };
 
-  const handleInputChange = (key: string, value: string) => {
+  const inputChange = (key: string, value: string) => {
     setThisChall({ ...thisChall, [key]: value });
   };
 
-  function handleDeleteInput(key: string) {
+  function deleteInput(key: string) {
     const { [key]: deleted, ...newChall } = thisChall;
     setThisChall(newChall);
     console.log("newChall", newChall);
   }
-  const [showForm, setShowForm] = useState(false);
+  function submitModify(e: any) {
+    e.preventDefault();
+    console.log("SUBMIT MODIFY", e);
+  }
+
   return (
     <div>
       {thisChall && (
@@ -55,11 +70,9 @@ const Page = () => {
                     return null;
                   }
                   return (
-                    <>
-                      <option value="">
-                        {key}: {String(value)}
-                      </option>
-                    </>
+                    <option value="" key={key}>
+                      {key}: {String(value)}
+                    </option>
                   );
                 })}
               </select>
@@ -70,33 +83,17 @@ const Page = () => {
             Modify this challenge
             <OpenIcon show={showForm} setShow={setShowForm} />
           </h3>
-
           <div className={showForm ? "cont-form active" : "cont-form hidden"}>
-            <div className="additional-properties">
-              {Object.entries(thisChall).map(([key, value]) => {
-                if (key === "id") {
-                  return null;
-                }
-                return (
-                  <div key={key}>
-                    <label>{key}</label>
-                    <input
-                      type="text"
-                      value={value as string}
-                      onChange={(e) => handleInputChange(key, e.target.value)}
-                    />
-                    {key !== "name" && (
-                      <button onClick={() => handleDeleteInput(key)}>
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <ModifyChallForm
+              thisChall={thisChall}
+              inputChange={inputChange}
+              deleteInput={deleteInput}
+              submitModify={submitModify}
+            />
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 };

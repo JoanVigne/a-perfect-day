@@ -8,7 +8,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 import BarChart from "./components/BarChart";
 import Footer from "@/components/Footer";
-import { getItemFromLocalStorage } from "../utils/localstorage";
+import { getItemFromLocalStorage } from "../../utils/localstorage";
 import LineChart from "./components/LineChart";
 
 import Streak from "./components/Streak";

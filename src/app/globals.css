@@ -71,6 +71,7 @@ h3 {
   justify-content: space-around;
   margin: 15px;
 }
+
 .add,
 .save {
   padding: 2px;
@@ -78,6 +79,7 @@ h3 {
   color: var(--color-white);
   background-color: var(--color-green);
 }
+
 .previous {
   padding: 2px;
   margin: 1px;
@@ -91,6 +93,7 @@ h3 {
   background-color: var(--color-black);
   padding: 5px;
 }
+
 .hide {
   background-color: var(--color-black);
   color: var(--color-white);

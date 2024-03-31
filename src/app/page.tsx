@@ -16,7 +16,7 @@ import Lists from "@/components/Lists";
 import Header from "@/components/Header";
 import TemporaryMessage from "../components/TemporaryMessage";
 import Link from "next/link";
-import { getItemFromLocalStorage } from "./utils/localstorage";
+import { getItemFromLocalStorage } from "../utils/localstorage";
 
 interface UserData {
   email: string;

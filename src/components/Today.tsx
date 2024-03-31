@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
 import TemporaryMessage from "./TemporaryMessage";
-import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
 import TaskDisplay from "./TaskDisplay";
 
 interface Task {
