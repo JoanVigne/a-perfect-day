@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import CustomChallenges from "./components/CustomChallenges";
 import { getItemFromLocalStorage } from "../utils/localstorage";
 import TemporaryMessage from "@/components/TemporaryMessage";
+import Link from "next/link";
 
 interface UserData {
   email: string;
@@ -78,10 +79,11 @@ const page = () => {
               }
               return (
                 <div key={index}>
-                  {" "}
-                  <li className="task">
-                    <h3>{item.name}</h3> score <button>I improved !</button>
-                  </li>
+                  <Link href={`/improve/${item.id}`}>
+                    <li className="task">
+                      <h3>{item.name}</h3> score <button>I improved !</button>
+                    </li>
+                  </Link>
                 </div>
               );
             })}

@@ -5,6 +5,7 @@ import Load from "@/components/Load";
 import Chall from "./Chall";
 import FormCustomChall from "./FormCustomChall";
 import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import ChallengeDisplay from "./ChallengeDisplay";
 
 interface Props {
   handleAddChall: any;
@@ -53,14 +54,13 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
     if (list === null) {
       list = {};
     }
-    console.log("listf : ", list);
 
     const isTaskAlreadyExists = Object.values(list).some(
       (existingTask: Task | any) => existingTask?.name === newChall.name
     );
-    console.log("isTaskAlreadyExists", isTaskAlreadyExists);
+
     if (isTaskAlreadyExists) {
-      setMessageCustom(`already exists in the list`);
+      setMessageCustom(`Name is already taken`);
       return;
     }
     const updatedList = { ...list, [newChall.id]: newChall };
@@ -136,7 +136,13 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
         customChall &&
         Object.values(customChall).map((chall, index) => (
           <div key={index}>
-            <Chall chall={chall} updateCustomChall={handleAddChall} />
+            {/*         <Chall chall={chall} updateCustomChall={handleAddChall} /> */}
+            <ChallengeDisplay
+              challenge={chall}
+              remove={true}
+              removeConfirmation={handleRemoveTask}
+              handleAddChall={handleAddChall}
+            />
             {clickedItemIndex === index && taskToRemove && (
               <div className="modal-remove">
                 <div className="modal-content">
@@ -165,7 +171,7 @@ const CustomChallenges: React.FC<Props> = ({ handleAddChall, userId }) => {
       )}
 
       <FormCustomChall updateCustomChall={updateCustomChall} />
-      <TemporaryMessage message={messageCustom} type="message-small" />
+      <TemporaryMessage message={messageCustom} type="message-error" />
     </ul>
   );
 };
