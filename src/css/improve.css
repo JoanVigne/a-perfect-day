@@ -1,0 +1,23 @@
+.challenge {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid var(--color-white);
+  background-color: var(--color-grey);
+  border-radius: 5px;
+  padding: 5px 5px 5px 12px;
+  margin: 5px;
+}
+
+.challenge .improvement-bcontainerin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.challenge .improvement-container .improvement {
+  background-color: var(--color-dark-grey);
+  border: 3px solid var(--color-green);
+  border-radius: 5px;
+  padding: 15px 5px;
+  margin: 5px 5px 15px 5px;
+}

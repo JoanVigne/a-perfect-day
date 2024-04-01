@@ -2,7 +2,6 @@ import OpenIcon from "@/components/OpenIcon";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToChall } from "@/firebase/db/chall";
-import { set } from "firebase/database";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 
 interface Field {

@@ -8,6 +8,7 @@ import "@/css/modal.css";
 import "@/css/charts.css";
 import "@/css/stats.css";
 import "@/css/calendar.css";
+import "@/css/improve.css";
 import { AuthContextProvider } from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
