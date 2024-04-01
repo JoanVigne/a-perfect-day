@@ -1,5 +1,7 @@
 import OpenIcon from "@/components/OpenIcon";
 import TemporaryMessage from "@/components/TemporaryMessage";
+import { useAuthContext } from "@/context/AuthContext";
+import { sendToChall } from "@/firebase/db/chall";
 import { set } from "firebase/database";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 
@@ -14,8 +16,10 @@ interface Props {
 
 const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
   const [fields, setFields] = useState<Field[]>([{ key: "", value: "" }]);
+  const { user } = useAuthContext() as { user: { uid: string } };
   const [selectedImprovement, setSelectedImprovement] = useState("");
   const [message, setMessage] = useState("");
+  const [showForm, setShowForm] = useState(false);
   const handleChange = (
     index: number,
     event: ChangeEvent<HTMLInputElement>
@@ -29,19 +33,21 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
     setFields(values);
   };
 
-  const handleAddField = () => {
+  const addField = () => {
     const values = [...fields];
     values.push({ key: "", value: "" });
     setFields(values);
   };
 
-  const handleRemoveField = (index: number) => {
+  const removeField = (index: number) => {
     const values = [...fields];
     values.splice(index, 1);
     setFields(values);
   };
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+    // add id: Math.random().toString(36), to an "id" field
+
     const result: { [key: string]: string } = {};
     if (selectedImprovement === "") {
       setMessage("Please select an improvement");
@@ -57,10 +63,16 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
     result["id"] = Math.random().toString(36);
     result["selectedImprovement"] = selectedImprovement;
     console.log(result);
+    // send to db
+    sendToChall(result, user.uid);
     // Envoyer les données où vous en avez besoin
     updateCustomChall(result);
+    // Reset fields
+    setFields([{ key: "", value: "" }]);
+    setMessage("New challenge created");
+    setShowForm(false);
   };
-  const [showForm, setShowForm] = useState(false);
+
   return (
     <div>
       <h3>
@@ -111,12 +123,12 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
               <img
                 src="/red-bin.png"
                 alt="remove"
-                onClick={() => handleRemoveField(index + 1)}
+                onClick={() => removeField(index + 1)}
               />
             </div>
           ))}
 
-          <div onClick={handleAddField}>
+          <div onClick={addField}>
             <img src="/add.png" alt="add" className="add-button" />
             Add Field
           </div>

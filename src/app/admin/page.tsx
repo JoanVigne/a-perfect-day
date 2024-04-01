@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 
-const AdminPage: React.FC = () => {
+const Page: React.FC = () => {
   return (
     <div>
       <h1>Welcome, Admin!</h1>
@@ -11,4 +11,4 @@ const AdminPage: React.FC = () => {
   );
 };
 
-export default AdminPage;
+export default Page;
