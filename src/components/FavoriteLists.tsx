@@ -129,7 +129,11 @@ const FavoriteLists: React.FC<Props> = ({
               )}
           </ul>
 
-          <TemporaryMessage message={messageDelete} type="message-error" />
+          <TemporaryMessage
+            message={messageDelete}
+            type="message-error"
+            timeInMS={3000}
+          />
         </div>
       </div>
     </>

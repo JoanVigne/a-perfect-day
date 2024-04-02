@@ -62,7 +62,11 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
         }
         onClickDay={(value) => handleClick(value)}
       />
-      <TemporaryMessage message={message} type="message-error" />
+      <TemporaryMessage
+        message={message}
+        type="message-error"
+        timeInMS={3000}
+      />
     </div>
   );
 };

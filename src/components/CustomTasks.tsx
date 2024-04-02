@@ -122,7 +122,11 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
           </div>
         ))
       )}
-      <TemporaryMessage message={messageCustom} type="message-small" />
+      <TemporaryMessage
+        message={messageCustom}
+        type="message-small"
+        timeInMS={3000}
+      />
       <FormCustomTask updateCustomTasks={updateCustomTasks} />
     </ul>
   );
