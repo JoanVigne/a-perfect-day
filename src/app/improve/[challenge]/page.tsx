@@ -3,8 +3,12 @@ import { getItemFromLocalStorage } from "@/utils/localstorage";
 import Footer from "@/components/Footer";
 import OpenIcon from "@/components/OpenIcon";
 import React, { useEffect, useState } from "react";
-import ModifyChallForm from "./components/ModifyChallForm";
-
+import FormModifyChall from "./components/FormModifyChall";
+import FormImproved from "./components/FormImproved";
+interface Field {
+  key: string;
+  value: string;
+}
 const Page = () => {
   const [showForm, setShowForm] = useState(false);
   const [slug, setSlug] = useState<string | null>(null);
@@ -25,10 +29,7 @@ const Page = () => {
 
   const getThisChall = () => {
     const customchall = getItemFromLocalStorage("customChall");
-    console.log("customChall", customchall);
-
     Object.values(customchall).map((chall: any) => {
-      console.log(chall);
       if (chall.id === slug) {
         setThisChall(chall);
       }
@@ -44,55 +45,35 @@ const Page = () => {
     setThisChall(newChall);
     console.log("newChall", newChall);
   }
-  function submitModify(e: any) {
-    e.preventDefault();
-    console.log("SUBMIT MODIFY", e);
+  function submitModify(data: any) {
+    console.log("data dans submitModify", data);
+    // control data
+    // send to db
   }
 
   return (
     <div>
       {thisChall && (
-        <div className="challenge">
-          <div>
-            <h1> {thisChall.name}</h1>
+        <div className="">
+          <h1> {thisChall.name}</h1>
 
-            <h3>
-              Value you are gonna improve :
-              <select name="" id="">
-                <option value="">{thisChall.selectedImprovement}</option>
-                {Object.entries(thisChall).map(([key, value]) => {
-                  if (
-                    key === "id" ||
-                    key === "name" ||
-                    key === thisChall.selectedImprovement ||
-                    key === "selectedImprovement"
-                  ) {
-                    return null;
-                  }
-                  return (
-                    <option value="" key={key}>
-                      {key}: {String(value)}
-                    </option>
-                  );
-                })}
-              </select>
-            </h3>
+          <div className="container">
+            <h2>I improved !</h2>
+            <FormImproved thisChall={thisChall} submitModify={submitModify} />
           </div>
-
-          <h3>
-            Modify this challenge
-            <OpenIcon show={showForm} setShow={setShowForm} />
-          </h3>
-          <div className={showForm ? "cont-form active" : "cont-form hidden"}>
-            <ModifyChallForm
-              thisChall={thisChall}
-              inputChange={inputChange}
-              deleteInput={deleteInput}
-              submitModify={submitModify}
-            />
+          <div className="container">
+            <div>
+              <FormModifyChall
+                thisChall={thisChall}
+                inputChange={inputChange}
+                deleteInput={deleteInput}
+                submitModify={submitModify}
+              />
+            </div>
           </div>
         </div>
       )}
+
       <Footer />
     </div>
   );

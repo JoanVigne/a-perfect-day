@@ -100,41 +100,21 @@ const CustomChallenges: React.FC<Props> = ({ userId }) => {
       ) : (
         customChall &&
         Object.values(customChall).map((chall, index) => (
-          <div key={index}>
-            <CardChallenge
-              challenge={chall}
-              remove={true}
-              removeConfirmation={handleRemoveTask}
-            />
-            {clickedItemIndex === index && taskToRemove && (
-              <div className="modal-remove">
-                <div className="modal-content">
-                  <p>
-                    Are you sure you want to delete "{chall.name}" for ever?
-                  </p>
-                  <div className="modal-buttons">
-                    <button
-                      onClick={handleConfirmRemoveTask}
-                      className="confirm"
-                    >
-                      Confirm
-                    </button>
-                    <button
-                      onClick={() => setTaskToRemove(null)}
-                      className="cancel"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          <CardChallenge
+            challenge={chall}
+            remove={true}
+            removeConfirmation={handleRemoveTask}
+            key={index}
+          />
         ))
       )}
 
-      <FormCustomChall updateCustomChall={updateCustomChall} />
-      <TemporaryMessage message={messageCustom} type="message-error" />
+      <FormCustomChall updateCustomChall={updateCustomChall} userid={userId} />
+      <TemporaryMessage
+        message={messageCustom}
+        type="message-error"
+        timeInMS={3000}
+      />
     </ul>
   );
 };

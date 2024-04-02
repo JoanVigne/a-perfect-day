@@ -47,7 +47,13 @@ li {
   border-radius: 5px;
   background-color: var(--color-dark-grey);
 }
-
+h1 {
+  text-align: center;
+  margin: 10px;
+}
+h2 {
+  margin: 10px;
+}
 h2,
 h3 {
   text-align: center;
@@ -110,11 +116,18 @@ h3 {
   transition: all 1s;
 }
 
-.message-error,
-.message-small {
+/* TEMPORARY MESSAGE */
+.temporary-message {
+  height: 35px;
+  width: auto;
   text-align: center;
 }
-
+.temporary-message.visible {
+  opacity: 1;
+}
+.temporary-message.invisible {
+  opacity: 0;
+}
 .message-error {
   color: var(--color-white);
   background-color: var(--color-red);

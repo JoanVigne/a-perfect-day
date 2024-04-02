@@ -1,6 +1,5 @@
 import OpenIcon from "@/components/OpenIcon";
 import TemporaryMessage from "@/components/TemporaryMessage";
-import { useAuthContext } from "@/context/AuthContext";
 import { sendToChall } from "@/firebase/db/chall";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 
@@ -11,14 +10,14 @@ interface Field {
 
 interface Props {
   updateCustomChall: any;
+  userid: string;
 }
 
-const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
+const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
+  const [selectedImprovement, setSelectedImprovement] = useState<string[]>([]);
   const [fields, setFields] = useState<Field[]>([{ key: "", value: "" }]);
-  const { user } = useAuthContext() as { user: { uid: string } };
-  const [selectedImprovement, setSelectedImprovement] = useState("");
-  const [message, setMessage] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [message, setMessage] = useState("");
   const handleChange = (
     index: number,
     event: ChangeEvent<HTMLInputElement>
@@ -47,11 +46,8 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
     event.preventDefault();
     // add id: Math.random().toString(36), to an "id" field
 
-    const result: { [key: string]: string } = {};
-    if (selectedImprovement === "") {
-      setMessage("Please select an improvement");
-      return;
-    }
+    const result: { [key: string]: string | string[] } = {};
+
     fields.forEach((field, index) => {
       if (index === 0) {
         result["name"] = field.value;
@@ -63,7 +59,7 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
     result["selectedImprovement"] = selectedImprovement;
     console.log(result);
     // send to db
-    sendToChall(result, user.uid);
+    sendToChall(result, userid);
     // Envoyer les données où vous en avez besoin
     updateCustomChall(result);
     // Reset fields
@@ -90,42 +86,63 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
               name="name"
             />
           </div>
-          <p>
-            Personnalise your challenge, and select the value you are gonna
-            improve
-          </p>
-          {/* Rendu des autres entrées */}
-          {fields.slice(1).map((field, index) => (
-            <div key={index} className="container-key-value">
-              <input
-                type="text"
-                placeholder="Enter key"
-                value={field.key}
-                onChange={(e) => handleChange(index + 1, e)}
-                name="key"
-              />
-              <input
-                type="text"
-                placeholder="Enter value"
-                value={field.value}
-                onChange={(e) => handleChange(index + 1, e)}
-                name="value"
-              />
-              <label htmlFor="selectedToImprove">improvement?</label>
-              <input
-                type="radio"
-                name="selectedToImprove"
-                id={`selectedToImprove_${index}`}
-                value={field.key}
-                onChange={(e) => setSelectedImprovement(e.target.value)}
-              />
-              <img
-                src="/red-bin.png"
-                alt="remove"
-                onClick={() => removeField(index + 1)}
-              />
-            </div>
-          ))}
+          <table>
+            <tbody>
+              <tr>
+                <td>Personnalise your challenge by adding an other field</td>
+                <td>Select the value you will improve</td>
+              </tr>
+              <tr>
+                <td colSpan={2}>
+                  {/* Rendu des autres entrées */}
+                  {fields.slice(1).map((field, index) => (
+                    <div key={index} className="container-key-value">
+                      <input
+                        type="text"
+                        placeholder="Enter key"
+                        value={field.key}
+                        onChange={(e) => handleChange(index + 1, e)}
+                        name="key"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Enter value"
+                        value={field.value}
+                        onChange={(e) => handleChange(index + 1, e)}
+                        name="value"
+                      />
+                      <div className="improve">
+                        <input
+                          type="checkbox"
+                          name="selectedToImprove"
+                          id={`selectedToImprove_${index}`}
+                          value={field.key}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedImprovement((prev) => [
+                                ...prev,
+                                e.target.value,
+                              ]);
+                            } else {
+                              setSelectedImprovement((prev) =>
+                                prev.filter((value) => value !== e.target.value)
+                              );
+                            }
+                          }}
+                        />
+                        <span
+                          onClick={() => removeField(index + 1)}
+                          className="remove"
+                        >
+                          <img src="./delet.png" alt="remove" />
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
           <div onClick={addField}>
             <img src="/add.png" alt="add" className="add-button" />
@@ -134,7 +151,11 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall }) => {
 
           {fields.some((field) => fields[0].value !== "") && (
             <>
-              <TemporaryMessage message={message} type="message-error" />
+              <TemporaryMessage
+                message={message}
+                type="message-error"
+                timeInMS={3000}
+              />
               <button type="submit" className="add">
                 Submit
               </button>

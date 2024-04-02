@@ -197,7 +197,7 @@ export default function Home() {
   }
   return (
     <>
-      <Header nickname={userInfo?.nickname} />
+      <Header />
       <main>
         {/*         <button
           onClick={async () => {
@@ -207,15 +207,19 @@ export default function Home() {
         >
           test
         </button> */}
+        <h1>Routine</h1>
         <div className="container">
-          <h2>Routine</h2>
           <Today
             list={todayList}
             handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
             userInfo={userInfo && userInfo}
             userId={user.uid}
           />
-          <TemporaryMessage message={messagelist} type="message-small" />
+          <TemporaryMessage
+            message={messagelist}
+            type="message-small"
+            timeInMS={3000}
+          />
 
           <Link href="/historic">historic</Link>
         </div>

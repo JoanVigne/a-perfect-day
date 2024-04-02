@@ -130,8 +130,9 @@ const Page = () => {
   const [showAllNonBoolean, setShowAllNB] = useState(false);
   return (
     <>
+      <Header />
       <main>
-        <Header nickname={userInfo?.nickname} />
+        <h1>Historic</h1>
         <div className="container">
           <h2>Countable</h2>
           <div className="task-stat-container">

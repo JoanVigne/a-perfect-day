@@ -1,13 +1,10 @@
-import OpenIcon from "@/components/OpenIcon";
-import TemporaryMessage from "@/components/TemporaryMessage";
 import Link from "next/link";
 import React, { useState } from "react";
 
 interface Challenge {
   id: string;
   name: string;
-  description: string;
-  details: string;
+  selectedImprovement: any;
   [key: string]: any;
 }
 
@@ -17,38 +14,50 @@ interface Props {
   removeConfirmation: any;
 }
 
-const CardChallenge: React.FC<Props> = ({
-  challenge,
-  remove,
-  removeConfirmation,
-}) => {
-  const [messageAdded, setMessageAdded] = useState("");
-  const [toggleDetails, settoggleDetails] = useState("hidden");
-
+const CardChallenge: React.FC<Props> = ({ challenge }) => {
   return (
     <li className="challenge">
       <div className="infos">
         {Object.entries(challenge).map(([key, value]) => {
           if (key === "name") {
-            return <h4 key={key}>{value}</h4>;
+            return <h3 key={key}>{value}</h3>;
           }
-          return (
-            <p key={key}>
-              {key}: {value}
-            </p>
-          );
+          if (key === "id" || key === "selectedImprovement") return null;
+          else {
+            return (
+              <p key={key}>
+                {key}: {value}
+              </p>
+            );
+          }
         })}
       </div>
-      <div className="improvement-container">
-        <Link href={`/improve/${challenge.id}`}>
-          <div className="improvement">
-            {challenge.selectedImprovement &&
-              `${challenge.selectedImprovement}: 
-            ${challenge[challenge.selectedImprovement]}
-            `}
-          </div>
-        </Link>
-      </div>
+      <Link href={`/improve/${challenge.id}`} className="improvement">
+        {challenge.selectedImprovement &&
+        challenge.selectedImprovement.length > 0 ? (
+          <ul>
+            {challenge.selectedImprovement.map(
+              (improvement: any, index: number) => (
+                <li key={index}>
+                  {Object.entries(challenge).map(([key, value]) => {
+                    if (key === improvement) {
+                      return (
+                        <h3 key={key}>
+                          {value} {key}
+                        </h3>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
+                </li>
+              )
+            )}
+          </ul>
+        ) : (
+          <p>Modify your challenge and select the value you wanna improve</p>
+        )}
+      </Link>
     </li>
   );
 };

@@ -102,7 +102,6 @@ const FavoriteLists: React.FC<Props> = ({
                             className="add"
                             onClick={() => {
                               useThisList(listName);
-                              /*              listDetail(listName); */
                             }}
                           >
                             Use

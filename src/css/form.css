@@ -103,3 +103,7 @@ form .label-delet {
   align-items: center;
   justify-content: center;
 }
+
+form input[type="checkbox"] {
+  transform: scale(1.5); /* Increase the size of the checkbox */
+}

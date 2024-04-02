@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 export default function TemporaryMessage({
   message,
   type,
+  timeInMS, // 5000
 }: {
   message: string | null;
   type: string | ""; // "message-small" ou "message-error"
+  timeInMS: number;
 }) {
   const [showMessage, setShowMessage] = useState(false);
 
@@ -15,15 +17,19 @@ export default function TemporaryMessage({
 
       const timeout = setTimeout(() => {
         setShowMessage(false);
-      }, 2000);
+      }, timeInMS);
 
       return () => clearTimeout(timeout);
     }
   }, [message]);
 
   return (
-    showMessage && (
-      <span className={"temporary-message " + type}>{message}</span>
-    )
+    <span
+      className={`temporary-message ${type} ${
+        showMessage ? "visible" : "invisible"
+      }`}
+    >
+      {message}
+    </span>
   );
 }

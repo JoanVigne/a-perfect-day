@@ -7,17 +7,42 @@
   padding: 5px 5px 5px 12px;
   margin: 5px;
 }
-
-.challenge .improvement-bcontainerin {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.challenge h3 {
+  font-size: 26px;
 }
 
-.challenge .improvement-container .improvement {
+.challenge .improvement {
+  max-width: 40%;
   background-color: var(--color-dark-grey);
   border: 3px solid var(--color-green);
   border-radius: 5px;
   padding: 15px 5px;
   margin: 5px 5px 15px 5px;
+}
+
+.modify-chall .field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
+}
+
+form .improve {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+
+.container-improvements {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.improvement {
+  display: flex;
+  align-items: center;
+  width: 49%;
+}
+.improvement * {
+  margin: 10px;
 }

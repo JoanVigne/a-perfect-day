@@ -4,6 +4,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import React, { useEffect, useState } from "react";
 import ContainerChallenges from "./components/ContainerChallenges";
 import Link from "next/link";
+import Header from "@/components/Header";
 
 interface UserData {
   email: string;
@@ -16,6 +17,7 @@ const page = () => {
 
   return (
     <div>
+      <Header />
       <h1>IMPROVE</h1>
       <div className="container">
         <h2>My Challenges</h2>

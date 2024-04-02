@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from "react";
 import "./header.css";
 import Link from "next/link";
-interface HeaderProps {
-  nickname?: string; // Annoter le type de la propriété nickname
+import { getItemFromLocalStorage } from "@/utils/localstorage";
+
+interface UserInfo {
+  nickname: string;
+  lists: { [key: string]: object };
+  todayList: { [key: string]: object };
 }
-const Header: React.FC<HeaderProps> = ({ nickname }) => {
+
+const Header = () => {
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    const users = getItemFromLocalStorage("users");
+    if (!users) {
+      console.log("No user in local storage");
+    } else {
+      setUserInfo(users);
+    }
+  }, []);
+
   const months = [
     "January",
     "February",
@@ -19,7 +35,6 @@ const Header: React.FC<HeaderProps> = ({ nickname }) => {
     "November",
     "December",
   ];
-
   const [dateToday, setDateToday] = useState("");
 
   useEffect(() => {
@@ -32,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ nickname }) => {
   return (
     <header>
       <p>{dateToday && dateToday}</p>
-      {nickname ? nickname : ""}
+      <h2>{userInfo?.nickname}</h2>
       <Link href={"/options"}>
         <img src="./options.png" alt="options" className="options-logo" />
       </Link>

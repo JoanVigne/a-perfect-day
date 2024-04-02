@@ -74,10 +74,10 @@
 .hidden {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.9s ease-in;
+  transition: max-height 0.9s ease-out;
 }
 .active {
-  max-height: 350px;
+  max-height: 1350px;
   transition: max-height 0.9s ease-in;
   overflow: scroll;
 }
