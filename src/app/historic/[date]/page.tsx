@@ -212,7 +212,11 @@ const Page = () => {
           <button className="add" onClick={backAndSendToDB}>
             Save modifcations
           </button>
-          <TemporaryMessage message={messagelist} type="message-small" />
+          <TemporaryMessage
+            message={messagelist}
+            type="message-small"
+            timeInMS={3000}
+          />
           <Link className="cancel" href="/historic">
             Cancel
           </Link>
