@@ -1,6 +1,11 @@
 import TemporaryMessage from "@/components/TemporaryMessage";
-import React, { useState } from "react";
+import { useAuthContext } from "@/context/AuthContext";
+import React, { useContext, useState } from "react";
 
+interface UserData {
+  email: string;
+  uid: string;
+}
 interface Props {
   thisChall: {
     selectedImprovement: string[];
@@ -10,6 +15,7 @@ interface Props {
 }
 
 const FormImproved: React.FC<Props> = ({ thisChall, submitModify }) => {
+  const { user } = useAuthContext() as { user: UserData };
   const [message, setMessage] = useState<string | null>("");
   const [improvements, setImprovements] = useState<{ [key: string]: string }>(
     thisChall.selectedImprovement.reduce(

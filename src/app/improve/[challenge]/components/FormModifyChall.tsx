@@ -1,11 +1,17 @@
 import OpenIcon from "@/components/OpenIcon";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useAuthContext } from "@/context/AuthContext";
+import { removeFromChall } from "@/firebase/db/chall";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 
-interface Field {
+interface Fields {
   key: string;
   value: string;
 }
-
+interface UserData {
+  email: string;
+  uid: string;
+}
 interface Props {
   thisChall: any;
   inputChange: (key: string, value: string) => void;
@@ -19,7 +25,8 @@ const FormModifyChall: React.FC<Props> = ({
   deleteInput,
   submitModify,
 }) => {
-  const [fields, setFields] = useState<Field[]>(
+  const { user } = useAuthContext() as { user: UserData };
+  const [fields, setFields] = useState<Fields[]>(
     Object.entries(thisChall).map(([key, value]) => ({
       key,
       value: value as string,
@@ -29,6 +36,8 @@ const FormModifyChall: React.FC<Props> = ({
   const [selectedImprovement, setSelectedImprovement] = useState<string[]>(
     thisChall.selectedImprovement || []
   );
+  const [customChall, setCustomChall] = useState<any | null>(null);
+  const [message, setMessage] = useState<string | null>("");
 
   const handleChange = (
     index: number,
@@ -50,7 +59,7 @@ const FormModifyChall: React.FC<Props> = ({
     setFields(values);
     deleteInput(values[index].key);
   };
-  function formingDataToSend(fields: Field[], selectedImprovement: string[]) {
+  function formingDataToSend(fields: Fields[], selectedImprovement: string[]) {
     const result = {
       ...thisChall,
       ...fields.reduce((acc, field) => {
@@ -62,11 +71,36 @@ const FormModifyChall: React.FC<Props> = ({
     console.log("result", result);
     submitModify(result);
   }
+  const [challToRemove, setChallToRemove] = useState<any | null>(null);
+
+  async function deleteChall() {
+    //
+    setCustomChall(getItemFromLocalStorage("customChall"));
+    if (challToRemove && challToRemove.id !== undefined) {
+      const updatedChalls = { ...customChall };
+
+      // Supprimer la tâche avec l'ID correspondant de la copie de customTasks
+      Object.keys(updatedChalls).forEach((key) => {
+        const taskKey = key as keyof typeof updatedChalls;
+        if (taskKey === challToRemove?.id) {
+          delete updatedChalls[taskKey];
+        }
+      });
+      console.log("updated Task", updatedChalls);
+      setChallToRemove(null);
+      // envoi a la db customChall
+      const mess = await removeFromChall(updatedChalls, user.uid);
+      setMessage(mess);
+      setCustomChall(updatedChalls);
+      /*       setForceUpdate((prev) => !prev); */
+    }
+  }
+
   return (
-    <div className="container">
-      <h3>
+    <div>
+      <h2>
         Modify this challenge <OpenIcon show={showForm} setShow={setShowForm} />
-      </h3>
+      </h2>
 
       <form
         onSubmit={(e) => {
@@ -135,6 +169,29 @@ const FormModifyChall: React.FC<Props> = ({
           Submit
         </button>
       </form>
+      <p>Or</p>
+      {challToRemove && (
+        <div className="modal-remove">
+          <div className="modal-content">
+            <p>Are you sure you want to delete "{thisChall.name}" for ever?</p>
+            <div className="modal-buttons">
+              <button onClick={deleteChall} className="confirm">
+                Confirm
+              </button>
+              <button onClick={() => setChallToRemove(null)} className="cancel">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <button
+        className="delete-button"
+        onClick={() => setChallToRemove(thisChall)}
+      >
+        Delet this Challenge for ever
+      </button>
     </div>
   );
 };

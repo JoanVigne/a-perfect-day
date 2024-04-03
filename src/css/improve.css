@@ -11,7 +11,7 @@
   font-size: 26px;
 }
 
-.challenge .improvement {
+.challenge .input-chosen {
   max-width: 40%;
   background-color: var(--color-dark-grey);
   border: 3px solid var(--color-green);
@@ -29,8 +29,10 @@
 
 form .improve {
   display: flex;
-  flex-direction: column;
-  padding: 5px;
+  align-items: center;
+}
+form .improve * {
+  margin-left: 10px;
 }
 
 .container-improvements {

@@ -32,7 +32,7 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
           }
         })}
       </div>
-      <Link href={`/improve/${challenge.id}`} className="improvement">
+      <Link href={`/improve/${challenge.id}`} className="input-chosen">
         {challenge.selectedImprovement &&
         challenge.selectedImprovement.length > 0 ? (
           <ul>
@@ -42,9 +42,9 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
                   {Object.entries(challenge).map(([key, value]) => {
                     if (key === improvement) {
                       return (
-                        <h3 key={key}>
+                        <h4 key={key}>
                           {value} {key}
-                        </h3>
+                        </h4>
                       );
                     } else {
                       return null;
