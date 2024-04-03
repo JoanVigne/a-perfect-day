@@ -70,7 +70,10 @@ const FormModifyChall: React.FC<Props> = ({
         return acc;
       }, {} as { [key: string]: string }),
     };
-    result.selectedImprovement = selectedImprovement;
+    // Filter selectedImprovement to only include keys that exist in fields
+    result.selectedImprovement = selectedImprovement.filter((key) =>
+      fields.some((field) => field.key === key)
+    );
     console.log("result", result);
     submitModify(result);
   }
