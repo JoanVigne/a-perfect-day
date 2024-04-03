@@ -81,8 +81,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
     <ul>
       {loadingTasks ? (
         <Load />
-      ) : (
-        customTasks &&
+      ) : customTasks && Object.keys(customTasks).length !== 0 ? (
         Object.values(customTasks).map((customTask, index) => (
           <div key={index}>
             <TaskDisplay
@@ -121,6 +120,11 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
             )}
           </div>
         ))
+      ) : (
+        <p>
+          You dont have any custom task yet, you can create a new one by
+          clicking on the icon down below
+        </p>
       )}
       <TemporaryMessage
         message={messageCustom}

@@ -7,7 +7,7 @@
   --color-light-grey: rgb(156, 156, 156);
   --color-grey: rgb(70 69 69);
   --color-dark-grey: rgb(45, 45, 45);
-  --color-black: rgba(20, 20, 20, 1);
+  --color-black: rgb(32, 28, 28);
   --color-dark-green: rgba(1, 107, 1, 1);
   --color-green: rgb(3 143 3);
   --color-red: rgb(199 0 0);
@@ -43,9 +43,8 @@ li {
 
 .container {
   padding: 5px;
-  margin: 30px 0;
-  border-radius: 5px;
-  background-color: var(--color-dark-grey);
+  margin-bottom: 30px;
+  border-bottom: 1px var(--color-white) solid;
 }
 h1 {
   text-align: center;
@@ -60,12 +59,15 @@ h3 {
 }
 
 h3 {
-  font-size: 15px;
+  font-size: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+h4 {
+  font-size: 16px;
+}
 .smaller-container {
   background-color: var(--color-grey);
   margin: 5px;
