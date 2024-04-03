@@ -18,21 +18,23 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
   return (
     <li className="challenge">
       <div className="infos">
-        {Object.entries(challenge).map(([key, value]) => {
-          if (key === "name") {
-            return <h3 key={key}>{value}</h3>;
-          }
-          if (key === "id" || key === "selectedImprovement") return null;
-          if (challenge.selectedImprovement.includes(key)) {
-            return null;
-          } else {
-            return (
-              <p key={key}>
-                {key}: {value}
-              </p>
-            );
-          }
-        })}
+        {Object.entries(challenge)
+          .sort((a, b) => (a[0] === "name" ? -1 : b[0] === "name" ? 1 : 0))
+          .map(([key, value]) => {
+            if (key === "name") {
+              return <h3 key={key}>{value}</h3>;
+            }
+            if (key === "id" || key === "selectedImprovement") return null;
+            if (challenge.selectedImprovement.includes(key)) {
+              return null;
+            } else {
+              return (
+                <p key={key}>
+                  {key}: {value}
+                </p>
+              );
+            }
+          })}
       </div>
       <Link href={`/improve/${challenge.id}`} className="input-chosen">
         {challenge.selectedImprovement &&

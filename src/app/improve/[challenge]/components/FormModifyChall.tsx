@@ -124,69 +124,73 @@ const FormModifyChall: React.FC<Props> = ({
           }}
           className="modify-chall"
         >
-          {fields.map((field, index) => {
-            if (field.key === "id" || field.key === "selectedImprovement") {
-              return null;
-            } else {
-              return (
-                <div key={index} className="field">
-                  <div className="inputs">
-                    <input
-                      type="text"
-                      value={field.key}
-                      placeholder="key"
-                      disabled={field.key === "name" ? true : undefined}
-                      onChange={(e) => handleChange(index, e)}
-                      name="key"
-                    />
-                    <input
-                      type="text"
-                      value={field.value}
-                      placeholder="value"
-                      onChange={(e) => handleChange(index, e)}
-                      name="value"
-                    />
+          {fields
+            .sort((a, b) => (a.key === "name" ? -1 : b.key === "name" ? 1 : 0))
+            .map((field, index) => {
+              if (field.key === "id" || field.key === "selectedImprovement") {
+                return null;
+              } else {
+                return (
+                  <div key={index} className="field">
+                    <div className="inputs">
+                      <input
+                        type="text"
+                        value={field.key}
+                        placeholder="key"
+                        disabled={field.key === "name" ? true : undefined}
+                        onChange={(e) => handleChange(index, e)}
+                        name="key"
+                      />
+                      <input
+                        type="text"
+                        value={field.value}
+                        placeholder="value"
+                        onChange={(e) => handleChange(index, e)}
+                        name="value"
+                      />
+                    </div>
+                    {field.key === "name" ? null : (
+                      <>
+                        <div className="improve">
+                          <label htmlFor={`selectedToImprove_${index}`}>
+                            value to improve?
+                          </label>
+                          <input
+                            type="checkbox"
+                            name="selectedToImprove"
+                            id={`selectedToImprove_${index}`}
+                            value={field.key}
+                            checked={selectedImprovement.includes(
+                              field.key ? field.key : index.toString()
+                            )}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedImprovement((prev) => [
+                                  ...prev,
+                                  e.target.value,
+                                ]);
+                              } else {
+                                setSelectedImprovement((prev) =>
+                                  prev.filter(
+                                    (value) => value !== e.target.value
+                                  )
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+                        <span
+                          onClick={() => removeField(index)}
+                          className="remove"
+                        >
+                          <img src="./delet.png" alt="remove" />
+                        </span>
+                      </>
+                    )}
                   </div>
-                  {field.key === "name" ? null : (
-                    <>
-                      <div className="improve">
-                        <label htmlFor={`selectedToImprove_${index}`}>
-                          value to improve?
-                        </label>
-                        <input
-                          type="checkbox"
-                          name="selectedToImprove"
-                          id={`selectedToImprove_${index}`}
-                          value={field.key}
-                          checked={selectedImprovement.includes(
-                            field.key ? field.key : index.toString()
-                          )}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedImprovement((prev) => [
-                                ...prev,
-                                e.target.value,
-                              ]);
-                            } else {
-                              setSelectedImprovement((prev) =>
-                                prev.filter((value) => value !== e.target.value)
-                              );
-                            }
-                          }}
-                        />
-                      </div>
-                      <span
-                        onClick={() => removeField(index)}
-                        className="remove"
-                      >
-                        <img src="./delet.png" alt="remove" />
-                      </span>
-                    </>
-                  )}
-                </div>
-              );
-            }
-          })}
+                );
+              }
+            })}
           <button type="button" onClick={addField}>
             Add Field
           </button>
