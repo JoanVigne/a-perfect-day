@@ -42,7 +42,11 @@ const TaskDisplay: React.FC<Props> = ({
   return (
     <li
       className={
-        task.unit === false || task.count === "0" ? "task" : "task task-done"
+        inputAdd
+          ? "task"
+          : task.unit === false || task.count === "0"
+          ? "task"
+          : "task task-done"
       }
     >
       <div className="title-inputs">
@@ -51,7 +55,11 @@ const TaskDisplay: React.FC<Props> = ({
           <button onClick={openDetails} className="details">
             ?
           </button>
-          <TemporaryMessage message={messageAdded} type="message-small" />
+          <TemporaryMessage
+            message={messageAdded}
+            type="message-small"
+            timeInMS={2000}
+          />
         </h4>
         {inputCountUnit && typeof task.unit !== "boolean" && (
           <div className="count">

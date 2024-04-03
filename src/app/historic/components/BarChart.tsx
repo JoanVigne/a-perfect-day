@@ -7,7 +7,7 @@ import {
   BarController,
   BarElement,
 } from "chart.js";
-import { formatDate } from "@/app/utils/date";
+import { formatDate } from "@/utils/date";
 
 Chart.register(CategoryScale);
 Chart.register(LinearScale);

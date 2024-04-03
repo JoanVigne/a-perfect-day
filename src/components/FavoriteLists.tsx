@@ -1,9 +1,10 @@
-import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
 
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";
 import React, { useEffect, useState } from "react";
 import TemporaryMessage from "./TemporaryMessage";
+import OpenIcon from "./OpenIcon";
 
 interface Props {
   deleteOnOff: boolean;
@@ -69,16 +70,26 @@ const FavoriteLists: React.FC<Props> = ({
     <>
       <div className="favorite-lists">
         <h3>
-          Favorite lists :{" "}
-          <button
-            className={`${showFav ? "hide" : "add"}`}
-            onClick={() => setShowFav(!showFav)}
-          >
-            {showFav ? "Hide favorites" : "Show favorites"}
-          </button>
+          Favorite lists
+          <OpenIcon show={showFav} setShow={setShowFav} />
         </h3>
         <div className={`excisting-favorites ${showFav ? "active" : "hidden"}`}>
           <ul>
+            {setTodayList ? (
+              <li>
+                Current list
+                <button
+                  className="previous"
+                  onClick={() => {
+                    location.reload();
+                  }}
+                >
+                  Use
+                </button>
+              </li>
+            ) : (
+              ""
+            )}
             {userInfo &&
               Object.keys(userInfo.lists).map(
                 (listName: string, index: number) => {
@@ -91,7 +102,6 @@ const FavoriteLists: React.FC<Props> = ({
                             className="add"
                             onClick={() => {
                               useThisList(listName);
-                              /*              listDetail(listName); */
                             }}
                           >
                             Use
@@ -118,19 +128,12 @@ const FavoriteLists: React.FC<Props> = ({
                 }
               )}
           </ul>
-          {setTodayList ? (
-            <button
-              className="add"
-              onClick={() => {
-                location.reload();
-              }}
-            >
-              use the previous list
-            </button>
-          ) : (
-            ""
-          )}
-          <TemporaryMessage message={messageDelete} type="message-error" />
+
+          <TemporaryMessage
+            message={messageDelete}
+            type="message-error"
+            timeInMS={3000}
+          />
         </div>
       </div>
     </>

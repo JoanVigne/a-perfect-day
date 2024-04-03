@@ -1,5 +1,5 @@
-import { setDoc } from "firebase/firestore";
-import { checkDB } from "./db";
+import { doc, setDoc } from "firebase/firestore";
+import { checkDB, db } from "./db";
 
 interface DataCustom {
   [key: string]: any;
@@ -9,7 +9,9 @@ const sendToCustom = async (data: DataCustom, userId: string) => {
   const { ref, snapShot } = await checkDB("custom", userId);
   if (!snapShot.exists()) {
     // Traitez le cas où l'id du user n'existe pas
-    await setDoc(ref, {});
+    const customRef = doc(db, "custom", userId);
+    await setDoc(customRef, {});
+    /*     await setDoc(ref, {}); */
   }
   const customData = snapShot.data();
   if (!customData) {

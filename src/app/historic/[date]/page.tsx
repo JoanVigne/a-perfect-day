@@ -1,5 +1,5 @@
 "use client";
-import { getItemFromLocalStorage } from "@/app/utils/localstorage";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
 import CommonTasks from "@/components/CommonTasks";
 import CustomTasks from "@/components/CustomTasks";
 import TemporaryMessage from "@/components/TemporaryMessage";
@@ -212,7 +212,11 @@ const Page = () => {
           <button className="add" onClick={backAndSendToDB}>
             Save modifcations
           </button>
-          <TemporaryMessage message={messagelist} type="message-small" />
+          <TemporaryMessage
+            message={messagelist}
+            type="message-small"
+            timeInMS={3000}
+          />
           <Link className="cancel" href="/historic">
             Cancel
           </Link>

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import "./css/lists.css";
-import "./css/form.css";
-import "./css/animation.css";
-import "./css/modal.css";
-import "./css/charts.css";
-import "./css/stats.css";
-import "./css/calendar.css";
+import "@/app/globals.css";
+import "@/css/lists.css";
+import "@/css/form.css";
+import "@/css/animation.css";
+import "@/css/modal.css";
+import "@/css/charts.css";
+import "@/css/stats.css";
+import "@/css/calendar.css";
+import "@/css/improve.css";
 import { AuthContextProvider } from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });

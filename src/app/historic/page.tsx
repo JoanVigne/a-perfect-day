@@ -8,7 +8,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 import BarChart from "./components/BarChart";
 import Footer from "@/components/Footer";
-import { getItemFromLocalStorage } from "../utils/localstorage";
+import { getItemFromLocalStorage } from "../../utils/localstorage";
 import LineChart from "./components/LineChart";
 
 import Streak from "./components/Streak";
@@ -130,8 +130,9 @@ const Page = () => {
   const [showAllNonBoolean, setShowAllNB] = useState(false);
   return (
     <>
+      <Header />
       <main>
-        <Header nickname={userInfo?.nickname} />
+        <h1>Historic</h1>
         <div className="container">
           <h2>Countable</h2>
           <div className="task-stat-container">
@@ -152,9 +153,18 @@ const Page = () => {
                 );
               })}
           </div>
-          <button onClick={() => setShowAllNB(!showAllNonBoolean)}>
+          {/*           <button onClick={() => setShowAllNB(!showAllNonBoolean)}>
             {showAllNonBoolean ? "v" : "^"}
-          </button>
+            
+          </button> */}
+          <h3>
+            <img
+              onClick={() => setShowAllNB(!showAllNonBoolean)}
+              className={showAllNonBoolean ? "icon" : "icon rotate"}
+              src="./icon/arrow-down.png"
+              alt="show"
+            />
+          </h3>
           <div className="task-stat-container">
             {showAllNonBoolean &&
               remainingNonBooleanTasks.map((task) => {

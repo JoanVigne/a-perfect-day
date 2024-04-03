@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
-
-import { sendToUsers } from "@/firebase/db/users";
-import Load from "./Load";
 import TemporaryMessage from "./TemporaryMessage";
+import OpenIcon from "./OpenIcon";
 
 interface UserInfo {
   nickname: string;
@@ -66,6 +64,7 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
           return "fail to delete";
         } */
     setMessage("New favorite list created");
+    setShowForm(!showForm);
     return "New favorite list created";
   }
 
@@ -79,13 +78,7 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
       />
       <div className="container-new-fav-list">
         <h3>
-          New favorite list :
-          <button
-            className={`${showForm ? "hide" : "add"}`}
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? "Hide new fav" : "New favorite"}
-          </button>
+          New favorite list <OpenIcon show={showForm} setShow={setShowForm} />
         </h3>
         <div
           className={
@@ -125,7 +118,11 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
               <p>Add some tasks from the lists below</p>
             ) : (
               <form action="" onSubmit={createANewFavoriteList}>
-                <TemporaryMessage message={message} type="message-small" />
+                <TemporaryMessage
+                  message={message}
+                  type="message-small"
+                  timeInMS={3000}
+                />
 
                 <input
                   type="text"

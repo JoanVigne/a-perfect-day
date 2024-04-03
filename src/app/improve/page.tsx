@@ -1,16 +1,27 @@
 "use client";
 import Footer from "@/components/Footer";
-import React, { useEffect } from "react";
+import { useAuthContext } from "@/context/AuthContext";
+import React, { useEffect, useState } from "react";
+import ContainerChallenges from "./components/ContainerChallenges";
+import Link from "next/link";
+import Header from "@/components/Header";
+
+interface UserData {
+  email: string;
+  uid: string;
+}
 
 const page = () => {
+  const { user } = useAuthContext() as { user: UserData };
+  const [message, setMessage] = useState("");
+
   return (
     <div>
+      <Header />
       <h1>IMPROVE</h1>
       <div className="container">
-        <p>here the list of the stuff you wanna improve</p>
-        <ul>
-          <li className="task">une task</li>
-        </ul>
+        <h2>My Challenges</h2>
+        <ContainerChallenges userId={user?.uid} />
       </div>
 
       <div className="container">

@@ -49,7 +49,11 @@ form label {
 .container-form form p.message-error {
   color: red;
 }
-
+.container-form .container-options {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px;
+}
 .container-form form .option {
   display: flex;
   align-items: center;
@@ -83,4 +87,23 @@ form label {
 .container-new-fav-list .container-column .common,
 .container-new-fav-list .container-column .custom {
   width: 50%;
+}
+.container-new-fav-list .container-column .custom {
+  border-right: 2px var(--color-black) solid;
+}
+
+.container-key-value {
+  display: flex;
+  align-items: center;
+}
+
+/* CHALL FORM */
+form .label-delet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form input[type="checkbox"] {
+  transform: scale(1.5); /* Increase the size of the checkbox */
 }

@@ -1,0 +1,51 @@
+.challenge {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border: 1px solid var(--color-white);
+  background-color: var(--color-grey);
+  border-radius: 5px;
+  padding: 5px 5px 5px 12px;
+  margin: 5px;
+}
+.challenge h3 {
+  font-size: 26px;
+}
+
+.challenge .input-chosen {
+  min-width: 40%;
+  background-color: var(--color-dark-grey);
+  border: 3px solid var(--color-green);
+  border-radius: 5px;
+  padding: 15px 5px;
+  margin: 5px 5px 15px 5px;
+}
+
+.modify-chall .field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
+}
+
+form .improve {
+  display: flex;
+  align-items: center;
+}
+form .improve * {
+  margin-left: 10px;
+}
+
+.container-improvements {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.improvement {
+  display: flex;
+  align-items: center;
+  width: 49%;
+}
+.improvement * {
+  margin: 10px;
+}

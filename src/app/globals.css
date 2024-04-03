@@ -11,6 +11,7 @@
   --color-dark-green: rgba(1, 107, 1, 1);
   --color-green: rgb(3 143 3);
   --color-red: rgb(199 0 0);
+  --color-active-link: rgb(45, 170, 170);
 }
 
 * {
@@ -46,7 +47,13 @@ li {
   border-radius: 5px;
   background-color: var(--color-dark-grey);
 }
-
+h1 {
+  text-align: center;
+  margin: 10px;
+}
+h2 {
+  margin: 10px;
+}
 h2,
 h3 {
   text-align: center;
@@ -54,6 +61,9 @@ h3 {
 
 h3 {
   font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .smaller-container {
@@ -67,6 +77,7 @@ h3 {
   justify-content: space-around;
   margin: 15px;
 }
+
 .add,
 .save {
   padding: 2px;
@@ -74,11 +85,27 @@ h3 {
   color: var(--color-white);
   background-color: var(--color-green);
 }
+
+.previous {
+  padding: 2px;
+  margin: 1px;
+  color: var(--color-white);
+  background-color: var(--color-red);
+}
+.delete-button {
+  padding: 2px;
+  margin: 1px;
+  color: var(--color-white);
+  background-color: var(--color-red);
+}
+
 .cancel,
 .back {
+  color: var(--color-white);
   background-color: var(--color-black);
   padding: 5px;
 }
+
 .hide {
   background-color: var(--color-black);
   color: var(--color-white);
@@ -92,13 +119,21 @@ h3 {
 .remove img {
   width: 25px;
   height: 25px;
+  transition: all 1s;
 }
 
-.message-error,
-.message-small {
+/* TEMPORARY MESSAGE */
+.temporary-message {
+  height: 35px;
+  width: auto;
   text-align: center;
 }
-
+.temporary-message.visible {
+  opacity: 1;
+}
+.temporary-message.invisible {
+  opacity: 0;
+}
 .message-error {
   color: var(--color-white);
   background-color: var(--color-red);
