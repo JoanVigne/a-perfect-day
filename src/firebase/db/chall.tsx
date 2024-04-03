@@ -4,7 +4,31 @@ import { checkDB, db } from "./db";
 interface DataCustom {
   [key: string]: any;
 }
-
+const modifyChall = async (data: DataCustom, userId: string) => {
+  const { ref, snapShot } = await checkDB("customChall", userId);
+  if (!snapShot.exists()) {
+    // Traitez le cas où l'id du user n'existe pas
+    const customRef = doc(db, "customChall", userId);
+    await setDoc(customRef, {});
+  }
+  const customData = snapShot.data();
+  let updatedData = {};
+  if (!customData) {
+    updatedData = { [data.id]: { ...data } };
+  }
+  if (customData) {
+    updatedData = {
+      ...customData,
+      [data.id]: {
+        ...data,
+      },
+    };
+  }
+  console.log(updatedData);
+  await setDoc(ref, updatedData);
+  localStorage.setItem("customChall", JSON.stringify(updatedData));
+  console.log("customChall est mis a jour");
+};
 const sendToChall = async (data: DataCustom, userId: string) => {
   const { ref, snapShot } = await checkDB("customChall", userId);
   if (!snapShot.exists()) {
@@ -62,4 +86,4 @@ const removeFromChall = async (data: any, userId: string) => {
     return "Error removing custom Chall";
   }
 };
-export { sendToChall, removeFromChall };
+export { sendToChall, removeFromChall, modifyChall };

@@ -23,7 +23,9 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
             return <h3 key={key}>{value}</h3>;
           }
           if (key === "id" || key === "selectedImprovement") return null;
-          else {
+          if (challenge.selectedImprovement.includes(key)) {
+            return null;
+          } else {
             return (
               <p key={key}>
                 {key}: {value}

@@ -1,5 +1,6 @@
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
+import { modifyChall } from "@/firebase/db/chall";
 import React, { useContext, useState } from "react";
 
 interface UserData {
@@ -11,10 +12,9 @@ interface Props {
     selectedImprovement: string[];
     [key: string]: any;
   };
-  submitModify: (improvements: { [key: string]: string }) => void;
 }
 
-const FormImproved: React.FC<Props> = ({ thisChall, submitModify }) => {
+const FormImproved: React.FC<Props> = ({ thisChall }) => {
   const { user } = useAuthContext() as { user: UserData };
   const [message, setMessage] = useState<string | null>("");
   const [improvements, setImprovements] = useState<{ [key: string]: string }>(
@@ -35,9 +35,16 @@ const FormImproved: React.FC<Props> = ({ thisChall, submitModify }) => {
     e.preventDefault();
     try {
       Object.entries(thisChall).forEach(([key, value]) => {
+        if (value === null || value === undefined) {
+          return;
+        }
         if (!isNaN(Number(value))) {
           Object.entries(improvements).forEach(([key, impValue]) => {
-            if (isNaN(Number(impValue))) {
+            if (
+              impValue !== null &&
+              impValue !== undefined &&
+              isNaN(Number(impValue))
+            ) {
               setMessage(
                 `The value of ${key} was a number and you entered a letter !`
               );
@@ -50,10 +57,27 @@ const FormImproved: React.FC<Props> = ({ thisChall, submitModify }) => {
       submitModify(improvements);
       console.log(improvements);
     } catch (error) {
+      console.log(improvements);
       console.error(error);
     }
   };
-
+  function submitModify(data: any) {
+    console.log("data dans submitModify", data);
+    // Convert undefined values to empty strings
+    Object.keys(data).forEach((key) => {
+      if (data[key] === undefined) {
+        data[key] = "";
+      }
+    });
+    const datatosend = {
+      ...thisChall,
+      ...data,
+    };
+    console.log("datatosend", datatosend);
+    // control data
+    // send to db
+    modifyChall(datatosend, user.uid);
+  }
   return (
     <form className="container-improvements" onSubmit={handleSubmit}>
       {thisChall.selectedImprovement &&

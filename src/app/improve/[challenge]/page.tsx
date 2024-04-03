@@ -5,11 +5,18 @@ import OpenIcon from "@/components/OpenIcon";
 import React, { useEffect, useState } from "react";
 import FormModifyChall from "./components/FormModifyChall";
 import FormImproved from "./components/FormImproved";
+import { modifyChall, sendToChall } from "@/firebase/db/chall";
+import { useAuthContext } from "@/context/AuthContext";
 interface Field {
   key: string;
   value: string;
 }
+interface UserData {
+  email: string;
+  uid: string;
+}
 const Page = () => {
+  const { user } = useAuthContext() as { user: UserData };
   const [showForm, setShowForm] = useState(false);
   const [slug, setSlug] = useState<string | null>(null);
   const [thisChall, setThisChall] = useState<any>(null);
@@ -45,11 +52,6 @@ const Page = () => {
     setThisChall(newChall);
     console.log("newChall", newChall);
   }
-  function submitModify(data: any) {
-    console.log("data dans submitModify", data);
-    // control data
-    // send to db
-  }
 
   return (
     <div>
@@ -59,7 +61,7 @@ const Page = () => {
 
           <div className="container">
             <h2>I improved !</h2>
-            <FormImproved thisChall={thisChall} submitModify={submitModify} />
+            <FormImproved thisChall={thisChall} />
           </div>
           <div className="container">
             <div>
@@ -67,7 +69,6 @@ const Page = () => {
                 thisChall={thisChall}
                 inputChange={inputChange}
                 deleteInput={deleteInput}
-                submitModify={submitModify}
               />
             </div>
           </div>
