@@ -4,7 +4,8 @@ import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";
 import React, { useEffect, useState } from "react";
 import TemporaryMessage from "./TemporaryMessage";
-import OpenIcon from "./OpenIcon";
+import IconOpen from "./IconOpen";
+import Icon from "./Icon";
 
 interface Props {
   deleteOnOff: boolean;
@@ -71,20 +72,19 @@ const FavoriteLists: React.FC<Props> = ({
       <div className="favorite-lists">
         <h3>
           Favorite lists
-          <OpenIcon show={showFav} setShow={setShowFav} />
+          <IconOpen show={showFav} setShow={setShowFav} />
         </h3>
         <div className={`excisting-favorites ${showFav ? "active" : "hidden"}`}>
           <ul>
             {setTodayList ? (
               <li>
-                Current list
                 <button
-                  className="previous"
+                  className="back"
                   onClick={() => {
                     location.reload();
                   }}
                 >
-                  Use
+                  Back to previous list
                 </button>
               </li>
             ) : (
@@ -96,30 +96,35 @@ const FavoriteLists: React.FC<Props> = ({
                   return (
                     <React.Fragment key={index}>
                       <li>
-                        {listName}
                         {useOnOff ? (
                           <button
-                            className="add"
+                            className="save"
                             onClick={() => {
                               useThisList(listName);
                             }}
                           >
-                            Use
+                            {listName}
                           </button>
                         ) : (
                           ""
                         )}
 
                         {deleteOnOff ? (
-                          <span
+                          <Icon
+                            nameImg="delete"
+                            onClick={() => {
+                              removeList(listName);
+                            }}
+                          />
+                        ) : (
+                          /*  <img
+                            src="./delet.png"
+                            alt="remove"
                             className="remove"
                             onClick={() => {
                               removeList(listName);
                             }}
-                          >
-                            <img src="./delet.png" alt="remove" />
-                          </span>
-                        ) : (
+                          /> */
                           ""
                         )}
                       </li>

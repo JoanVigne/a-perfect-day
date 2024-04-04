@@ -1,4 +1,4 @@
-import OpenIcon from "@/components/OpenIcon";
+import IconOpen from "@/components/IconOpen";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { modifyChall, removeFromChall } from "@/firebase/db/chall";
@@ -117,7 +117,7 @@ const FormModifyChall: React.FC<Props> = ({
   return (
     <div>
       <h2>
-        Modify this challenge <OpenIcon show={showForm} setShow={setShowForm} />
+        Modify this challenge <IconOpen show={showForm} setShow={setShowForm} />
       </h2>
       <div className={showForm ? "active" : "hidden"}>
         <form
@@ -182,12 +182,13 @@ const FormModifyChall: React.FC<Props> = ({
                             }}
                           />
                         </div>
-                        <span
+
+                        <img
+                          src="./delet.png"
+                          alt="remove"
                           onClick={() => removeField(index)}
                           className="remove"
-                        >
-                          <img src="./delet.png" alt="remove" />
-                        </span>
+                        />
                       </>
                     )}
                   </div>
@@ -217,10 +218,7 @@ const FormModifyChall: React.FC<Props> = ({
                 <button onClick={deleteChall} className="confirm">
                   Confirm
                 </button>
-                <button
-                  onClick={() => setChallToRemove(null)}
-                  className="cancel"
-                >
+                <button onClick={() => setChallToRemove(null)} className="back">
                   Cancel
                 </button>
               </div>

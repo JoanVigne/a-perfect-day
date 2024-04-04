@@ -1,4 +1,4 @@
-import OpenIcon from "@/components/OpenIcon";
+import IconOpen from "@/components/IconOpen";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { sendToChall } from "@/firebase/db/chall";
 import React, { useState, ChangeEvent, FormEvent } from "react";
@@ -72,7 +72,7 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
     <div>
       <h3>
         Create a new challenge
-        <OpenIcon show={showForm} setShow={setShowForm} />
+        <IconOpen show={showForm} setShow={setShowForm} />
       </h3>
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>
         <form onSubmit={handleSubmit}>
@@ -130,12 +130,13 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
                             }
                           }}
                         />
-                        <span
-                          onClick={() => removeField(index + 1)}
+
+                        <img
+                          src="./delet.png"
+                          alt="remove"
                           className="remove"
-                        >
-                          <img src="./delet.png" alt="remove" />
-                        </span>
+                          onClick={() => removeField(index + 1)}
+                        />
                       </div>
                     </div>
                   ))}

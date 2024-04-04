@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
 import TemporaryMessage from "./TemporaryMessage";
-import OpenIcon from "./OpenIcon";
+import IconOpen from "./IconOpen";
 
 interface UserInfo {
   nickname: string;
@@ -78,7 +78,7 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
       />
       <div className="container-new-fav-list">
         <h3>
-          New favorite list <OpenIcon show={showForm} setShow={setShowForm} />
+          New favorite list <IconOpen show={showForm} setShow={setShowForm} />
         </h3>
         <div
           className={
@@ -120,7 +120,7 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
               <form action="" onSubmit={createANewFavoriteList}>
                 <TemporaryMessage
                   message={message}
-                  type="message-small"
+                  type="message-info"
                   timeInMS={3000}
                 />
 

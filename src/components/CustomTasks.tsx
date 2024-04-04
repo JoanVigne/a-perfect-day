@@ -110,7 +110,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
                     </button>
                     <button
                       onClick={() => setTaskToRemove(null)}
-                      className="cancel"
+                      className="back"
                     >
                       Cancel
                     </button>
@@ -128,7 +128,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
       )}
       <TemporaryMessage
         message={messageCustom}
-        type="message-small"
+        type="message-info"
         timeInMS={3000}
       />
       <FormCustomTask updateCustomTasks={updateCustomTasks} />

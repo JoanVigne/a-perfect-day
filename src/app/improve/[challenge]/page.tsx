@@ -1,11 +1,9 @@
 "use client";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import Footer from "@/components/Footer";
-import OpenIcon from "@/components/OpenIcon";
 import React, { useEffect, useState } from "react";
 import FormModifyChall from "./components/FormModifyChall";
 import FormImproved from "./components/FormImproved";
-import { modifyChall, sendToChall } from "@/firebase/db/chall";
 import { useAuthContext } from "@/context/AuthContext";
 interface Field {
   key: string;

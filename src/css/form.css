@@ -1,13 +1,12 @@
-form,
-.container-form form {
+form {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 input[type="text"],
-.container-form form input[type="text"],
-.container-form form textarea {
+textarea {
+  box-sizing: border-box;
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
@@ -16,14 +15,31 @@ input[type="text"],
   color: var(--color-white);
   background-color: var(--color-dark-grey);
 }
+textarea {
+  height: 70px;
+}
+
 input::placeholder {
   color: var(--color-light-grey);
+}
+
+/* radio */
+input[type="radio"]:checked + label {
+  background-color: var(--color-dark-green);
+  border-color: #080;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+input[type="radio"]:checked::before {
+  transform: scale(1);
+  background-color: white;
 }
 form input[type="submit"],
 form button[type="submit"],
 .container-form form button.add {
   display: block;
-  width: 100%;
+  margin: auto;
   padding: 10px;
   border: none;
   border-radius: 3px;
@@ -38,17 +54,6 @@ form label {
   margin-bottom: 5px;
 }
 
-.container-form form textarea {
-  height: 70px;
-}
-
-.container-form form input[type="radio"] {
-  margin-right: 5px;
-}
-
-.container-form form p.message-error {
-  color: red;
-}
 .container-form .container-options {
   display: flex;
   justify-content: space-around;

@@ -208,19 +208,18 @@ const Page = () => {
               </div>
             );
           })}
-        <div className="buttons-container">
-          <button className="add" onClick={backAndSendToDB}>
-            Save modifcations
-          </button>
-          <TemporaryMessage
-            message={messagelist}
-            type="message-small"
-            timeInMS={3000}
-          />
-          <Link className="cancel" href="/historic">
-            Cancel
-          </Link>
-        </div>
+
+        <button className="add" onClick={backAndSendToDB}>
+          Save modifcations
+        </button>
+        <TemporaryMessage
+          message={messagelist}
+          type="message-info"
+          timeInMS={3000}
+        />
+        <Link className="back" href="/historic">
+          Cancel
+        </Link>
       </div>
       <div className="container">
         <h2>Forgot one ?</h2>

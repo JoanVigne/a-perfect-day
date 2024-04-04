@@ -96,7 +96,7 @@ const page = () => {
             <input type="text" name="nickname" id="nickname" required />
             <input className="add" type="submit" value="Save" />
           </form>
-          <p className="message-small">{messageChangeNickname}</p>
+          <p className="message-info">{messageChangeNickname}</p>
         </div>
       </div>
       {/*   <div className="container">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./TemporaryMessage.css";
 
 export default function TemporaryMessage({
   message,
@@ -6,7 +7,7 @@ export default function TemporaryMessage({
   timeInMS, // 5000
 }: {
   message: string | null;
-  type: string | ""; // "message-small" ou "message-error"
+  type: string | ""; // message-error // message-success // message-info // message-warning
   timeInMS: number;
 }) {
   const [showMessage, setShowMessage] = useState(false);
