@@ -198,9 +198,7 @@ const FormModifyChall: React.FC<Props> = ({
           <button type="button" onClick={addField}>
             Add Field
           </button>
-          <button type="submit" className="add">
-            Submit
-          </button>
+          <button type="submit">Submit</button>
           <TemporaryMessage
             message={message}
             type="message-error"

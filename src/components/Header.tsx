@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./header.css";
 import Link from "next/link";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
+import Icon from "./Icon";
 
 interface UserInfo {
   nickname: string;
@@ -49,7 +50,7 @@ const Header = () => {
       <p>{dateToday && dateToday}</p>
       <h2>{userInfo?.nickname}</h2>
       <Link href={"/options"}>
-        <img src="./options.png" alt="options" className="options-logo" />
+        <Icon nameImg="options" onClick={() => null} />
       </Link>
     </header>
   );

@@ -194,9 +194,7 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
             )}
 
             <p className="message-info">{message}</p>
-            <button className="add" type="submit">
-              Create Task
-            </button>
+            <button type="submit">Create Task</button>
           </form>
         </div>
       </div>

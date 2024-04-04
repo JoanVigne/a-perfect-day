@@ -157,9 +157,7 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
                 type="message-error"
                 timeInMS={3000}
               />
-              <button type="submit" className="add">
-                Submit
-              </button>
+              <button type="submit">Submit</button>
             </>
           )}
         </form>

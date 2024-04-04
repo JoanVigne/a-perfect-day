@@ -2,7 +2,7 @@ import React from "react";
 import "./icon.css";
 interface Props {
   nameImg: string;
-  onClick: () => void;
+  onClick: () => void | null;
 }
 
 const Icon = ({ nameImg, onClick }: Props) => {

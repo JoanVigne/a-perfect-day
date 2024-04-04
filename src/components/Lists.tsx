@@ -130,9 +130,7 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                   id="name"
                   placeholder="name of your new list"
                 />
-                <button type="submit" className="add">
-                  Create Favorite
-                </button>
+                <button type="submit">Create Favorite</button>
               </form>
             )}
           </div>

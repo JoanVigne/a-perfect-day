@@ -44,6 +44,7 @@ form button[type="submit"],
   border: none;
   border-radius: 3px;
   color: var(--color-white);
+  background-color: var(--color-dark-green);
 }
 
 .container-form h2,
