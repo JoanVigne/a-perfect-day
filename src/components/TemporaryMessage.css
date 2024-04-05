@@ -9,8 +9,9 @@
 /* TEMPORARY MESSAGE */
 .temporary-message {
   height: 35px;
-  width: auto;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .temporary-message.visible {
   opacity: 1;
@@ -36,6 +37,5 @@
 }
 
 .message-info {
-  background-color: var(--info-color);
-  color: white;
+  color: var(--info-color);
 }

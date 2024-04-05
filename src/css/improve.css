@@ -1,6 +1,6 @@
 .challenge {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   border: 1px solid var(--color-white);
   background-color: var(--color-grey);
@@ -26,14 +26,6 @@
   justify-content: space-between;
   align-items: center;
   margin: 5px;
-}
-
-form .improve {
-  display: flex;
-  align-items: center;
-}
-form .improve * {
-  margin-left: 10px;
 }
 
 .container-improvements {

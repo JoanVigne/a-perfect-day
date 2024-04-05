@@ -1,3 +1,4 @@
+import Icon from "@/components/Icon";
 import IconOpen from "@/components/IconOpen";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
@@ -155,9 +156,6 @@ const FormModifyChall: React.FC<Props> = ({
                     {field.key === "name" ? null : (
                       <>
                         <div className="improve">
-                          <label htmlFor={`selectedToImprove_${index}`}>
-                            value to improve?
-                          </label>
                           <input
                             type="checkbox"
                             name="selectedToImprove"
@@ -181,13 +179,13 @@ const FormModifyChall: React.FC<Props> = ({
                               }
                             }}
                           />
+                          <label htmlFor={`selectedToImprove_${index}`}>
+                            value to improve?
+                          </label>
                         </div>
-
-                        <img
-                          src="./delet.png"
-                          alt="remove"
+                        <Icon
+                          nameImg="delete"
                           onClick={() => removeField(index)}
-                          className="remove"
                         />
                       </>
                     )}

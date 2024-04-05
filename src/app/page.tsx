@@ -218,7 +218,7 @@ export default function Home() {
           />
           <TemporaryMessage
             message={messagelist}
-            type="message-small"
+            type="message-info"
             timeInMS={3000}
           />
 
