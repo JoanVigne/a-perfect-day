@@ -1,6 +1,7 @@
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { modifyChall } from "@/firebase/db/chall";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
 import React, { useContext, useState } from "react";
 
 interface UserData {
@@ -17,6 +18,7 @@ interface Props {
 const FormImproved: React.FC<Props> = ({ thisChall }) => {
   const { user } = useAuthContext() as { user: UserData };
   const [message, setMessage] = useState<string | null>("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [improvements, setImprovements] = useState<{ [key: string]: string }>(
     thisChall.selectedImprovement.reduce(
       (acc: { [key: string]: string }, currentValue: string) => {
@@ -53,17 +55,44 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
           });
         }
       });
+      const actualChall = getItemFromLocalStorage("customChall");
 
+      if (actualChall[thisChall.id].perf) {
+        console.log(" in today perf of thus chall");
+
+        for (const date of Object.keys(actualChall[thisChall.id].perf)) {
+          if (date === new Date().toISOString().slice(0, 10)) {
+            const confirmReplace = window.confirm(
+              "You have already submitted your improvement for today. Do you want to replace it?"
+            );
+            if (confirmReplace) {
+              // If user confirms, proceed with replacing the previous data
+              // You can continue your logic here to replace the previous data
+              setMessage("Your improvement for today will be replaced.");
+              console.log("Your improvement for today will be replaced.");
+            }
+            if (!confirmReplace) {
+              console.log("canceled.");
+              return;
+            }
+          }
+        }
+      }
       submitModify(improvements);
-      console.log(improvements);
     } catch (error) {
       console.log(improvements);
       console.error(error);
     }
   };
-  function submitModify(data: any) {
-    console.log("data dans submitModify", data);
-    // Convert undefined values to empty strings
+  async function submitModify(data: any) {
+    const dateToday = new Date().toISOString();
+    let perf = {
+      [dateToday.slice(0, 10)]: {
+        ...data,
+        date: dateToday,
+      },
+    };
+    console.log("historic", perf);
     Object.keys(data).forEach((key) => {
       if (data[key] === undefined) {
         data[key] = "";
@@ -71,12 +100,16 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
     });
     const datatosend = {
       ...thisChall,
-      ...data,
+      perf,
     };
     console.log("datatosend", datatosend);
-    // control data
     // send to db
-    modifyChall(datatosend, user.uid);
+    await modifyChall(datatosend, user.uid);
+    setMessage("Your improvement has been saved !");
+
+    setTimeout(() => {
+      window.location.href = "/improve";
+    }, 2500);
   }
   return (
     <form className="container-improvements" onSubmit={handleSubmit}>

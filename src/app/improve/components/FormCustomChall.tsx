@@ -1,3 +1,4 @@
+import Icon from "@/components/Icon";
 import IconOpen from "@/components/IconOpen";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { sendToChall } from "@/firebase/db/chall";
@@ -44,11 +45,13 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
   };
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    // add id: Math.random().toString(36), to an "id" field
 
     const result: { [key: string]: string | string[] } = {};
 
     fields.forEach((field, index) => {
+      if (!field.key) {
+        fields.splice(index, 1);
+      }
       if (index === 0) {
         result["name"] = field.value;
       } else {
@@ -57,7 +60,10 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
     });
     result["id"] = Math.random().toString(36);
     result["selectedImprovement"] = selectedImprovement;
+    console.log("selected Improvement", selectedImprovement);
+
     console.log(result);
+    return;
     // send to db
     sendToChall(result, userid);
     // Envoyer les données où vous en avez besoin
@@ -80,7 +86,7 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
             <label htmlFor="name">Name</label>
             <input
               type="text"
-              placeholder="Enter a name"
+              placeholder="Name"
               value={fields[0].value}
               onChange={(e) => handleChange(0, e)}
               name="name"
@@ -89,8 +95,8 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
           <table>
             <tbody>
               <tr>
-                <td>Personnalise your challenge by adding an other field</td>
-                <td>Select the value you will improve</td>
+                <td>Personnalise your challenge by adding fields</td>
+                <td>Select the values you will improve</td>
               </tr>
               <tr>
                 <td colSpan={2}>
@@ -99,14 +105,14 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
                     <div key={index} className="container-key-value">
                       <input
                         type="text"
-                        placeholder="Enter key"
+                        placeholder="Key"
                         value={field.key}
                         onChange={(e) => handleChange(index + 1, e)}
                         name="key"
                       />
                       <input
                         type="text"
-                        placeholder="Enter value"
+                        placeholder="Value"
                         value={field.value}
                         onChange={(e) => handleChange(index + 1, e)}
                         name="value"
@@ -130,11 +136,11 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
                             }
                           }}
                         />
-
-                        <img
-                          src="./delet.png"
-                          alt="remove"
-                          className="remove"
+                        <label htmlFor={`selectedToImprove_${index}`}>
+                          To improve?
+                        </label>
+                        <Icon
+                          nameImg="delete"
                           onClick={() => removeField(index + 1)}
                         />
                       </div>
@@ -145,10 +151,7 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
             </tbody>
           </table>
 
-          <div onClick={addField}>
-            <img src="/add.png" alt="add" className="add-button" />
-            Add Field
-          </div>
+          <Icon nameImg="add" onClick={() => addField()} />
 
           {fields.some((field) => fields[0].value !== "") && (
             <>

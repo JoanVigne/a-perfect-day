@@ -112,7 +112,7 @@ const FormModifyChall: React.FC<Props> = ({
       setShowForm(false);
     }, 2000);
     setTimeout(() => {
-      window.location.reload();
+      window.location.href = "/improve";
     }, 2500);
   }
   return (
@@ -203,7 +203,12 @@ const FormModifyChall: React.FC<Props> = ({
             timeInMS={3000}
           />
         </form>
-        <p>Or</p>
+        <form>
+          <h3>Or maybe wanna modify past datas?</h3>
+          les datas historicChall sur un calendrier
+          <button type="submit">Submit</button>
+        </form>
+
         {challToRemove && (
           <div className="modal-remove">
             <div className="modal-content">
@@ -221,13 +226,21 @@ const FormModifyChall: React.FC<Props> = ({
             </div>
           </div>
         )}
-
-        <button
-          className="delete-button"
-          onClick={() => setChallToRemove(thisChall)}
+        <div
+          className="smaller-container"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
-          Delet this Challenge for ever
-        </button>
+          <h3>Wanna get rid of this challenge ?</h3>
+          <button
+            className="delete-button"
+            onClick={() => setChallToRemove(thisChall)}
+          >
+            Delet for ever
+          </button>
+        </div>
       </div>
     </div>
   );
