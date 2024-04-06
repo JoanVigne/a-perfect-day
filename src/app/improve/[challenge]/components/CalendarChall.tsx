@@ -4,6 +4,7 @@ import { modifyChall } from "@/firebase/db/chall";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
+import FormModifyPreviousDays from "./FormModifyPreviousDays";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -33,151 +34,37 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
     const formattedMonth = month < 10 ? `0${month}` : month;
     const formattedDay = day < 10 ? `0${day}` : day;
 
-    const selectedDate = `${year}-${formattedMonth}-${formattedDay}`;
-    return selectedDate;
+    const thisDate = `${year}-${formattedMonth}-${formattedDay}`;
+    return thisDate;
   }
   useEffect(() => {
     console.log("thisChall", thisChall);
     console.log("===============================");
   }, []);
   const dayClick = (value: Date) => {
-    const selectedDate = makeDateForReactCalendarFormat(value);
+    const thisDayDate = makeDateForReactCalendarFormat(value);
+    const date = new Date(
+      Date.UTC(value.getFullYear(), value.getMonth(), value.getDate())
+    ).toISOString();
+
     const todayDate = new Date().toISOString().split("T")[0];
-    if (selectedDate === todayDate) {
+    if (thisDayDate === todayDate) {
       setMessage("You can change today perfs in the previous section.");
       return;
     }
-    if (selectedDate > todayDate) {
+    if (thisDayDate > todayDate) {
       setMessage("cannot change the futur !");
       return;
     }
-
-    /*     window.location.href = `/improve/${formattedDate}`; */
     setModal(true);
-    setSelectedDate(selectedDate);
-    console.log(selectedDate);
-  };
-  const [improvements, setImprovements] = useState<{ [key: string]: string }>(
-    thisChall.selectedImprovement.reduce(
-      (acc: { [key: string]: string }, currentValue: string) => {
-        acc[currentValue] = thisChall[currentValue];
-        return acc;
-      },
-      {}
-    )
-  );
-
-  const handleInputChange = (improvement: string, value: string) => {
-    setImprovements({ ...improvements, [improvement]: value });
+    // here i would like a friendly date format
+    setSelectedDate(date);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      Object.entries(thisChall).forEach(([key, value]) => {
-        if (value === null || value === undefined) {
-          return;
-        }
-        if (!isNaN(Number(value))) {
-          Object.entries(improvements).forEach(([key, impValue]) => {
-            if (
-              impValue !== null &&
-              impValue !== undefined &&
-              isNaN(Number(impValue))
-            ) {
-              setMessage(
-                `The value of ${key} was a number and you entered a letter !`
-              );
-              throw new Error("Invalid input");
-            }
-          });
-        }
-      });
-      const actualChall = getItemFromLocalStorage("customChall");
-
-      if (actualChall[thisChall.id].perf) {
-        console.log(" in today perf of thus chall");
-
-        for (const date of Object.keys(actualChall[thisChall.id].perf)) {
-          if (date === new Date().toISOString().slice(0, 10)) {
-            const confirmReplace = window.confirm(
-              "You have already submitted your improvement for today. Do you want to replace it?"
-            );
-            if (confirmReplace) {
-              // If user confirms, proceed with replacing the previous data
-              // You can continue your logic here to replace the previous data
-              setMessage("Your improvement for today will be replaced.");
-              console.log("Your improvement for today will be replaced.");
-            }
-            if (!confirmReplace) {
-              console.log("canceled.");
-              return;
-            }
-          }
-        }
-      }
-      submitModify(improvements);
-    } catch (error) {
-      console.log(improvements);
-      console.error(error);
-    }
-  };
-  async function submitModify(data: any) {
-    let perf = {
-      ...thisChall.perf,
-      [selectedDate.slice(0, 10)]: {
-        ...data,
-        date: selectedDate,
-      },
-    };
-    console.log("historic", perf);
-    Object.keys(data).forEach((key) => {
-      if (data[key] === undefined) {
-        data[key] = "";
-      }
-    });
-    const datatosend = {
-      ...thisChall,
-      perf,
-    };
-    console.log("datatosend", datatosend);
-    // send to db
-    await modifyChall(datatosend, user.uid);
-    setMessage("Your improvement has been saved !");
-
-    setTimeout(() => {
-      window.location.href = "/improve";
-    }, 2500);
-  }
   return (
     <div>
       {modal && (
-        <div>
-          <h3>Modify the {selectedDate} ? </h3>
-          <form className="container-improvements" onSubmit={handleSubmit}>
-            {thisChall.selectedImprovement &&
-              thisChall.selectedImprovement.map(
-                (improvement: string, index: number) => (
-                  <div key={index} className="improvement">
-                    <label>{improvement}:</label>
-                    <input
-                      type="text"
-                      value={improvements[improvement]}
-                      onChange={(e) =>
-                        handleInputChange(improvement, e.target.value)
-                      }
-                    />
-                  </div>
-                )
-              )}
-            <TemporaryMessage
-              message={message}
-              type="message-error"
-              timeInMS={6000}
-            />
-            <input className="save" type="submit" value="Save my improvement" />
-          </form>
-        </div>
+        <FormModifyPreviousDays thisChall={thisChall} thisDay={selectedDate} />
       )}
       <Calendar
         value={value}
@@ -185,7 +72,7 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
         onClickDay={dayClick}
         tileClassName={({ date }) =>
           `${
-            thisChall.perf[makeDateForReactCalendarFormat(date)]
+            thisChall.perf[makeDateForReactCalendarFormat(date)[0]]
               ? "has-thisChall"
               : ""
           } ${
