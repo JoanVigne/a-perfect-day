@@ -15,18 +15,19 @@ interface Props {
   remove: boolean;
   removeConfirmation: any;
 }
+interface Perf {
+  [key: string]: any;
+}
 
 const CardChallenge: React.FC<Props> = ({ challenge }) => {
   const [perfOfThisChall, setPerfOfThisChall] = useState<any | null>(null);
-  const [lastPerf, setLastPerf] = useState<any | null>(null);
+
   useEffect(() => {
     if (challenge.perf) {
       setPerfOfThisChall(challenge.perf);
     }
     if (perfOfThisChall) {
-      setLastPerf(findLast());
-      console.log(findLast());
-      console.log("find biggest :", findBiggest());
+      console.log(sortByDate(perfOfThisChall));
     }
   }, [challenge.perf, perfOfThisChall]);
 
@@ -42,6 +43,14 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
       }
     }
     return perfOfThisChall[lastDate];
+  }
+  function sortByDate(performances: Perf | null) {
+    if (!performances) return [];
+    return Object.entries(performances)
+      .filter(([_, day]) => day.date)
+      .map(([date, day]) => ({ date, day }))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .map(({ day }) => day);
   }
   // A REFAIRE QUAND ON AURA DES DATAS
   function findBiggest() {
@@ -100,12 +109,7 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
                     if (key === improvement) {
                       return (
                         <div key={key}>
-                          {lastPerf && (
-                            <>
-                              <h4>{key}</h4>
-                              {lastPerf[key]}
-                            </>
-                          )}
+                          <h4>{key}</h4>
                         </div>
                       );
                     } else {

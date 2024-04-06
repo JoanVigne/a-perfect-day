@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import FormModifyChall from "./components/FormModifyChall";
 import FormImproved from "./components/FormImproved";
 import { useAuthContext } from "@/context/AuthContext";
+import CalendarChall from "./components/CalendarChall";
 interface Field {
   key: string;
   value: string;
@@ -60,6 +61,9 @@ const Page = () => {
           <div className="container">
             <h2>I improved !</h2>
             <FormImproved thisChall={thisChall} />
+          </div>
+          <div className="container">
+            <CalendarChall thisChall={thisChall} />
           </div>
           <div className="container">
             <div>

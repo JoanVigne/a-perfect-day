@@ -2,24 +2,48 @@ import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { modifyChall } from "@/firebase/db/chall";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import Calendar from "react-calendar";
 
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 interface UserData {
   email: string;
   uid: string;
 }
 interface Props {
-  thisChall: {
-    selectedImprovement: string[];
-    [key: string]: any;
-  };
+  thisChall: { [shortDate: string]: any };
 }
 
-const FormImproved: React.FC<Props> = ({ thisChall }) => {
+/* CALENDAR + FORM CHANGE PAST DAYS */
+const CalendarChall: React.FC<Props> = ({ thisChall }) => {
+  // calendar :
+  const [value, onChange] = useState<Value>(new Date());
+  //
   const { user } = useAuthContext() as { user: UserData };
-  const dateToday = new Date().toISOString();
-  const [message, setMessage] = useState<string | null>("");
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [modal, setModal] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const today = new Date();
+  const todayDate = today.toISOString().split("T")[0];
+  const dayClick = (value: Date) => {
+    const selectedDate = value.toISOString().split("T")[0];
+    const todayDate = new Date().toISOString().split("T")[0];
+    if (selectedDate === todayDate) {
+      setMessage("You can change today perfs in the previous section.");
+      return;
+    }
+    if (selectedDate > todayDate) {
+      setMessage("cannot change the futur !");
+      return;
+    }
+
+    const formattedDate = value.toISOString().split("T")[0];
+    /*     window.location.href = `/improve/${formattedDate}`; */
+    setModal(true);
+    setSelectedDate(formattedDate);
+    console.log(formattedDate);
+  };
   const [improvements, setImprovements] = useState<{ [key: string]: string }>(
     thisChall.selectedImprovement.reduce(
       (acc: { [key: string]: string }, currentValue: string) => {
@@ -88,9 +112,9 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
   async function submitModify(data: any) {
     let perf = {
       ...thisChall.perf,
-      [dateToday.slice(0, 10)]: {
+      [selectedDate.slice(0, 10)]: {
         ...data,
-        date: dateToday,
+        date: selectedDate,
       },
     };
     console.log("historic", perf);
@@ -113,33 +137,49 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
     }, 2500);
   }
   return (
-    <>
-      <h3>{dateToday.slice(0, 10)}</h3>
-      <form className="container-improvements" onSubmit={handleSubmit}>
-        {thisChall.selectedImprovement &&
-          thisChall.selectedImprovement.map(
-            (improvement: string, index: number) => (
-              <div key={index} className="improvement">
-                <label>{improvement}:</label>
-                <input
-                  type="text"
-                  value={improvements[improvement]}
-                  onChange={(e) =>
-                    handleInputChange(improvement, e.target.value)
-                  }
-                />
-              </div>
-            )
-          )}
-        <TemporaryMessage
-          message={message}
-          type="message-error"
-          timeInMS={6000}
-        />
-        <input className="save" type="submit" value="Save my improvement" />
-      </form>
-    </>
+    <div>
+      {modal && (
+        <div>
+          <h3>Modify the {selectedDate} ? </h3>
+          <form className="container-improvements" onSubmit={handleSubmit}>
+            {thisChall.selectedImprovement &&
+              thisChall.selectedImprovement.map(
+                (improvement: string, index: number) => (
+                  <div key={index} className="improvement">
+                    <label>{improvement}:</label>
+                    <input
+                      type="text"
+                      value={improvements[improvement]}
+                      onChange={(e) =>
+                        handleInputChange(improvement, e.target.value)
+                      }
+                    />
+                  </div>
+                )
+              )}
+            <TemporaryMessage
+              message={message}
+              type="message-error"
+              timeInMS={6000}
+            />
+            <input className="save" type="submit" value="Save my improvement" />
+          </form>
+        </div>
+      )}
+
+      <Calendar
+        value={value}
+        onChange={onChange}
+        onClickDay={dayClick}
+        tileClassName={({ date }) =>
+          `${
+            thisChall[date.toISOString().split("T")[0]] ? "has-thisChall" : ""
+          } ${date.toISOString().split("T")[0] === todayDate ? "today" : ""}`
+        }
+      />
+      <TemporaryMessage message={message} type="message-info" timeInMS={4000} />
+    </div>
   );
 };
 
-export default FormImproved;
+export default CalendarChall;
