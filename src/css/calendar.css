@@ -45,11 +45,10 @@
   border: 1px black solid;
 }
 
+.react-calendar__month-view__days > .has-data {
+  background-color: var(--color-green);
+}
 .react-calendar__month-view__days > .today {
   background-color: var(--color-black);
   color: var(--color-white);
-}
-
-.react-calendar__month-view__days > .has-data {
-  background-color: var(--color-green);
 }

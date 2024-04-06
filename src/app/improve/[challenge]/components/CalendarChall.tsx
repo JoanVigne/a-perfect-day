@@ -1,7 +1,5 @@
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
-import { modifyChall } from "@/firebase/db/chall";
-import { getItemFromLocalStorage } from "@/utils/localstorage";
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import FormModifyPreviousDays from "./FormModifyPreviousDays";
@@ -27,16 +25,12 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const today = new Date();
   const todayDate = makeDateForReactCalendarFormat(today);
-  function makeDateForReactCalendarFormat(date: any) {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // JavaScript months are 0-based counting
-    const day = date.getDate();
-    const formattedMonth = month < 10 ? `0${month}` : month;
-    const formattedDay = day < 10 ? `0${day}` : day;
 
-    const thisDate = `${year}-${formattedMonth}-${formattedDay}`;
-    return thisDate;
-  }
+  useEffect(() => {
+    let test = new Date("2022-12-31T00:00:00.000Z");
+    console.log("tesT :", makeDateForReactCalendarFormat(test));
+  }, []);
+
   useEffect(() => {
     console.log("thisChall", thisChall);
     console.log("===============================");
@@ -72,8 +66,10 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
         onClickDay={dayClick}
         tileClassName={({ date }) =>
           `${
-            thisChall.perf[makeDateForReactCalendarFormat(date)[0]]
-              ? "has-thisChall"
+            thisChall.perf[makeDateForReactCalendarFormat(date)] &&
+            Object.keys(thisChall.perf[makeDateForReactCalendarFormat(date)])
+              .length > 0
+              ? "has-data"
               : ""
           } ${
             makeDateForReactCalendarFormat(date) === todayDate ? "today" : ""
@@ -86,3 +82,13 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
 };
 
 export default CalendarChall;
+function makeDateForReactCalendarFormat(date: any) {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // JavaScript months are 0-based counting
+  const day = date.getDate();
+  const formattedMonth = month < 10 ? `0${month}` : month;
+  const formattedDay = day < 10 ? `0${day}` : day;
+
+  const thisDate = `${year}-${formattedMonth}-${formattedDay}`;
+  return thisDate;
+}
