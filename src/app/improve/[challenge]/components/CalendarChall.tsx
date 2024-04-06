@@ -2,7 +2,7 @@ import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { modifyChall } from "@/firebase/db/chall";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 
 type ValuePiece = Date | null;
@@ -25,9 +25,23 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
   const [modal, setModal] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const today = new Date();
-  const todayDate = today.toISOString().split("T")[0];
+  const todayDate = makeDateForReactCalendarFormat(today);
+  function makeDateForReactCalendarFormat(date: any) {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // JavaScript months are 0-based counting
+    const day = date.getDate();
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+
+    const selectedDate = `${year}-${formattedMonth}-${formattedDay}`;
+    return selectedDate;
+  }
+  useEffect(() => {
+    console.log("thisChall", thisChall);
+    console.log("===============================");
+  }, []);
   const dayClick = (value: Date) => {
-    const selectedDate = value.toISOString().split("T")[0];
+    const selectedDate = makeDateForReactCalendarFormat(value);
     const todayDate = new Date().toISOString().split("T")[0];
     if (selectedDate === todayDate) {
       setMessage("You can change today perfs in the previous section.");
@@ -38,11 +52,10 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
       return;
     }
 
-    const formattedDate = value.toISOString().split("T")[0];
     /*     window.location.href = `/improve/${formattedDate}`; */
     setModal(true);
-    setSelectedDate(formattedDate);
-    console.log(formattedDate);
+    setSelectedDate(selectedDate);
+    console.log(selectedDate);
   };
   const [improvements, setImprovements] = useState<{ [key: string]: string }>(
     thisChall.selectedImprovement.reduce(
@@ -166,15 +179,18 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
           </form>
         </div>
       )}
-
       <Calendar
         value={value}
         onChange={onChange}
         onClickDay={dayClick}
         tileClassName={({ date }) =>
           `${
-            thisChall[date.toISOString().split("T")[0]] ? "has-thisChall" : ""
-          } ${date.toISOString().split("T")[0] === todayDate ? "today" : ""}`
+            thisChall.perf[makeDateForReactCalendarFormat(date)]
+              ? "has-thisChall"
+              : ""
+          } ${
+            makeDateForReactCalendarFormat(date) === todayDate ? "today" : ""
+          }`
         }
       />
       <TemporaryMessage message={message} type="message-info" timeInMS={4000} />

@@ -21,35 +21,22 @@ interface Perf {
 
 const CardChallenge: React.FC<Props> = ({ challenge }) => {
   const [perfOfThisChall, setPerfOfThisChall] = useState<any | null>(null);
-
+  const [lastPerf, setLastPerf] = useState<any | null>(null);
   useEffect(() => {
     if (challenge.perf) {
       setPerfOfThisChall(challenge.perf);
     }
     if (perfOfThisChall) {
-      console.log(sortByDate(perfOfThisChall));
+      setLastPerf(sortByDate(perfOfThisChall)[0]);
     }
   }, [challenge.perf, perfOfThisChall]);
 
-  function findLast() {
-    // find the last in date of the perf
-    let last = "0000-01-01";
-    let lastDate = "";
-    const today = new Date().toISOString().slice(0, 10);
-    for (const date of Object.keys(perfOfThisChall)) {
-      if (date > last && date <= today) {
-        last = date;
-        lastDate = date;
-      }
-    }
-    return perfOfThisChall[lastDate];
-  }
   function sortByDate(performances: Perf | null) {
     if (!performances) return [];
     return Object.entries(performances)
       .filter(([_, day]) => day.date)
       .map(([date, day]) => ({ date, day }))
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .map(({ day }) => day);
   }
   // A REFAIRE QUAND ON AURA DES DATAS
@@ -102,6 +89,7 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
         {challenge.selectedImprovement &&
         challenge.selectedImprovement.length > 0 ? (
           <ul>
+            <h4>Last time :</h4>
             {challenge.selectedImprovement.map(
               (improvement: any, index: number) => (
                 <li key={index}>
@@ -109,7 +97,8 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
                     if (key === improvement) {
                       return (
                         <div key={key}>
-                          <h4>{key}</h4>
+                          {lastPerf && lastPerf[improvement]}
+                          {key}
                         </div>
                       );
                     } else {
