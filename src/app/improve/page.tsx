@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import ContainerChallenges from "./components/ContainerChallenges";
 import Link from "next/link";
 import Header from "@/components/Header";
+import ContainerWorldRecords from "./components/ContainerWorldRecords";
 
 interface UserData {
   email: string;
@@ -57,36 +58,7 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className="container">
-        <h2>World class heros</h2>
-        <div className="task-stat-container">
-          <div className="hero task-stat-card">
-            <h3>Ron Hill </h3>
-            <img src="" alt="photo" />
-            <p>categorie : Sport</p>
-            <p>ran for 19,032 consecutive days.</p>
-            <p>stats</p>
-          </div>
-          <div className="hero task-stat-card">
-            <h3>autre </h3>
-            <img src="" alt="photo" />
-            <p>exploit</p>
-            <p>stats</p>
-          </div>
-          <div className="hero task-stat-card">
-            <h3>nom</h3>
-            <img src="" alt="photo" />
-            <p>exploit</p>
-            <p>stats</p>
-          </div>
-          <div className="hero task-stat-card">
-            <h3>nom</h3>
-            <img src="" alt="photo" />
-            <p>exploit</p>
-            <p>stats</p>
-          </div>
-        </div>
-      </div>
+      <ContainerWorldRecords />
       <Footer />
     </div>
   );

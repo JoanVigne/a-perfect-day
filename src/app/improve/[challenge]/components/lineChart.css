@@ -1,0 +1,23 @@
+/* <div className="line-chart-and-options">
+<Line data={data} options={options} key={renderKey} />
+<select name="" id="" onChange={handleSelectChange} value={days}>
+  <option value="all">All</option>
+  <option value="90">The last 3 months</option>
+  <option value="30">The last month</option>
+  <option value="7">The last week</option>
+</select>
+<div className="container-show-hide-lines"> */
+
+.line-chart-and-options {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px white solid;
+  border-radius: 3px;
+}
+.line-chart-and-options select,
+.line-chart-and-options option {
+  min-width: 40%;
+  min-height: none;
+}

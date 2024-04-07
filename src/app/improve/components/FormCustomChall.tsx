@@ -82,10 +82,10 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>
         <form onSubmit={handleSubmit}>
           <div className="container-key-value">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Name of the Challenge</label>
             <input
               type="text"
-              placeholder="Name"
+              placeholder="ex: Jogging ..."
               value={fields[0].value}
               onChange={(e) => handleChange(0, e)}
               name="name"
