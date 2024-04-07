@@ -121,7 +121,6 @@ const LineChart: React.FC<Props> = ({ thisChall }) => {
       ),
     }));
   };
-
   return (
     <>
       <div className="">
@@ -132,12 +131,16 @@ const LineChart: React.FC<Props> = ({ thisChall }) => {
           <option value="7">The last week</option>
         </select>
       </div>
-      <Line data={data} options={options} key={renderKey} />
-      {data.datasets.map((dataset: any, index: number) => (
-        <button key={index} onClick={() => toggleDataset(index)}>
-          {dataset.hidden ? "Show " : "Hide "} {dataset.label}
-        </button>
-      ))}
+      {thisChall.perf && Object.keys(thisChall.perf).length > 0 && (
+        <>
+          <Line data={data} options={options} key={renderKey} />
+          {data.datasets.map((dataset: any, index: number) => (
+            <button key={index} onClick={() => toggleDataset(index)}>
+              {dataset.hidden ? "Show " : "Hide "} {dataset.label}
+            </button>
+          ))}
+        </>
+      )}
     </>
   );
 };
