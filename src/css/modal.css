@@ -11,6 +11,3 @@
 .modal-remove .modal-content .confirm {
   background-color: var(--color-green);
 }
-.modal-remove .modal-content .cancel {
-  background-color: var(--color-dark-grey);
-}

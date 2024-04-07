@@ -1,76 +1,96 @@
-form,
-.container-form form {
+form {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
+label {
+  padding: 5px;
+  margin: 5px;
+}
 input[type="text"],
-.container-form form input[type="text"],
-.container-form form textarea {
+textarea {
+  box-sizing: border-box;
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  margin-bottom: 10px;
+  margin: 5px 0;
   color: var(--color-white);
   background-color: var(--color-dark-grey);
 }
+textarea {
+  height: 70px;
+}
+
 input::placeholder {
   color: var(--color-light-grey);
 }
-form input[type="submit"],
-form button[type="submit"],
-.container-form form button.add {
+
+/* radio */
+input[type="radio"]:checked + label {
+  background-color: var(--color-dark-green);
+  border-color: #080;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+  background-color: white;
+}
+/* checkbox */
+form .improve {
+  display: flex;
+}
+input[type="checkbox"] + label {
+  border: 1px solid var(--color-dark-green);
+  border-radius: 3px;
+  cursor: pointer;
+}
+input[type="checkbox"]:checked + label {
+  background-color: var(--color-dark-green);
+
+  border-radius: 3px;
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+  background-color: white;
+  padding: 5px;
+}
+
+input[type="submit"],
+button[type="submit"] {
   display: block;
-  width: 100%;
+  margin: auto;
   padding: 10px;
   border: none;
   border-radius: 3px;
   color: var(--color-white);
+  background-color: var(--color-dark-green);
 }
 
-.container-form h2,
-form label {
-  text-align: center;
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.container-form form textarea {
-  height: 70px;
-}
-
-.container-form form input[type="radio"] {
-  margin-right: 5px;
-}
-
-.container-form form p.message-error {
-  color: red;
-}
-.container-form .container-options {
+form .container-options {
   display: flex;
   justify-content: space-around;
   margin: 10px;
 }
-.container-form form .option {
+form .option {
   display: flex;
-  align-items: center;
 }
 
 /* NEW FAV LIST */
 .container-new-fav-list .new-fav-list {
   background-color: var(--color-grey);
   border-radius: 5px;
-  border: 1px solid var(--color-white);
-  padding: 5px;
+
+  padding: 12px;
   margin: 10px 5px;
 }
 
 .container-new-fav-list ul {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -95,15 +115,4 @@ form label {
 .container-key-value {
   display: flex;
   align-items: center;
-}
-
-/* CHALL FORM */
-form .label-delet {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-form input[type="checkbox"] {
-  transform: scale(1.5); /* Increase the size of the checkbox */
 }

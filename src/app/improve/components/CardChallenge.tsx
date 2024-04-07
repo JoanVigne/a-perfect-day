@@ -1,5 +1,7 @@
+"use client";
+import { set } from "firebase/database";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface Challenge {
   id: string;
@@ -13,8 +15,31 @@ interface Props {
   remove: boolean;
   removeConfirmation: any;
 }
+interface Perf {
+  [key: string]: any;
+}
 
 const CardChallenge: React.FC<Props> = ({ challenge }) => {
+  const [perfOfThisChall, setPerfOfThisChall] = useState<any | null>(null);
+  const [lastPerf, setLastPerf] = useState<any | null>(null);
+  useEffect(() => {
+    if (challenge.perf) {
+      setPerfOfThisChall(challenge.perf);
+    }
+    if (perfOfThisChall) {
+      setLastPerf(sortByDate(perfOfThisChall)[0]);
+    }
+  }, [challenge.perf, perfOfThisChall]);
+
+  function sortByDate(performances: Perf | null) {
+    if (!performances) return [];
+    return Object.entries(performances)
+      .filter(([_, day]) => day.date)
+      .map(([date, day]) => ({ date, day }))
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .map(({ day }) => day);
+  }
+
   return (
     <li className="challenge">
       <div className="infos">
@@ -24,7 +49,8 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
             if (key === "name") {
               return <h3 key={key}>{value}</h3>;
             }
-            if (key === "id" || key === "selectedImprovement") return null;
+            if (key === "id" || key === "selectedImprovement" || key === "perf")
+              return null;
             if (challenge.selectedImprovement.includes(key)) {
               return null;
             } else {
@@ -40,15 +66,17 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
         {challenge.selectedImprovement &&
         challenge.selectedImprovement.length > 0 ? (
           <ul>
+            <h4>Last time :</h4>
             {challenge.selectedImprovement.map(
               (improvement: any, index: number) => (
                 <li key={index}>
                   {Object.entries(challenge).map(([key, value]) => {
                     if (key === improvement) {
                       return (
-                        <h4 key={key}>
-                          {value} {key}
-                        </h4>
+                        <div key={key}>
+                          {lastPerf && lastPerf[improvement]}
+                          {key}
+                        </div>
                       );
                     } else {
                       return null;

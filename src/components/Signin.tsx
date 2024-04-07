@@ -49,9 +49,7 @@ function Signin() {
               id="newPassword"
             />
           </label>
-          <button type="submit" className="add">
-            Sign in
-          </button>
+          <button type="submit">Sign in</button>
         </form>
       </div>
 

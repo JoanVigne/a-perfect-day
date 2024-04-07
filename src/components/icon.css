@@ -1,0 +1,23 @@
+/* icons and logos */
+
+/* .add-button,
+.minus-button,
+.icon,
+.remove {
+  width: 25px;
+  height: 25px;
+  transition: all 1s;
+} */
+
+.icon {
+  width: 25px;
+  height: 25px;
+  transition: all 1s;
+}
+.add {
+  width: 25px;
+  height: 25px;
+  transition: all 1s;
+  background-color: unset;
+  padding: 0;
+}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { sendToUsers } from "@/firebase/db/users";
+import IconOpen from "./IconOpen";
 
 interface TodaySaveListProps {
   taskList: object;
@@ -73,7 +74,8 @@ const TodaySaveList: React.FC<TodaySaveListProps> = ({ taskList, userid }) => {
 
   return (
     <>
-      <button
+      <IconOpen show={showForm} setShow={setShowForm} />
+      {/*  <button
         className={`${showForm ? "hide" : "add"}`}
         onClick={() => {
           setShowForm(!showForm);
@@ -81,7 +83,7 @@ const TodaySaveList: React.FC<TodaySaveListProps> = ({ taskList, userid }) => {
         }}
       >
         {showForm ? "Hide this " : "add to favorite"}
-      </button>
+      </button> */}
       {message && message}
       <div className={showForm ? "active" : "hidden"}>
         <div className="container-save-list">

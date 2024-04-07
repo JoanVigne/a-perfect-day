@@ -7,6 +7,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import { updateAllHistoric } from "@/firebase/db/historic";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import Icon from "@/components/Icon";
 
 interface UserData {
   email: string;
@@ -179,7 +180,7 @@ const Page = () => {
                   ) : (
                     <>
                       <input
-                        type="number"
+                        type="text"
                         name={`${e.id}_count`}
                         id={`${e.id}_count`}
                         defaultValue={dayData[`${e.id}_count`] || ""}
@@ -193,34 +194,32 @@ const Page = () => {
                         onClick={() => {
                           handleSave(e.id);
                         }}
+                        className="save"
                       >
                         save
                       </button>
-                      <button
-                        className="message-error"
+                      <Icon
+                        nameImg="delete"
                         onClick={() => handleRemoveTask(e)}
-                      >
-                        X
-                      </button>
+                      />
                     </>
                   )}
                 </div>
               </div>
             );
           })}
-        <div className="buttons-container">
-          <button className="add" onClick={backAndSendToDB}>
-            Save modifcations
-          </button>
-          <TemporaryMessage
-            message={messagelist}
-            type="message-small"
-            timeInMS={3000}
-          />
-          <Link className="cancel" href="/historic">
-            Cancel
-          </Link>
-        </div>
+
+        <button onClick={backAndSendToDB} className="save">
+          Save modifcations
+        </button>
+        <TemporaryMessage
+          message={messagelist}
+          type="message-info"
+          timeInMS={3000}
+        />
+        <Link className="back" href="/historic">
+          Cancel
+        </Link>
       </div>
       <div className="container">
         <h2>Forgot one ?</h2>

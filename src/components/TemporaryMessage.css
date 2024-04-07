@@ -1,0 +1,41 @@
+/* Define colors for TemporaryMessage types */
+:root {
+  --success-color: #28a745;
+  --error-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+}
+
+/* TEMPORARY MESSAGE */
+.temporary-message {
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.temporary-message.visible {
+  opacity: 1;
+}
+.temporary-message.invisible {
+  opacity: 0;
+}
+
+/* Apply colors to TemporaryMessage types */
+.message-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.message-error {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.message-warning {
+  background-color: var(--warning-color);
+  color: black;
+}
+
+.message-info {
+  color: var(--info-color);
+}

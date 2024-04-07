@@ -33,7 +33,14 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
   //
   const [message, setMessage] = useState<string | null>(null);
   const handleClick = (value: Date) => {
-    const selectedDate = value.toISOString().split("T")[0];
+    const year = value.getFullYear();
+    const month = value.getMonth() + 1;
+    const day = value.getDate();
+
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+
+    const selectedDate = `${year}-${formattedMonth}-${formattedDay}`;
     const todayDate = new Date().toISOString().split("T")[0];
 
     if (selectedDate === todayDate) {
@@ -45,8 +52,7 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
       return;
     }
 
-    const formattedDate = value.toISOString().split("T")[0];
-    window.location.href = `/historic/${formattedDate}`;
+    window.location.href = `/historic/${selectedDate}`;
   };
   const today = new Date();
   const todayDate = today.toISOString().split("T")[0];

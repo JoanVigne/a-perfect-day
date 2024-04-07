@@ -33,6 +33,7 @@ button:active {
 }
 
 /*  rotation button show fav list */
-.rotate {
-  transform: translateX(-10%) rotate(-90deg);
+
+.rotate-up {
+  transform: translateX(-10%) rotate(-180deg);
 }

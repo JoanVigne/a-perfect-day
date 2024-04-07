@@ -1,7 +1,7 @@
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToCustom } from "@/firebase/db/custom";
 import React, { useState } from "react";
-import OpenIcon from "./OpenIcon";
+import IconOpen from "./IconOpen";
 
 interface FormCustomTaskProps {
   updateCustomTasks: (newCustomTasks: Task[]) => void;
@@ -114,44 +114,38 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
     <>
       <h3>
         Create a new task
-        <OpenIcon show={showForm} setShow={setShowForm} />
+        <IconOpen show={showForm} setShow={setShowForm} />
       </h3>
 
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>
         <div className="container-form">
           <form className="add-custom-task" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="name">Name:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={task.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="description">Description:</label>
-              <textarea
-                id="description"
-                name="description"
-                value={task.description}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="details">Details:</label>
-              <textarea
-                id="details"
-                name="details"
-                value={task.details}
-                onChange={handleChange}
-              />
-            </div>
-            <label htmlFor="unit">Unit (boolean or string):</label>
+            <label htmlFor="name">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={task.name}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="description">Description:</label>
+            <textarea
+              id="description"
+              name="description"
+              value={task.description}
+              onChange={handleChange}
+            />
+
+            <label htmlFor="details">Details:</label>
+            <textarea
+              id="details"
+              name="details"
+              value={task.details}
+              onChange={handleChange}
+            />
+            <label htmlFor="unit">Chose a unit (boolean or string):</label>
             <div className="container-options">
-              {" "}
               <div className="option">
                 <input
                   type="radio"
@@ -161,7 +155,7 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
                   checked={isBooleanSelected}
                   onChange={handleOptionChange}
                 />
-                <label htmlFor="boolean">Boolean</label>
+                <label htmlFor="boolean">Done or not</label>
               </div>
               <div className="option">
                 <input
@@ -172,7 +166,7 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
                   checked={!isBooleanSelected}
                   onChange={handleOptionChange}
                 />
-                <label htmlFor="other">Other</label>
+                <label htmlFor="other">Personalized</label>
               </div>
             </div>
 
@@ -199,10 +193,8 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
               </div>
             )}
 
-            <p className="message-small">{message}</p>
-            <button className="add" type="submit">
-              Create Task
-            </button>
+            <p className="message-info">{message}</p>
+            <button type="submit">Create Task</button>
           </form>
         </div>
       </div>

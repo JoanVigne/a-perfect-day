@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TemporaryMessage from "./TemporaryMessage";
+import Icon from "./Icon";
 interface Task {
   id: string;
   name: string;
@@ -57,7 +58,7 @@ const TaskDisplay: React.FC<Props> = ({
           </button>
           <TemporaryMessage
             message={messageAdded}
-            type="message-small"
+            type="message-info"
             timeInMS={2000}
           />
         </h4>
@@ -98,10 +99,8 @@ const TaskDisplay: React.FC<Props> = ({
           </div>
         )}
         {inputAdd && (
-          <img
-            src="/add.png"
-            alt="add"
-            className="add-button"
+          <Icon
+            nameImg="add"
             onClick={() => {
               theFunction(task), setMessageAdded("added !");
             }}
@@ -111,11 +110,7 @@ const TaskDisplay: React.FC<Props> = ({
       <div className={toggleDetails}>
         <h4>{task.description}</h4>
         <p>{task.details}</p>
-        {remove && (
-          <span className="remove">
-            <img src="/red-bin.png" alt="remove" onClick={removeConfirmation} />
-          </span>
-        )}
+        {remove && <Icon nameImg="red-bin" onClick={removeConfirmation} />}
       </div>
     </li>
   );

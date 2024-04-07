@@ -5,7 +5,3 @@ header {
   padding: 7px;
   background-color: var(--color-grey);
 }
-
-header .options-logo {
-  height: 25px;
-}

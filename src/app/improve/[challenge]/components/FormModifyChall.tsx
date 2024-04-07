@@ -1,4 +1,5 @@
-import OpenIcon from "@/components/OpenIcon";
+import Icon from "@/components/Icon";
+import IconOpen from "@/components/IconOpen";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { modifyChall, removeFromChall } from "@/firebase/db/chall";
@@ -70,6 +71,10 @@ const FormModifyChall: React.FC<Props> = ({
         return acc;
       }, {} as { [key: string]: string }),
     };
+<<<<<<< HEAD
+=======
+    // Filter selectedImprovement to only include keys that exist in fields
+>>>>>>> develop
     result.selectedImprovement = selectedImprovement.filter((key) =>
       fields.some((field) => field.key === key)
     );
@@ -110,13 +115,13 @@ const FormModifyChall: React.FC<Props> = ({
       setShowForm(false);
     }, 2000);
     setTimeout(() => {
-      window.location.reload();
+      window.location.href = "/improve";
     }, 2500);
   }
   return (
     <div>
       <h2>
-        Modify this challenge <OpenIcon show={showForm} setShow={setShowForm} />
+        Modify this challenge <IconOpen show={showForm} setShow={setShowForm} />
       </h2>
       <div className={showForm ? "active" : "hidden"}>
         <form
@@ -154,9 +159,6 @@ const FormModifyChall: React.FC<Props> = ({
                     {field.key === "name" ? null : (
                       <>
                         <div className="improve">
-                          <label htmlFor={`selectedToImprove_${index}`}>
-                            value to improve?
-                          </label>
                           <input
                             type="checkbox"
                             name="selectedToImprove"
@@ -180,13 +182,14 @@ const FormModifyChall: React.FC<Props> = ({
                               }
                             }}
                           />
+                          <label htmlFor={`selectedToImprove_${index}`}>
+                            value to improve?
+                          </label>
                         </div>
-                        <span
+                        <Icon
+                          nameImg="delete"
                           onClick={() => removeField(index)}
-                          className="remove"
-                        >
-                          <img src="./delet.png" alt="remove" />
-                        </span>
+                        />
                       </>
                     )}
                   </div>
@@ -196,16 +199,19 @@ const FormModifyChall: React.FC<Props> = ({
           <button type="button" onClick={addField}>
             Add Field
           </button>
-          <button type="submit" className="add">
-            Submit
-          </button>
+          <button type="submit">Submit</button>
           <TemporaryMessage
             message={message}
             type="message-error"
             timeInMS={3000}
           />
         </form>
-        <p>Or</p>
+        <form>
+          <h3>Or maybe wanna modify past datas?</h3>
+          les datas historicChall sur un calendrier
+          <button type="submit">Submit</button>
+        </form>
+
         {challToRemove && (
           <div className="modal-remove">
             <div className="modal-content">
@@ -216,23 +222,28 @@ const FormModifyChall: React.FC<Props> = ({
                 <button onClick={deleteChall} className="confirm">
                   Confirm
                 </button>
-                <button
-                  onClick={() => setChallToRemove(null)}
-                  className="cancel"
-                >
+                <button onClick={() => setChallToRemove(null)} className="back">
                   Cancel
                 </button>
               </div>
             </div>
           </div>
         )}
-
-        <button
-          className="delete-button"
-          onClick={() => setChallToRemove(thisChall)}
+        <div
+          className="smaller-container"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
-          Delet this Challenge for ever
-        </button>
+          <h3>Wanna get rid of this challenge ?</h3>
+          <button
+            className="delete-button"
+            onClick={() => setChallToRemove(thisChall)}
+          >
+            Delet for ever
+          </button>
+        </div>
       </div>
     </div>
   );

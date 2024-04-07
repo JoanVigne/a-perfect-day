@@ -1,23 +1,24 @@
 import React from "react";
+import "./icon.css";
 
 interface Props {
   show: any;
   setShow: any;
 }
 const iconStyles = {
-  marginLeft: "10px",
+  marginLeft: "15px",
 };
 
-const OpenIcon: React.FC<Props> = ({ show, setShow }) => {
+const IconOpen: React.FC<Props> = ({ show, setShow }) => {
   return (
     <img
       onClick={() => setShow(!show)}
       style={iconStyles}
-      className={show ? "icon" : "icon rotate"}
+      className={show ? "icon rotate-up" : "icon"}
       src="/icon/arrow-down.png"
       alt="show"
     />
   );
 };
 
-export default OpenIcon;
+export default IconOpen;

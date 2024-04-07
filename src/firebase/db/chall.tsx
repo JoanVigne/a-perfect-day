@@ -28,6 +28,7 @@ const modifyChall = async (data: DataCustom, userId: string) => {
   await setDoc(ref, updatedData);
   localStorage.setItem("customChall", JSON.stringify(updatedData));
   console.log("customChall est mis a jour");
+  return "Your performance has been updated !";
 };
 const sendToChall = async (data: DataCustom, userId: string) => {
   const { ref, snapShot } = await checkDB("customChall", userId);

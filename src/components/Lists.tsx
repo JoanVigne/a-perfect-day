@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
 import TemporaryMessage from "./TemporaryMessage";
-import OpenIcon from "./OpenIcon";
+import IconOpen from "./IconOpen";
+import Icon from "./Icon";
 
 interface UserInfo {
   nickname: string;
@@ -70,16 +71,15 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
 
   return (
     <div className="container">
-      <FavoriteLists
-        useOnOff={false}
-        deleteOnOff={true}
-        userInfo={userInfo}
-        functionSetUserInfo={functionSetUserInfo}
-      />
       <div className="container-new-fav-list">
         <h3>
-          New favorite list <OpenIcon show={showForm} setShow={setShowForm} />
+          New favorite list <IconOpen show={showForm} setShow={setShowForm} />
         </h3>
+        <TemporaryMessage
+          message={message}
+          type="message-info"
+          timeInMS={3000}
+        />
         <div
           className={
             showForm ? "container-form active" : "container-form hidden"
@@ -91,10 +91,8 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                 Object.values(newFav).map((ele: any, index: number) => {
                   return (
                     <li key={index}>
-                      <img
-                        className="minus-button"
-                        src="./minus-big.png"
-                        alt="remove"
+                      <Icon
+                        nameImg="minus"
                         onClick={() => {
                           setNewFav((prevState) => {
                             const newState = { ...prevState };
@@ -118,21 +116,13 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
               <p>Add some tasks from the lists below</p>
             ) : (
               <form action="" onSubmit={createANewFavoriteList}>
-                <TemporaryMessage
-                  message={message}
-                  type="message-small"
-                  timeInMS={3000}
-                />
-
                 <input
                   type="text"
                   name="name"
                   id="name"
                   placeholder="name of your new list"
                 />
-                <button type="submit" className="add">
-                  Create Favorite
-                </button>
+                <button type="submit">Create Favorite</button>
               </form>
             )}
           </div>
@@ -144,17 +134,16 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                   Object.values(custom).map((ele: any, index: number) => {
                     return (
                       <li key={index}>
-                        <img
-                          src="./add.png"
-                          className="add-button"
+                        <Icon
+                          nameImg="add"
                           onClick={() => {
                             setNewFav((prevState) => ({
                               ...prevState,
                               [ele.id]: ele,
                             }));
                           }}
-                          alt="add"
-                        ></img>
+                        />
+
                         {ele.name}
                       </li>
                     );
@@ -168,17 +157,16 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                   Object.values(common).map((ele: any, index: number) => {
                     return (
                       <li key={index}>
-                        <img
-                          src="./add.png"
-                          className="add-button"
+                        <Icon
+                          nameImg="add"
                           onClick={() => {
                             setNewFav((prevState) => ({
                               ...prevState,
                               [ele.id]: ele,
                             }));
                           }}
-                          alt="add"
-                        ></img>
+                        />
+
                         {ele.name}
                       </li>
                     );

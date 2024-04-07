@@ -207,8 +207,9 @@ export default function Home() {
         >
           test
         </button> */}
-        <h1>Routine</h1>
+
         <div className="container">
+          <h1>Today</h1>
           <Today
             list={todayList}
             handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}
@@ -217,7 +218,7 @@ export default function Home() {
           />
           <TemporaryMessage
             message={messagelist}
-            type="message-small"
+            type="message-info"
             timeInMS={3000}
           />
 

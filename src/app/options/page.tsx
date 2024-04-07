@@ -84,7 +84,7 @@ const page = () => {
     <main>
       <h1 style={{ textAlign: "center" }}>
         Options{" "}
-        <button onClick={logOut} className="save">
+        <button onClick={logOut} className="delete-button">
           Log out
         </button>
       </h1>
@@ -94,9 +94,9 @@ const page = () => {
           <form action="" onSubmit={changeNickName}>
             <label htmlFor="">Change your nickname</label>
             <input type="text" name="nickname" id="nickname" required />
-            <input className="add" type="submit" value="Save" />
+            <input type="submit" value="Save" />
           </form>
-          <p className="message-small">{messageChangeNickname}</p>
+          <p className="message-info">{messageChangeNickname}</p>
         </div>
       </div>
       {/*   <div className="container">

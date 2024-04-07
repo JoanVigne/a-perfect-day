@@ -7,7 +7,7 @@
   --color-light-grey: rgb(156, 156, 156);
   --color-grey: rgb(70 69 69);
   --color-dark-grey: rgb(45, 45, 45);
-  --color-black: rgba(20, 20, 20, 1);
+  --color-black: rgb(32, 28, 28);
   --color-dark-green: rgba(1, 107, 1, 1);
   --color-green: rgb(3 143 3);
   --color-red: rgb(199 0 0);
@@ -34,19 +34,6 @@ a {
   text-decoration: none;
 }
 
-ul,
-li {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  padding: 5px;
-  margin: 30px 0;
-  border-radius: 5px;
-  background-color: var(--color-dark-grey);
-}
 h1 {
   text-align: center;
   margin: 10px;
@@ -60,38 +47,48 @@ h3 {
 }
 
 h3 {
-  font-size: 15px;
+  font-size: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+h4 {
+  font-size: 16px;
+}
+ul,
+li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+button {
+  all: unset;
+  text-align: center;
+  font-size: 12px;
+  border-radius: 3px;
+  padding: 6px;
+}
+input {
+  all: unset;
+}
+.container {
+  padding: 5px;
+  margin-bottom: 30px;
+  border-bottom: 1px var(--color-white) solid;
+}
 .smaller-container {
   background-color: var(--color-grey);
   margin: 5px;
   padding: 5px;
 }
 
-.buttons-container {
-  display: flex;
-  justify-content: space-around;
-  margin: 15px;
-}
-
-.add,
 .save {
-  padding: 2px;
   margin: 1px;
   color: var(--color-white);
-  background-color: var(--color-green);
+  background-color: var(--color-dark-green);
 }
 
-.previous {
-  padding: 2px;
-  margin: 1px;
-  color: var(--color-white);
-  background-color: var(--color-red);
-}
 .delete-button {
   padding: 2px;
   margin: 1px;
@@ -99,47 +96,8 @@ h3 {
   background-color: var(--color-red);
 }
 
-.cancel,
 .back {
   color: var(--color-white);
   background-color: var(--color-black);
   padding: 5px;
-}
-
-.hide {
-  background-color: var(--color-black);
-  color: var(--color-white);
-  padding: 2px;
-  margin: 1px;
-}
-
-.add-button,
-.minus-button,
-.icon,
-.remove img {
-  width: 25px;
-  height: 25px;
-  transition: all 1s;
-}
-
-/* TEMPORARY MESSAGE */
-.temporary-message {
-  height: 35px;
-  width: auto;
-  text-align: center;
-}
-.temporary-message.visible {
-  opacity: 1;
-}
-.temporary-message.invisible {
-  opacity: 0;
-}
-.message-error {
-  color: var(--color-white);
-  background-color: var(--color-red);
-}
-
-.message-small {
-  margin-left: 15px;
-  color: var(--color-green);
 }
