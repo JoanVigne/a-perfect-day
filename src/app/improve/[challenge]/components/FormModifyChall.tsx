@@ -131,7 +131,11 @@ const FormModifyChall: React.FC<Props> = ({
           {fields
             .sort((a, b) => (a.key === "name" ? -1 : b.key === "name" ? 1 : 0))
             .map((field, index) => {
-              if (field.key === "id" || field.key === "selectedImprovement") {
+              if (
+                field.key === "id" ||
+                field.key === "selectedImprovement" ||
+                field.key === "perf"
+              ) {
                 return null;
               } else {
                 return (
