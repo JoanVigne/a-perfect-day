@@ -2,7 +2,7 @@ import TemporaryMessage from "@/components/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { modifyChall } from "@/firebase/db/chall";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 interface UserData {
   email: string;
@@ -112,6 +112,7 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
       window.location.href = "/improve";
     }, 2500);
   }
+
   return (
     <>
       <h3>{dateToday.slice(0, 10)}</h3>
@@ -124,6 +125,7 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
                 <input
                   type="text"
                   value={improvements[improvement]}
+                  placeholder={improvements[improvement]}
                   onChange={(e) =>
                     handleInputChange(improvement, e.target.value)
                   }

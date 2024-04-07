@@ -4,19 +4,10 @@ import Footer from "@/components/Footer";
 import React, { useEffect, useState } from "react";
 import FormModifyChall from "./components/FormModifyChall";
 import FormImproved from "./components/FormImproved";
-import { useAuthContext } from "@/context/AuthContext";
 import CalendarChall from "./components/CalendarChall";
-interface Field {
-  key: string;
-  value: string;
-}
-interface UserData {
-  email: string;
-  uid: string;
-}
+import ShowPerfs from "./components/ShowPerfs";
+
 const Page = () => {
-  const { user } = useAuthContext() as { user: UserData };
-  const [showForm, setShowForm] = useState(false);
   const [slug, setSlug] = useState<string | null>(null);
   const [thisChall, setThisChall] = useState<any>(null);
 
@@ -61,6 +52,9 @@ const Page = () => {
           <div className="container">
             <h2>I improved !</h2>
             <FormImproved thisChall={thisChall} />
+          </div>
+          <div className="container">
+            <ShowPerfs thisChall={thisChall} />
           </div>
           <div className="container">
             <CalendarChall thisChall={thisChall} />

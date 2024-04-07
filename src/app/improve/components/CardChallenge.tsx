@@ -39,30 +39,7 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .map(({ day }) => day);
   }
-  // A REFAIRE QUAND ON AURA DES DATAS
-  function findBiggest() {
-    let biggest = 0;
 
-    Object.values(perfOfThisChall).forEach((perf: any) => {
-      if (Object.values(perfOfThisChall).length <= 1) {
-        console.log("il n'y a qu'une date");
-        console.log("perf", perf);
-        return perf;
-      }
-      console.log(perf);
-    });
-  }
-  function findLowest() {
-    let lowest = 0;
-    Object.values(perfOfThisChall).forEach((perf: any) => {
-      if (Object.values(perfOfThisChall).length <= 1) {
-        console.log("il n'y a qu'une date");
-        console.log("perf", perf);
-        return perf;
-      }
-      console.log(perf);
-    });
-  }
   return (
     <li className="challenge">
       <div className="infos">

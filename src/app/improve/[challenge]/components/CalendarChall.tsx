@@ -1,15 +1,11 @@
 import TemporaryMessage from "@/components/TemporaryMessage";
-import { useAuthContext } from "@/context/AuthContext";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Calendar from "react-calendar";
 import FormModifyPreviousDays from "./FormModifyPreviousDays";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
-interface UserData {
-  email: string;
-  uid: string;
-}
+
 interface Props {
   thisChall: { [shortDate: string]: any };
 }
@@ -18,23 +14,13 @@ interface Props {
 const CalendarChall: React.FC<Props> = ({ thisChall }) => {
   // calendar :
   const [value, onChange] = useState<Value>(new Date());
-  //
-  const { user } = useAuthContext() as { user: UserData };
+
   const [message, setMessage] = useState<string | null>(null);
   const [modal, setModal] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const today = new Date();
   const todayDate = makeDateForReactCalendarFormat(today);
 
-  useEffect(() => {
-    let test = new Date("2022-12-31T00:00:00.000Z");
-    console.log("tesT :", makeDateForReactCalendarFormat(test));
-  }, []);
-
-  useEffect(() => {
-    console.log("thisChall", thisChall);
-    console.log("===============================");
-  }, []);
   const dayClick = (value: Date) => {
     const thisDayDate = makeDateForReactCalendarFormat(value);
     const date = new Date(
@@ -84,7 +70,7 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
 export default CalendarChall;
 function makeDateForReactCalendarFormat(date: any) {
   const year = date.getFullYear();
-  const month = date.getMonth() + 1; // JavaScript months are 0-based counting
+  const month = date.getMonth() + 1;
   const day = date.getDate();
   const formattedMonth = month < 10 ? `0${month}` : month;
   const formattedDay = day < 10 ? `0${day}` : day;
