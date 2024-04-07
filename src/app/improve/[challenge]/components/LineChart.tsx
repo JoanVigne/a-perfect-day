@@ -123,16 +123,15 @@ const LineChart: React.FC<Props> = ({ thisChall }) => {
   };
   return (
     <>
-      <div className="">
-        <select name="" id="" onChange={handleSelectChange}>
-          <option value="all">All</option>
-          <option value="90">The last 3 months</option>
-          <option value="30">The last month</option>
-          <option value="7">The last week</option>
-        </select>
-      </div>
+      <div className=""></div>
       {thisChall.perf && Object.keys(thisChall.perf).length > 0 && (
         <>
+          <select name="" id="" onChange={handleSelectChange}>
+            <option value="all">All</option>
+            <option value="90">The last 3 months</option>
+            <option value="30">The last month</option>
+            <option value="7">The last week</option>
+          </select>
           <Line data={data} options={options} key={renderKey} />
           {data.datasets.map((dataset: any, index: number) => (
             <button key={index} onClick={() => toggleDataset(index)}>

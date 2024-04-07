@@ -63,7 +63,6 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
     console.log("selected Improvement", selectedImprovement);
 
     console.log(result);
-    return;
     // send to db
     sendToChall(result, userid);
     // Envoyer les données où vous en avez besoin

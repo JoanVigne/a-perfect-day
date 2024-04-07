@@ -52,6 +52,7 @@ const CalendarChall: React.FC<Props> = ({ thisChall }) => {
         onClickDay={dayClick}
         tileClassName={({ date }) =>
           `${
+            thisChall.perf &&
             thisChall.perf[makeDateForReactCalendarFormat(date)] &&
             Object.keys(thisChall.perf[makeDateForReactCalendarFormat(date)])
               .length > 0

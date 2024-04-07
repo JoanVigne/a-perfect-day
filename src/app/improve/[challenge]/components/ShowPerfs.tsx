@@ -52,45 +52,47 @@ const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
       </li>
     );
   }
-
-  console.log(thisChall);
   return (
     <div>
       {thisChall.selectedImprovement &&
-      thisChall.selectedImprovement.length > 0 ? (
+      thisChall.perf &&
+      Object.keys(thisChall.perf).length > 0 ? (
         <ul>
           <h3>Last time, you did </h3>
           <span>{thisChall.selectedImprovement.map(renderImprovement)}</span>
         </ul>
       ) : (
-        <p>Nothing yet</p>
+        <p>
+          Here will be your performances in a chart when you are gonna add them.
+        </p>
       )}
       <ul>
-        <h3>All the times :</h3>
         <LineChart thisChall={thisChall} />
-        {Object.entries(thisChall.perf)
-          .sort(
-            ([dateA], [dateB]) =>
-              new Date(dateB).getTime() - new Date(dateA).getTime()
-          )
-          .map(([date, performance]) => (
-            <li key={date}>
-              <span>{date} :</span>
-              {Object.entries(performance).map(([key, value]) => {
-                if (key !== "date") {
-                  return (
-                    <span key={key}>
-                      {value}
-                      {key}
-                      {" / "}
-                    </span>
-                  );
-                } else {
-                  return null;
-                }
-              })}
-            </li>
-          ))}
+
+        {thisChall.perf &&
+          Object.entries(thisChall.perf)
+            .sort(
+              ([dateA], [dateB]) =>
+                new Date(dateB).getTime() - new Date(dateA).getTime()
+            )
+            .map(([date, performance]) => (
+              <li key={date}>
+                <span>{date} :</span>
+                {Object.entries(performance).map(([key, value]) => {
+                  if (key !== "date") {
+                    return (
+                      <span key={key}>
+                        {value}
+                        {key}
+                        {" / "}
+                      </span>
+                    );
+                  } else {
+                    return null;
+                  }
+                })}
+              </li>
+            ))}
       </ul>
     </div>
   );
