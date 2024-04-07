@@ -1,8 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 :root {
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
-    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
-    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+
+  --font-montserrat: "Montserrat", sans-serif;
+
   --color-white: rgba(218, 218, 218, 1);
   --color-light-grey: rgb(156, 156, 156);
   --color-grey: rgb(70 69 69);
@@ -18,7 +19,7 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-montserrat);
 }
 
 html,
