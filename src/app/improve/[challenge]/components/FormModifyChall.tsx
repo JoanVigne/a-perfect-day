@@ -71,10 +71,7 @@ const FormModifyChall: React.FC<Props> = ({
         return acc;
       }, {} as { [key: string]: string }),
     };
-<<<<<<< HEAD
-=======
     // Filter selectedImprovement to only include keys that exist in fields
->>>>>>> develop
     result.selectedImprovement = selectedImprovement.filter((key) =>
       fields.some((field) => field.key === key)
     );
