@@ -71,8 +71,8 @@ const FavoriteLists: React.FC<Props> = ({
     <>
       <div className="favorite-lists">
         <h3>
-          Favorite lists
           <IconOpen show={showFav} setShow={setShowFav} />
+          Favorite lists
         </h3>
         <div className={`excisting-favorites ${showFav ? "active" : "hidden"}`}>
           <ul>

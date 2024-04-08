@@ -21,3 +21,9 @@
   background-color: unset;
   padding: 0;
 }
+.rotate-right {
+  transform: translateX(-10%) rotate(-90deg);
+}
+.rotate-down {
+  transform: translateX(-10%) rotate(-0deg);
+}

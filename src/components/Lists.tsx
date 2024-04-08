@@ -73,7 +73,8 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
     <div className="container">
       <div className="container-new-fav-list">
         <h3>
-          New favorite list <IconOpen show={showForm} setShow={setShowForm} />
+          <IconOpen show={showForm} setShow={setShowForm} />
+          New favorite list
         </h3>
         <TemporaryMessage
           message={message}

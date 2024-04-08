@@ -56,8 +56,6 @@ const LineChart0to60: React.FC<Props> = ({
     scales: {
       y: {
         beginAtZero: false,
-        suggestedMin: 0,
-        suggestedMax: 60,
       },
     },
   };
@@ -65,11 +63,22 @@ const LineChart0to60: React.FC<Props> = ({
     const value = event.target.value;
     setDays(value === "all" ? Object.keys(perf).length : Number(value));
   };
+  const convertToDecimalTime = (time: string) => {
+    const timeWithPoint = time.includes(",") ? time.replace(",", ".") : time;
+    const timeNumber = parseFloat(timeWithPoint);
+    const integerPart = Math.floor(timeNumber);
+    const fractionalPart = timeNumber - integerPart;
+    const decimalFractionalPart = fractionalPart * (100 / 60);
+    return integerPart + decimalFractionalPart;
+  };
   const generateDatasets = (improvement: string, dates: string[]) => {
     return [
       {
         label: improvement,
-        data: dates.map((date) => perf[date]?.[improvement] || null),
+        data: dates.map((date) => {
+          const value = perf[date]?.[improvement];
+          return value !== null ? convertToDecimalTime(value) : null;
+        }),
         fill: false,
         hidden: false,
         spanGaps: true,
