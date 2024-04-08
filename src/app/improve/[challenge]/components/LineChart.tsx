@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./lineChart.css";
 import { Line } from "react-chartjs-2";
 import {
   Chart,
@@ -27,14 +26,6 @@ const last30Days = [...Array(30)]
   })
   .reverse();
 
-const options = {
-  scales: {
-    y: {
-      beginAtZero: false,
-    },
-  },
-};
-
 interface Chall {
   selectedImprovement: string[];
   details: string;
@@ -48,7 +39,7 @@ interface Chall {
 interface Props {
   thisChall: Chall;
 }
-// Define colors for each line
+
 const colors = [
   {
     backgroundColor: "rgba(255, 99, 132, 0.2)",
@@ -62,13 +53,31 @@ const colors = [
     backgroundColor: "rgba(1, 107, 1, 1)",
     borderColor: "rgba(1, 107, 1, 1)",
   },
-  // Add more colors here if you have more lines
+  {
+    backgroundColor: "rgba(255, 205, 86, 0.2)",
+    borderColor: "rgb(255, 205, 86)",
+  },
+  {
+    backgroundColor: "rgba(75, 192, 192, 0.2)",
+    borderColor: "rgb(75, 192, 192)",
+  },
+  {
+    backgroundColor: "rgba(153, 102, 255, 0.2)",
+    borderColor: "rgb(153, 102, 255)",
+  },
 ];
 const LineChart: React.FC<Props> = ({ thisChall }) => {
   const [data, setData] = useState<any>({ datasets: [] });
   const [renderKey, setRenderKey] = useState(0);
   const [days, setDays] = useState(90);
-
+  const [unit, setUnit] = useState("");
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+    },
+  };
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setDays(
@@ -128,6 +137,7 @@ const LineChart: React.FC<Props> = ({ thisChall }) => {
     <>
       {thisChall.perf && Object.keys(thisChall.perf).length > 0 && (
         <div className="line-chart-and-options">
+          <h3>All your selected improvements in a chart : </h3>
           <select name="" id="" onChange={handleSelectChange} value={days}>
             <option value="7">Last week</option>
             <option value="30">Last month</option>

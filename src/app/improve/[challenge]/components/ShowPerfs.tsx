@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import "./lineChart.css";
 import LineChart from "./LineChart";
+import LineChart0to100 from "./LineChart0to100";
+import LineChart0to60 from "./LineChart0to60";
 
 interface Perf {
-  reps: string;
-  kg: string;
-  date: string;
+  [key: string]: any;
 }
 interface Chall {
   selectedImprovement: string[];
@@ -35,39 +36,69 @@ const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
     )[0];
   }
 
-  function renderImprovement(improvement: string, index: number) {
-    return (
-      <li key={index}>
-        {Object.entries(thisChall).map(([key, value]) => {
-          if (key === improvement) {
-            return (
-              <div key={key}>
-                {latestPerformance?.[improvement as keyof Perf]}
-                {key}
-              </div>
-            );
-          }
-          return null;
-        })}
-      </li>
-    );
-  }
   return (
     <div>
       {thisChall.selectedImprovement &&
       thisChall.perf &&
       Object.keys(thisChall.perf).length > 0 ? (
         <ul>
-          <h3>Last time, you did </h3>
-          <span>{thisChall.selectedImprovement.map(renderImprovement)}</span>
+          <h3>Your last performances :</h3>
+          <span>
+            {thisChall.selectedImprovement.map((improvement, index) => {
+              return (
+                <div key={index}>
+                  <h4></h4>
+
+                  {latestPerformance && latestPerformance[improvement] !== ""
+                    ? `${latestPerformance[improvement]} ${improvement}`
+                    : `no data last time about ${improvement}`}
+                </div>
+              );
+            })}
+          </span>
         </ul>
       ) : (
-        <p>
-          Here will be your performances in a chart when you are gonna add them.
-        </p>
+        <p>Here will be your performances in charts.</p>
       )}
       <ul>
         <LineChart thisChall={thisChall} />
+        {thisChall &&
+          thisChall.perf &&
+          thisChall.selectedImprovement.map((improvement, index) => {
+            const timeUnits = [
+              "mn",
+              "m",
+              "min",
+              "minutes",
+              "minute",
+              "s",
+              "sec",
+              "h",
+              "hour",
+              "hours",
+            ];
+            if (timeUnits.includes(improvement)) {
+              return (
+                <li key={improvement}>
+                  <LineChart0to60
+                    perf={thisChall.perf}
+                    selectedImprovement={improvement}
+                    color={index}
+                  />
+                </li>
+              );
+            } else {
+              return (
+                <li key={improvement}>
+                  <LineChart0to100
+                    perf={thisChall.perf}
+                    selectedImprovement={improvement}
+                    color={index}
+                  />
+                </li>
+              );
+            }
+          })}
 
         {thisChall.perf &&
           Object.entries(thisChall.perf)

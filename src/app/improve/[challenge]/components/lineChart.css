@@ -8,6 +8,14 @@
 </select>
 <div className="container-show-hide-lines"> */
 
+canvas {
+  display: flex;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  background-color: var(--color-grey);
+}
+
 .line-chart-and-options {
   display: flex;
   flex-direction: column;
@@ -15,6 +23,12 @@
   align-items: center;
   border: 1px white solid;
   border-radius: 3px;
+  margin: 10px 0;
+}
+.line-chart-and-options .title-select {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }
 .line-chart-and-options select,
 .line-chart-and-options option {
