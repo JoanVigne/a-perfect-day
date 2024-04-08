@@ -57,6 +57,9 @@ const page = () => {
     }
     localStorage.setItem("users", JSON.stringify(updatedUser));
     setMessageChangeNickname("Nickname updated");
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 2500);
   }
   function logOut() {
     let updatedUser;

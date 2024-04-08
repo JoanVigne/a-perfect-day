@@ -6,7 +6,8 @@ interface Props {
   setShow: any;
 }
 const iconStyles = {
-  marginLeft: "15px",
+  marginLeft: "-15px",
+  marginRight: "5px",
 };
 
 const IconOpen: React.FC<Props> = ({ show, setShow }) => {
@@ -14,7 +15,7 @@ const IconOpen: React.FC<Props> = ({ show, setShow }) => {
     <img
       onClick={() => setShow(!show)}
       style={iconStyles}
-      className={show ? "icon rotate-up" : "icon"}
+      className={show ? "icon rotate-down" : "icon rotate-right"}
       src="/icon/arrow-down.png"
       alt="show"
     />

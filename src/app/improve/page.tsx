@@ -25,11 +25,7 @@ const page = () => {
         <ContainerChallenges userId={user?.uid} />
       </div>
 
-      <div className="container">
-        <p>LIENS VERS charts of progression of stuff improvement</p>
-      </div>
-
-      <div className="container">
+      {/*   <div className="container">
         <h2>MY Exemples</h2>
         <div className="task-stat-container">
           <div className="hero">
@@ -55,9 +51,10 @@ const page = () => {
             <img src="" alt="photo" />
             <p>exploit</p>
             <p>stats</p>
-          </div>
+      
         </div>
       </div>
+          </div> */}
       <ContainerWorldRecords />
       <Footer />
     </div>

@@ -76,8 +76,8 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
   return (
     <div>
       <h3>
-        Create a new challenge
         <IconOpen show={showForm} setShow={setShowForm} />
+        Create a new challenge
       </h3>
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>
         <form onSubmit={handleSubmit}>

@@ -20,7 +20,7 @@ const ContainerWorldRecords = () => {
           <p>Didn't eat for 382 days</p>
           <p>stats</p>
         </div>
-        <div className="hero task-stat-card">
+        {/*    <div className="hero task-stat-card">
           <h3>nom</h3>
           <img src="" alt="photo" />
           <p>exploit</p>
@@ -31,7 +31,7 @@ const ContainerWorldRecords = () => {
           <img src="" alt="photo" />
           <p>exploit</p>
           <p>stats</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

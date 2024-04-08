@@ -73,7 +73,11 @@ const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
               "minute",
               "s",
               "sec",
+              "secondes",
+              "seconde",
               "h",
+              "heures",
+              "heure",
               "hour",
               "hours",
             ];
