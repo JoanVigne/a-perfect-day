@@ -1,7 +1,0 @@
-canvas {
-  display: flex;
-  padding: 5px;
-  margin: 35px 5px;
-  border-radius: 5px;
-  background-color: var(--color-dark-grey);
-}

@@ -82,10 +82,10 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>
         <form onSubmit={handleSubmit}>
           <div className="container-key-value">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Name of the Challenge</label>
             <input
               type="text"
-              placeholder="Name"
+              placeholder="ex: Jogging ..."
               value={fields[0].value}
               onChange={(e) => handleChange(0, e)}
               name="name"
@@ -95,7 +95,10 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
             <tbody>
               <tr>
                 <td>Personnalise your challenge by adding fields</td>
-                <td>Select the values you will improve</td>
+                <td>
+                  Select the values you will improve. No need to add a value
+                  now.
+                </td>
               </tr>
               <tr>
                 <td colSpan={2}>
@@ -111,6 +114,7 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
                       />
                       <input
                         type="text"
+                        // HERE I NEED HELP FOR THE
                         placeholder="Value"
                         value={field.value}
                         onChange={(e) => handleChange(index + 1, e)}
@@ -136,7 +140,9 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
                           }}
                         />
                         <label htmlFor={`selectedToImprove_${index}`}>
-                          To improve?
+                          {selectedImprovement.includes(field.key)
+                            ? "I will improve!"
+                            : "To improve?"}
                         </label>
                         <Icon
                           nameImg="delete"

@@ -7,6 +7,18 @@ label {
   padding: 5px;
   margin: 5px;
 }
+select,
+option {
+  all: unset;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin: 5px 0;
+  color: var(--color-white);
+  background-color: var(--color-dark-green);
+}
+
 input[type="text"],
 textarea {
   box-sizing: border-box;

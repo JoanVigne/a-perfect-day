@@ -26,34 +26,6 @@ const last30Days = [...Array(30)]
   })
   .reverse();
 
-const initialData = {
-  labels: last30Days,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: [65, 59, 80, 81, 56, 55, 40],
-      fill: false,
-      backgroundColor: "rgb(255, 99, 132)",
-      borderColor: "rgba(255, 99, 132, 0.2)",
-    },
-    {
-      label: "Dataset 2",
-      data: [28, 48, 40, 19, 86, 27, 90],
-      fill: false,
-      backgroundColor: "rgb(54, 162, 235)",
-      borderColor: "rgba(54, 162, 235, 0.2)",
-    },
-  ] as DatasetType[],
-};
-
-const options = {
-  scales: {
-    y: {
-      beginAtZero: true,
-    },
-  },
-};
-
 interface Chall {
   selectedImprovement: string[];
   details: string;
@@ -67,18 +39,63 @@ interface Chall {
 interface Props {
   thisChall: Chall;
 }
+
+const colors = [
+  {
+    backgroundColor: "rgba(255, 99, 132, 0.2)",
+    borderColor: "rgb(255, 99, 132)",
+  },
+  {
+    backgroundColor: "rgba(54, 162, 235, 0.2)",
+    borderColor: "rgb(54, 162, 235)",
+  },
+  {
+    backgroundColor: "rgba(1, 107, 1, 1)",
+    borderColor: "rgba(1, 107, 1, 1)",
+  },
+  {
+    backgroundColor: "rgba(255, 205, 86, 0.2)",
+    borderColor: "rgb(255, 205, 86)",
+  },
+  {
+    backgroundColor: "rgba(75, 192, 192, 0.2)",
+    borderColor: "rgb(75, 192, 192)",
+  },
+  {
+    backgroundColor: "rgba(153, 102, 255, 0.2)",
+    borderColor: "rgb(153, 102, 255)",
+  },
+];
 const LineChart: React.FC<Props> = ({ thisChall }) => {
   const [data, setData] = useState<any>({ datasets: [] });
   const [renderKey, setRenderKey] = useState(0);
-  const [days, setDays] = useState(30); // new state variable for the number of days
-
+  const [days, setDays] = useState(90);
+  const [unit, setUnit] = useState("");
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+    },
+  };
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setDays(
       value === "all" ? Object.keys(thisChall.perf).length : Number(value)
     );
   };
-
+  const generateDatasets = (improvements: string[], dates: string[]) => {
+    return improvements.map((improvement, index) => ({
+      label: improvement,
+      data: dates.map((date) => thisChall.perf[date]?.[improvement] || null),
+      fill: false,
+      hidden: false,
+      spanGaps: true,
+      // Use the colors array to set the colors for each line
+      backgroundColor: colors[index % colors.length].backgroundColor,
+      borderColor: colors[index % colors.length].borderColor,
+    }));
+  };
   useEffect(() => {
     if (thisChall.perf && thisChall.selectedImprovement) {
       const lastNDays = [...Array(days)]
@@ -94,19 +111,14 @@ const LineChart: React.FC<Props> = ({ thisChall }) => {
         const d = new Date(date);
         return `${d.getMonth() + 1}-${d.getDate()}`;
       });
-      const datasets = thisChall.selectedImprovement.map((improvement) => ({
-        label: improvement,
-        data: lastNDays.map(
-          (date) => thisChall.perf[date]?.[improvement] || null
-        ),
-        fill: false,
-        hidden: false,
-        spanGaps: true,
-      }));
+      const datasets = generateDatasets(
+        thisChall.selectedImprovement,
+        lastNDays
+      );
 
       setData({ labels, datasets });
     }
-  }, [thisChall, days]); // add days as a dependency
+  }, [thisChall, days]);
 
   const toggleDataset = (index: number) => {
     setData((currentData: any) => ({
@@ -123,22 +135,25 @@ const LineChart: React.FC<Props> = ({ thisChall }) => {
   };
   return (
     <>
-      <div className=""></div>
       {thisChall.perf && Object.keys(thisChall.perf).length > 0 && (
-        <>
-          <select name="" id="" onChange={handleSelectChange}>
+        <div className="line-chart-and-options">
+          <h3>All your selected improvements in a chart : </h3>
+          <select name="" id="" onChange={handleSelectChange} value={days}>
+            <option value="7">Last week</option>
+            <option value="30">Last month</option>
+            <option value="90">Last 3 months</option>
             <option value="all">All</option>
-            <option value="90">The last 3 months</option>
-            <option value="30">The last month</option>
-            <option value="7">The last week</option>
           </select>
           <Line data={data} options={options} key={renderKey} />
-          {data.datasets.map((dataset: any, index: number) => (
-            <button key={index} onClick={() => toggleDataset(index)}>
-              {dataset.hidden ? "Show " : "Hide "} {dataset.label}
-            </button>
-          ))}
-        </>
+
+          <div className="container-show-hide-lines">
+            {data.datasets.map((dataset: any, index: number) => (
+              <button key={index} onClick={() => toggleDataset(index)}>
+                {dataset.hidden ? "Show " : "Hide "} {dataset.label}
+              </button>
+            ))}
+          </div>
+        </div>
       )}
     </>
   );
