@@ -19,6 +19,7 @@ import Header from "@/components/Header";
 import { findTasksByType } from "./utils/utils";
 import PreviousDay from "./components/PreviousDay";
 import { useRouter } from "next/navigation";
+import IconOpen from "@/components/IconOpen";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -158,12 +159,8 @@ const Page = () => {
             
           </button> */}
           <h3>
-            <img
-              onClick={() => setShowAllNB(!showAllNonBoolean)}
-              className={showAllNonBoolean ? "icon" : "icon rotate"}
-              src="./icon/arrow-down.png"
-              alt="show"
-            />
+            <IconOpen show={showAllNonBoolean} setShow={setShowAllNB} />
+            Show all
           </h3>
           <div className="task-stat-container">
             {showAllNonBoolean &&

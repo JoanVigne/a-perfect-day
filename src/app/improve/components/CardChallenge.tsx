@@ -78,8 +78,7 @@ const CardChallenge: React.FC<Props> = ({ challenge }) => {
                       if (key === improvement) {
                         return (
                           <div key={key}>
-                            {lastPerf && lastPerf[improvement]}
-                            {key}
+                            {key}: {lastPerf && lastPerf[improvement]}.
                           </div>
                         );
                       } else {

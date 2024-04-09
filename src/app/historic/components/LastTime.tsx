@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { findTask } from "../utils/utils";
+import Icon from "@/components/Icon";
 
 const LastTime = ({ data, taskName }: { data: any; taskName: string }) => {
   const [lasttime, setLastTime] = useState<string | null>(null);
@@ -53,7 +54,12 @@ const LastTime = ({ data, taskName }: { data: any; taskName: string }) => {
         "Last time: "
       ) : (
         <>
-          <img className="icon" src="./last.png" alt="last time" />
+          <Icon
+            nameImg="last24-green"
+            onClick={() => {
+              setImgOrText(!imgOrText);
+            }}
+          />
         </>
       )}
       <span className="date"> {lasttime}</span>

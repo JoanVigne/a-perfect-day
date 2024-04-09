@@ -24,10 +24,6 @@ const FormModifyPreviousDays: React.FC<Props> = ({ thisChall, thisDay }) => {
       {}
     )
   );
-  useEffect(() => {
-    console.log("thisChall", thisChall);
-    console.log("thisDay", thisDay);
-  }, []);
   const handleInputChange = (improvement: string, value: string) => {
     setImprovements({ ...improvements, [improvement]: value });
   };
@@ -87,10 +83,9 @@ const FormModifyPreviousDays: React.FC<Props> = ({ thisChall, thisDay }) => {
     // send to db
     await modifyChall(datatosend, user.uid);
     setMessage("Your improvement has been saved !");
-
     setTimeout(() => {
-      window.location.href = "/improve";
-    }, 2500);
+      window.location.reload();
+    }, 2000);
   }
   return (
     <>
@@ -103,8 +98,11 @@ const FormModifyPreviousDays: React.FC<Props> = ({ thisChall, thisDay }) => {
                 <div key={index} className="improvement">
                   <label>{improvement}:</label>
                   <input
+                    placeholder={
+                      thisChall.perf[thisDay.slice(0, 10)]?.[improvement]
+                    }
                     type="text"
-                    value={improvements[improvement]}
+                    value={improvements[improvement] || ""}
                     onChange={(e) =>
                       handleInputChange(improvement, e.target.value)
                     }

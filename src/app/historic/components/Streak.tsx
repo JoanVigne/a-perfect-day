@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { findTask } from "../utils/utils";
+import Icon from "@/components/Icon";
 
 const Streak = ({ data, taskName }: { data: any; taskName: string }) => {
   const [streak, setStreak] = useState(0);
@@ -47,7 +48,12 @@ const Streak = ({ data, taskName }: { data: any; taskName: string }) => {
         "Streak: "
       ) : (
         <>
-          <img className="icon" src="./fire.png" alt="longest streak" />
+          <Icon
+            nameImg="fire"
+            onClick={() => {
+              setImgOrText(!imgOrText);
+            }}
+          />
         </>
       )}
       <span className="number">{streak}x</span>

@@ -37,29 +37,9 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      Object.entries(thisChall).forEach(([key, value]) => {
-        if (value === null || value === undefined) {
-          return;
-        }
-        if (!isNaN(Number(value))) {
-          Object.entries(improvements).forEach(([key, impValue]) => {
-            if (
-              impValue !== null &&
-              impValue !== undefined &&
-              isNaN(Number(impValue))
-            ) {
-              setMessage(
-                `The value of ${key} was a number and you entered a letter !`
-              );
-              throw new Error("Invalid input");
-            }
-          });
-        }
-      });
       const actualChall = getItemFromLocalStorage("customChall");
-
       if (actualChall[thisChall.id].perf) {
-        console.log(" in today perf of thus chall");
+        console.log(" in today perf of this chall");
 
         for (const date of Object.keys(actualChall[thisChall.id].perf)) {
           if (date === new Date().toISOString().slice(0, 10)) {
@@ -110,7 +90,7 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
 
     setTimeout(() => {
       window.location.href = "/improve";
-    }, 2500);
+    }, 2000);
   }
 
   return (
@@ -124,7 +104,7 @@ const FormImproved: React.FC<Props> = ({ thisChall }) => {
                 <label>{improvement}:</label>
                 <input
                   type="text"
-                  value={improvements[improvement]}
+                  value={improvements[improvement] || ""}
                   placeholder={improvements[improvement]}
                   onChange={(e) =>
                     handleInputChange(improvement, e.target.value)

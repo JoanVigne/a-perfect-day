@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { findTask } from "../utils/utils";
+import Icon from "@/components/Icon";
 
 const HighestScore = ({ data, taskName }: { data: any; taskName: string }) => {
   const [highest, setHighest] = useState<number | null>(null);
@@ -46,17 +47,14 @@ const HighestScore = ({ data, taskName }: { data: any; taskName: string }) => {
       {imgOrText ? (
         "Best ever "
       ) : (
-        <img
-          className="icon-bigger"
-          src="./number-one.png"
-          alt="best performance"
-        />
+        <Icon nameImg="number-one" onClick={() => {}} />
       )}
       <div className="score">
         <div className="number">{highest}</div>
         <div>{unit}</div>
         <div className="img-explication">
-          <img className="icon" src="./location.png" alt="when" />
+          <Icon nameImg="location" onClick={() => {}} />
+
           <span>{highestDate}</span>
         </div>
       </div>

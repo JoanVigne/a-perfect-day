@@ -1,6 +1,6 @@
 // LineChart0to100.tsx
 import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
+import { Line, getDatasetAtEvent } from "react-chartjs-2";
 import {
   Chart,
   LinearScale,
@@ -67,7 +67,15 @@ const LineChart0to100: React.FC<Props> = ({
     return [
       {
         label: improvement,
-        data: dates.map((date) => perf[date]?.[improvement] || null),
+        data: dates.map((date) => {
+          const value = perf[date]?.[improvement];
+          if (typeof value === "string") {
+            const valueCheck = value.replace(",", ".");
+            return !isNaN(Number(valueCheck)) ? valueCheck : value;
+          } else {
+            return value;
+          }
+        }),
         fill: false,
         hidden: false,
         spanGaps: true,

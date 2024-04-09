@@ -85,9 +85,19 @@ const LineChart: React.FC<Props> = ({ thisChall }) => {
     );
   };
   const generateDatasets = (improvements: string[], dates: string[]) => {
+    if (!improvements || !dates || !thisChall.perf) {
+      return [];
+    }
     return improvements.map((improvement, index) => ({
       label: improvement,
-      data: dates.map((date) => thisChall.perf[date]?.[improvement] || null),
+      data: dates.map((date) => {
+        const value = thisChall.perf[date]?.[improvement];
+        if (typeof value === "string") {
+          const valueCheck = value.replace(",", ".");
+          return !isNaN(Number(valueCheck)) ? Number(valueCheck) : value;
+        }
+        return value;
+      }),
       fill: false,
       hidden: false,
       spanGaps: true,

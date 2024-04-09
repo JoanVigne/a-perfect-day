@@ -82,11 +82,10 @@ const FormModifyChall: React.FC<Props> = ({
   const [challToRemove, setChallToRemove] = useState<any | null>(null);
   async function deleteChall() {
     //
-    setCustomChall(getItemFromLocalStorage("customChall"));
+    const currentCustomChall = getItemFromLocalStorage("customChall");
+    setCustomChall(currentCustomChall);
     if (challToRemove && challToRemove.id !== undefined) {
-      const updatedChalls = { ...customChall };
-
-      // Supprimer la tâche avec l'ID correspondant de la copie de customTasks
+      const updatedChalls = { ...currentCustomChall };
       Object.keys(updatedChalls).forEach((key) => {
         const taskKey = key as keyof typeof updatedChalls;
         if (taskKey === challToRemove?.id) {
@@ -94,6 +93,7 @@ const FormModifyChall: React.FC<Props> = ({
         }
       });
       console.log("updated Task", updatedChalls);
+
       setChallToRemove(null);
       // envoi a la db customChall
       const mess = await removeFromChall(updatedChalls, user.uid);

@@ -6,6 +6,7 @@ import FormModifyChall from "./components/FormModifyChall";
 import FormImproved from "./components/FormImproved";
 import CalendarChall from "./components/CalendarChall";
 import ShowPerfs from "./components/ShowPerfs";
+import Header from "@/components/Header";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
@@ -45,6 +46,7 @@ const Page = () => {
 
   return (
     <div>
+      <Header />
       {thisChall && (
         <div className="">
           <h1> {thisChall.name}</h1>

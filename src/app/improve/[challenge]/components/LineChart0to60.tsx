@@ -56,6 +56,30 @@ const LineChart0to60: React.FC<Props> = ({
     scales: {
       y: {
         beginAtZero: false,
+        ticks: {
+          callback: function (
+            tickValue: string | number,
+            index: number,
+            ticks: any[]
+          ) {
+            if (typeof tickValue === "number") {
+              const minutes = Math.floor(tickValue);
+              const fractionalPart = tickValue - minutes;
+              let seconds = 0;
+
+              if (fractionalPart >= 0.6 && fractionalPart < 1) {
+                seconds = fractionalPart;
+              } else {
+                seconds = Math.round(fractionalPart * 60);
+              }
+
+              return `${minutes}:${(seconds * 100)
+                .toString()
+                .padStart(2, "0")}`;
+            }
+            return tickValue;
+          },
+        },
       },
     },
   };
@@ -64,11 +88,18 @@ const LineChart0to60: React.FC<Props> = ({
     setDays(value === "all" ? Object.keys(perf).length : Number(value));
   };
   const convertToDecimalTime = (time: string) => {
+    if (time === null || time === undefined) return null;
     const timeWithPoint = time.includes(",") ? time.replace(",", ".") : time;
     const timeNumber = parseFloat(timeWithPoint);
     const integerPart = Math.floor(timeNumber);
     const fractionalPart = timeNumber - integerPart;
-    const decimalFractionalPart = fractionalPart * (100 / 60);
+    let decimalFractionalPart = 0;
+    if (fractionalPart >= 0.6 && fractionalPart < 1) {
+      decimalFractionalPart = fractionalPart;
+    } else {
+      decimalFractionalPart = fractionalPart * (100 / 60);
+    }
+
     return integerPart + decimalFractionalPart;
   };
   const generateDatasets = (improvement: string, dates: string[]) => {

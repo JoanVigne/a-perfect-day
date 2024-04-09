@@ -45,24 +45,20 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
   };
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-
     const result: { [key: string]: string | string[] } = {};
-
-    fields.forEach((field, index) => {
-      if (!field.key) {
-        fields.splice(index, 1);
-      }
+    const filteredFields = fields.filter(
+      (field) => !(field.key === "" && field.value === "")
+    );
+    filteredFields.forEach((field, index) => {
       if (index === 0) {
         result["name"] = field.value;
       } else {
         result[field.key] = field.value;
       }
     });
+
     result["id"] = Math.random().toString(36);
     result["selectedImprovement"] = selectedImprovement;
-    console.log("selected Improvement", selectedImprovement);
-
-    console.log(result);
     // send to db
     sendToChall(result, userid);
     // Envoyer les données où vous en avez besoin
