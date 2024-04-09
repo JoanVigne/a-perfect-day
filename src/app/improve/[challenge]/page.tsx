@@ -55,12 +55,10 @@ const Page = () => {
               key === "id" ||
               key === "selectedImprovement" ||
               key === "perf" ||
-              key === "name"
+              key === "name" ||
+              thisChall.selectedImprovement.includes(key)
             )
               return null;
-            if (thisChall.selectedImprovement.includes(key)) {
-              return null;
-            }
             return (
               <p key={key}>
                 <span>{key} : </span>
