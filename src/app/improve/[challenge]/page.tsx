@@ -50,6 +50,24 @@ const Page = () => {
       {thisChall && (
         <div className="">
           <h1> {thisChall.name}</h1>
+          {Object.keys(thisChall).map((key) => {
+            if (
+              key === "id" ||
+              key === "selectedImprovement" ||
+              key === "perf" ||
+              key === "name"
+            )
+              return null;
+            if (thisChall.selectedImprovement.includes(key)) {
+              return null;
+            }
+            return (
+              <p key={key}>
+                <span>{key} : </span>
+                <span>{thisChall[key]}</span>
+              </p>
+            );
+          })}
 
           <div className="container">
             <h2>I improved !</h2>
