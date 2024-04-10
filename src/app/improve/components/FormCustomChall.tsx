@@ -77,82 +77,86 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
       </h3>
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>
         <form onSubmit={handleSubmit}>
-          <table>
-            <tbody>
-              <tr>
-                <td>Personnalise your challenge by adding fields</td>
-                <td>Select the values you will improve.</td>
-              </tr>
-              <tr>
-                <td colSpan={2}>
-                  <div className="container-key-value">
-                    <label htmlFor="name">Name of the Challenge</label>
+          <div>
+            <div className="container-key-value">
+              <label htmlFor="name">Name of the Challenge</label>
+              <input
+                type="text"
+                placeholder="ex: Jogging ..."
+                value={fields[0].value}
+                onChange={(e) => handleChange(0, e)}
+                name="name"
+              />
+            </div>
+            {/* Rendu des autres entrées */}
+            {selectedImprovement.length === 0 ? (
+              <h3>
+                Click on "To improve" if it is the element you are gonna
+                improve.
+              </h3>
+            ) : (
+              <h3>
+                You selected {selectedImprovement.length} elements to improve,
+                no need to fill its value yet
+              </h3>
+            )}
+            {fields.slice(1).map((field, index) => (
+              <div key={index}>
+                <div className="container-key-value">
+                  <div className="inputs">
                     <input
                       type="text"
-                      placeholder="ex: Jogging ..."
-                      value={fields[0].value}
-                      onChange={(e) => handleChange(0, e)}
-                      name="name"
+                      placeholder="ex: kg, km, min, details..."
+                      value={field.key}
+                      onChange={(e) => handleChange(index + 1, e)}
+                      name="key"
+                    />
+                    <input
+                      type="text"
+                      // HERE I NEED HELP FOR THE
+                      placeholder="If to improve, can be nothing"
+                      value={field.value}
+                      onChange={(e) => handleChange(index + 1, e)}
+                      name="value"
                     />
                   </div>
-                  {/* Rendu des autres entrées */}
-                  {fields.slice(1).map((field, index) => (
-                    <div key={index} className="container-key-value">
-                      <div className="inputs">
-                        <input
-                          type="text"
-                          placeholder="ex: kg, km, min, details..."
-                          value={field.key}
-                          onChange={(e) => handleChange(index + 1, e)}
-                          name="key"
-                        />
-                        <input
-                          type="text"
-                          // HERE I NEED HELP FOR THE
-                          placeholder="If to improve, can be nothing"
-                          value={field.value}
-                          onChange={(e) => handleChange(index + 1, e)}
-                          name="value"
-                        />
-                      </div>
 
-                      <div className="improve">
-                        <input
-                          type="checkbox"
-                          name="selectedToImprove"
-                          id={`selectedToImprove_${index}`}
-                          value={field.key}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedImprovement((prev) => [
-                                ...prev,
-                                e.target.value,
-                              ]);
-                            } else {
-                              setSelectedImprovement((prev) =>
-                                prev.filter((value) => value !== e.target.value)
-                              );
-                            }
-                          }}
-                        />
-                        <label htmlFor={`selectedToImprove_${index}`}>
-                          {selectedImprovement.includes(field.key)
-                            ? "I will improve!"
-                            : "To improve?"}
-                        </label>
-                        <Icon
-                          nameImg="delete"
-                          onClick={() => removeField(index + 1)}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  <div className="improve">
+                    <input
+                      type="checkbox"
+                      name="selectedToImprove"
+                      id={`selectedToImprove_${index}`}
+                      value={index}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedImprovement((prev) => [
+                            ...prev,
+                            e.target.value,
+                          ]);
+                        } else {
+                          setSelectedImprovement((prev) =>
+                            prev.filter((value) => value !== e.target.value)
+                          );
+                        }
+                      }}
+                    />
+                    <label htmlFor={`selectedToImprove_${index}`}>
+                      {selectedImprovement.includes(index.toString())
+                        ? "I will improve!"
+                        : "To improve?"}
+                    </label>
+                    <Icon
+                      nameImg="delete"
+                      onClick={() => removeField(index + 1)}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
           <h3>
-            Add other fields <Icon nameImg="add" onClick={() => addField()} />
+            Add fields to add the things you will improve with time
+            <Icon nameImg="add" onClick={() => addField()} />
           </h3>
 
           {fields.some((field) => fields[0].value !== "") && (

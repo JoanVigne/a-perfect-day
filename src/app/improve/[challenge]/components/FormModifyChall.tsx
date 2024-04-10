@@ -184,7 +184,7 @@ const FormModifyChall: React.FC<Props> = ({
                             }}
                           />
                           <label htmlFor={`selectedToImprove_${index}`}>
-                            value to improve?
+                            To improve?
                           </label>
                         </div>
                         <Icon
