@@ -1,64 +1,60 @@
 "use client";
 import React, { useState } from "react";
-import signUp from "@/firebase/auth/signup";
+import signIn from "@/firebase/auth/signin";
 import { useRouter } from "next/navigation";
 
-function Signup() {
+function Signin() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [nickname, setNickname] = useState<string>("");
   const router = useRouter();
+  const [erreur, setErreur] = useState<boolean>(false);
+  const [messageErreur, setMessageErreur] = useState<string>("");
 
   const handleForm = async (event: React.FormEvent) => {
     event.preventDefault();
-    const { result, error } = await signUp(email, password, nickname);
-    if (error) {
+    const { result, error } = await signIn(email, password);
+    if (error instanceof Error) {
+      setErreur(true);
+      setMessageErreur(error.message);
       return console.log(error);
     }
-    console.log(result);
+    setErreur(false);
+    setMessageErreur("");
     return router.push("/");
   };
+
   return (
     <div>
       <div className="container-form">
-        <h2>Sign up</h2>
         <form onSubmit={handleForm}>
-          <label htmlFor="email">
+          <h3>Sign in</h3>
+          <label htmlFor="newEmail">
             <p>Email</p>
             <input
               onChange={(e) => setEmail(e.target.value)}
               required
               type="email"
-              name="email"
-              id="email"
+              name="newEmail"
+              id="newEmail"
               placeholder="example@mail.com"
             />
           </label>
-          <label htmlFor="password">
+          <label htmlFor="newPassword">
             <p>Password</p>
             <input
               onChange={(e) => setPassword(e.target.value)}
               required
               type="password"
-              name="password"
-              id="password"
+              name="newPassword"
+              id="newPassword"
             />
           </label>
-          <label htmlFor="nickname">
-            <p>Nickname</p>
-            <input
-              onChange={(e) => setNickname(e.target.value)}
-              type="text"
-              name="nickname"
-              id="nickname"
-              required
-            />
-          </label>
-          <button type="submit">Sign up</button>
+          <button type="submit">Sign in</button>
         </form>
       </div>
+      {erreur && messageErreur}
     </div>
   );
 }
 
-export default Signup;
+export default Signin;

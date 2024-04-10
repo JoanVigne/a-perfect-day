@@ -69,8 +69,9 @@ const FavoriteLists: React.FC<Props> = ({
 
   return (
     <>
+      {userInfo && console.log(userInfo.lists)}
       <div className="favorite-lists">
-        <h3>
+        <h3 onClick={() => setShowFav(!showFav)}>
           <IconOpen show={showFav} setShow={setShowFav} />
           Favorite lists
         </h3>

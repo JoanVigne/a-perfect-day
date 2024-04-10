@@ -117,7 +117,7 @@ const FormModifyChall: React.FC<Props> = ({
   }
   return (
     <div>
-      <h2>
+      <h2 onClick={() => setShowForm(!showForm)}>
         <IconOpen show={showForm} setShow={setShowForm} /> Modify this challenge
       </h2>
       <div className={showForm ? "active" : "hidden"}>

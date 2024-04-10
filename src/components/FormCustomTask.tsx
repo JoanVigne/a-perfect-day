@@ -112,7 +112,7 @@ const FormCustomTask: React.FC<FormCustomTaskProps> = ({
 
   return (
     <>
-      <h3>
+      <h3 onClick={() => setShowForm(!showForm)}>
         <IconOpen show={showForm} setShow={setShowForm} />
         Create a new task
       </h3>

@@ -71,51 +71,51 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
 
   return (
     <div>
-      <h3>
+      <h3 onClick={() => setShowForm(!showForm)}>
         <IconOpen show={showForm} setShow={setShowForm} />
         Create a new challenge
       </h3>
       <div className={showForm ? "cont-form active" : "cont-form hidden"}>
         <form onSubmit={handleSubmit}>
-          <div className="container-key-value">
-            <label htmlFor="name">Name of the Challenge</label>
-            <input
-              type="text"
-              placeholder="ex: Jogging ..."
-              value={fields[0].value}
-              onChange={(e) => handleChange(0, e)}
-              name="name"
-            />
-          </div>
           <table>
             <tbody>
               <tr>
                 <td>Personnalise your challenge by adding fields</td>
-                <td>
-                  Select the values you will improve. No need to add a value
-                  now.
-                </td>
+                <td>Select the values you will improve.</td>
               </tr>
               <tr>
                 <td colSpan={2}>
+                  <div className="container-key-value">
+                    <label htmlFor="name">Name of the Challenge</label>
+                    <input
+                      type="text"
+                      placeholder="ex: Jogging ..."
+                      value={fields[0].value}
+                      onChange={(e) => handleChange(0, e)}
+                      name="name"
+                    />
+                  </div>
                   {/* Rendu des autres entrées */}
                   {fields.slice(1).map((field, index) => (
                     <div key={index} className="container-key-value">
-                      <input
-                        type="text"
-                        placeholder="Key"
-                        value={field.key}
-                        onChange={(e) => handleChange(index + 1, e)}
-                        name="key"
-                      />
-                      <input
-                        type="text"
-                        // HERE I NEED HELP FOR THE
-                        placeholder="Value"
-                        value={field.value}
-                        onChange={(e) => handleChange(index + 1, e)}
-                        name="value"
-                      />
+                      <div className="inputs">
+                        <input
+                          type="text"
+                          placeholder="ex: kg, km, min, details..."
+                          value={field.key}
+                          onChange={(e) => handleChange(index + 1, e)}
+                          name="key"
+                        />
+                        <input
+                          type="text"
+                          // HERE I NEED HELP FOR THE
+                          placeholder="If to improve, can be nothing"
+                          value={field.value}
+                          onChange={(e) => handleChange(index + 1, e)}
+                          name="value"
+                        />
+                      </div>
+
                       <div className="improve">
                         <input
                           type="checkbox"
@@ -151,8 +151,9 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
               </tr>
             </tbody>
           </table>
-
-          <Icon nameImg="add" onClick={() => addField()} />
+          <h3>
+            Add other fields <Icon nameImg="add" onClick={() => addField()} />
+          </h3>
 
           {fields.some((field) => fields[0].value !== "") && (
             <>

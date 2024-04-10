@@ -122,8 +122,9 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
         ))
       ) : (
         <p>
-          You dont have any custom task yet, you can create a new one by
-          clicking on the icon down below
+          Welcome to your routine task. The aim of this page is to help you to
+          create a good routine. Down bellow you can create a task that you
+          wanna try to do everyday.
         </p>
       )}
       <TemporaryMessage

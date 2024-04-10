@@ -222,7 +222,9 @@ export default function Home() {
             timeInMS={3000}
           />
 
-          <Link href="/historic">historic</Link>
+          <Link className="link" href="/historic">
+            Check out the Historic of my routine
+          </Link>
         </div>
         <div className="container">
           <h2>Custom tasks</h2>

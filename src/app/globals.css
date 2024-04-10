@@ -103,3 +103,13 @@ input {
   background-color: var(--color-black);
   padding: 5px;
 }
+
+.link {
+  display: block;
+  text-align: center;
+  color: var(--color-white);
+  background-color: var(--color-dark-green);
+  font-size: 12px;
+  border-radius: 3px;
+  padding: 6px;
+}

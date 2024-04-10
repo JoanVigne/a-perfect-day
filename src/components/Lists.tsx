@@ -72,7 +72,7 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
   return (
     <div className="container">
       <div className="container-new-fav-list">
-        <h3>
+        <h3 onClick={() => setShowForm(!showForm)}>
           <IconOpen show={showForm} setShow={setShowForm} />
           New favorite list
         </h3>

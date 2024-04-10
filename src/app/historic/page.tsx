@@ -158,7 +158,7 @@ const Page = () => {
             {showAllNonBoolean ? "v" : "^"}
             
           </button> */}
-          <h3>
+          <h3 onClick={() => setShowAllNB(!showAllNonBoolean)}>
             <IconOpen show={showAllNonBoolean} setShow={setShowAllNB} />
             Show all
           </h3>

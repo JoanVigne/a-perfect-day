@@ -126,13 +126,13 @@ const Today: React.FC<TodayProps> = ({
             );
           })}
       </ul>
-      <FavoriteLists
+      {/*  <FavoriteLists
         setTodayList={updateTaskList}
         useOnOff={true}
         deleteOnOff={false}
         userInfo={userInfo}
-        /*        functionSetUserInfo={functionSetUserInfo} */
-      />
+      //     functionSetUserInfo={functionSetUserInfo}
+      /> */}
     </div>
   );
 };
