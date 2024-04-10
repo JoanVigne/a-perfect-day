@@ -217,7 +217,7 @@ const Page = () => {
           type="message-info"
           timeInMS={3000}
         />
-        <Link className="back" href="/historic">
+        <Link className="cancel" href="/historic">
           Cancel
         </Link>
       </div>

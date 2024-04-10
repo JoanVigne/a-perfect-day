@@ -47,6 +47,7 @@ const Header = () => {
   }, []);
   return (
     <header>
+      <Icon nameImg="back" onClick={() => window.history.back()} />
       <p>{dateToday && dateToday}</p>
       <h2>{userInfo?.nickname}</h2>
       <Link href={"/options"}>

@@ -51,8 +51,8 @@ const TaskDisplay: React.FC<Props> = ({
       }
     >
       <div className="title-inputs">
-        <h4>
-          {task.name}{" "}
+        <div className="title-details-message">
+          <h4>{task.name}</h4>
           <button onClick={openDetails} className="details">
             ?
           </button>
@@ -61,7 +61,7 @@ const TaskDisplay: React.FC<Props> = ({
             type="message-info"
             timeInMS={2000}
           />
-        </h4>
+        </div>
         {inputCountUnit && typeof task.unit !== "boolean" && (
           <div className="count">
             <div className="container-count-unit">

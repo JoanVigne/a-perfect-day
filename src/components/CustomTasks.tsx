@@ -110,7 +110,7 @@ const CustomTasks: React.FC<CustomTasksProps> = ({ handleAddTask, userId }) => {
                     </button>
                     <button
                       onClick={() => setTaskToRemove(null)}
-                      className="back"
+                      className="cancel"
                     >
                       Cancel
                     </button>

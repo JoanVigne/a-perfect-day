@@ -223,7 +223,10 @@ const FormModifyChall: React.FC<Props> = ({
                 <button onClick={deleteChall} className="confirm">
                   Confirm
                 </button>
-                <button onClick={() => setChallToRemove(null)} className="back">
+                <button
+                  onClick={() => setChallToRemove(null)}
+                  className="cancel"
+                >
                   Cancel
                 </button>
               </div>

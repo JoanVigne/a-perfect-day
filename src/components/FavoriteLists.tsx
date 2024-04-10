@@ -79,7 +79,7 @@ const FavoriteLists: React.FC<Props> = ({
             {setTodayList ? (
               <li>
                 <button
-                  className="back"
+                  className="cancel"
                   onClick={() => {
                     location.reload();
                   }}

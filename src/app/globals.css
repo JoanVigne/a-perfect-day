@@ -98,7 +98,7 @@ input {
   background-color: var(--color-red);
 }
 
-.back {
+.cancel {
   color: var(--color-white);
   background-color: var(--color-black);
   padding: 5px;

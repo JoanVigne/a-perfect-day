@@ -13,7 +13,6 @@
 }
 .details {
   font-size: 10px;
-  margin-left: 5px;
 }
 
 .task .title-inputs {
@@ -22,19 +21,18 @@
   align-items: center;
 }
 
-.task .title-inputs h4 {
+.task .title-inputs .title-details-message {
   text-align: unset;
   width: 60%;
-  overflow: hidden;
   display: flex;
   align-items: center;
 }
+.task .title-inputs .title-details-message h4 {
+  overflow: hidden;
+}
 
 .task .title-inputs .count {
-  width: 40%;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
 }
 
 .task .title-inputs .count .container-count-unit {
@@ -43,13 +41,13 @@
   margin-right: 5px;
 }
 .task .title-inputs .count .container-count-unit .unit {
-  width: 50px;
+  max-width: 50px;
   overflow: hidden;
   font-size: 13px;
 }
 
 .task .title-inputs .count input {
-  width: 50px;
+  max-width: 50px;
   height: 25px;
   color: var(--color-white);
   background-color: var(--color-dark-grey);
