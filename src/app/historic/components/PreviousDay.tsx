@@ -1,7 +1,5 @@
 "use client";
 import TemporaryMessage from "../../../components/TemporaryMessage";
-import Link from "next/link";
-
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 
@@ -32,17 +30,19 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
   const [value, onChange] = useState<Value>(new Date());
   //
   const [message, setMessage] = useState<string | null>(null);
-  const handleClick = (value: Date) => {
-    const year = value.getFullYear();
-    const month = value.getMonth() + 1;
-    const day = value.getDate();
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Months are zero-based
+    const day = date.getDate();
 
     const formattedMonth = month < 10 ? `0${month}` : month;
     const formattedDay = day < 10 ? `0${day}` : day;
 
-    const selectedDate = `${year}-${formattedMonth}-${formattedDay}`;
-    const todayDate = new Date().toISOString().split("T")[0];
-
+    return `${year}-${formattedMonth}-${formattedDay}`;
+  };
+  const handleClick = (value: Date) => {
+    const selectedDate = formatDate(value);
+    const todayDate = formatDate(new Date());
     if (selectedDate === todayDate) {
       setMessage("Its today date");
       return;
@@ -51,7 +51,6 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
       setMessage("cannot change the futur !");
       return;
     }
-
     window.location.href = `/historic/${selectedDate}`;
   };
   const today = new Date();
@@ -62,12 +61,13 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
         onChange={onChange}
         value={value}
         tileClassName={({ date }) =>
-          `${data[date.toISOString().split("T")[0]] ? "has-data" : ""} ${
-            date.toISOString().split("T")[0] === todayDate ? "today" : ""
+          `${data[formatDate(date)] ? "has-data" : ""} ${
+            formatDate(date) === todayDate ? "today" : ""
           }`
         }
         onClickDay={(value) => handleClick(value)}
       />
+
       <TemporaryMessage
         message={message}
         type="message-error"
