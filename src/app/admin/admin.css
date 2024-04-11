@@ -8,3 +8,21 @@ ul li {
 .ReactModalPortal > div > div {
   color: black;
 }
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+fieldset {
+  margin: 2px;
+  padding: 2px;
+}
+button {
+  background-color: var(--color-active-link);
+  margin: 5px;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}

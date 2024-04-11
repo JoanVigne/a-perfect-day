@@ -1,10 +1,11 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { AuthContext, useAuthContext } from "@/context/AuthContext";
 import { checkDB, db } from "@/firebase/db/db";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import "./admin.css";
 import Modal from "react-modal";
+import IconOpen from "@/components/IconOpen";
 
 interface UserData {
   email: string;
@@ -13,18 +14,12 @@ interface UserData {
 const Page: React.FC = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [users, setUsers] = useState<{ id: string }[]>([]);
-  const [commonTask, setCommonTask] = useState<any>({});
-  const [customTask, setCustomTask] = useState([]);
-  const [customChall, setCustomChall] = useState([]);
-  const [historic, setHistoric] = useState<any>({});
+  const [allCustomTasks, setAllCustomTasks] = useState<any>(null);
+  const [allChallenges, setAllChallenges] = useState<any>(null);
+  const [allHistoric, setAllHistoric] = useState<any>(null);
 
-  async function collectionOfThisUser(thisDB: string, thisUserId: string) {
-    const { snapShot } = await checkDB(thisDB, thisUserId);
-    if (!snapShot.exists()) return null;
-    console.log("snapShot of ", thisDB, snapShot.data());
-  }
-  async function fetchAllData(thisDB: string) {
-    const ref = collection(db, thisDB);
+  async function fetchAllData(ThisFavDB: string) {
+    const ref = collection(db, ThisFavDB);
     const snapShot = await getDocs(ref);
     if (snapShot.empty) return [];
     return snapShot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -32,27 +27,24 @@ const Page: React.FC = () => {
   useEffect(() => {
     console.log("user :", user);
 
-    const fetchData = async () => {
-      const commonTaskDB = await fetchAllData("commonTask");
-
-      const customTaskDB = await fetchAllData("customTask");
-      const customChallDB = await fetchAllData("customChall");
-      const historicDB = await fetchAllData("historic");
-      const usersDB = await fetchAllData("users");
-      setUsers(usersDB);
-    };
-
-    fetchData();
     console.log(" users :", users);
   }, []);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [thisUser, setThisUser] = useState<any>({});
-  function checkThisUser(user: any) {
+  const [ThisFavUser, setThisFavUser] = useState<any>({});
+  function checkThisFavUser(user: any) {
     console.log("user", user);
-    setThisUser(user);
+    setThisFavUser(user);
     console.log("user id", user.id);
     setSelectedUser(user.id);
   }
+
+  // show icon open
+  const [showThisFav, setShowThisFav] = useState<boolean[]>([]);
+  const [showFavorites, setShowFavorites] = useState<boolean>(false);
+  const [showPerf, setShowPerf] = useState<Record<string, boolean>>({});
+  // show THIS data
+  const [showingCustomTasks, setshowingCustomTasks] = useState<any>(null);
+  const [showingChallenges, setShowingChallenges] = useState<any>(null);
   if (user.uid !== "JBoU3yqCAKVI7dsAu109Gz9sEmx2") {
     return <h1>Access denied. You are not an admin.</h1>;
   }
@@ -62,6 +54,15 @@ const Page: React.FC = () => {
       <h1>Welcome, Admin!</h1>
       <div className="container">
         <div className="smaller-container">
+          <button
+            onClick={async () => {
+              const usersDB = await fetchAllData("users");
+              setUsers(usersDB);
+            }}
+          >
+            Fetch user infos ( id, list of today, favorite lists and nickname)
+          </button>
+
           <h2>All the users :</h2>
           <ul>
             {users.map((user: any, index: number) => (
@@ -69,7 +70,7 @@ const Page: React.FC = () => {
                 <h3>{user.nickname}</h3>
                 <button
                   onClick={() => {
-                    checkThisUser(user);
+                    checkThisFavUser(user);
                   }}
                 >
                   about
@@ -83,47 +84,69 @@ const Page: React.FC = () => {
             contentLabel="User Details"
             ariaHideApp={false}
           >
-            {" "}
             <button onClick={() => setSelectedUser(null)}>Close</button>
-            {thisUser && (
+            {ThisFavUser && (
               <div>
-                <h4>Name : {thisUser.nickname}</h4>
-                <h4>id : {thisUser.id}</h4>
-                {thisUser.todayList && (
+                <fieldset>
+                  <h4>Name : {ThisFavUser.nickname}</h4>
+                  <h4>id : {ThisFavUser.id}</h4>
+                </fieldset>
+                {ThisFavUser.todayList && (
                   <>
-                    <h3>Today's tasks :</h3>
-                    {Object.values(thisUser.todayList).map(
-                      (task: any, index: number) => (
-                        <div key={index}>
-                          {typeof task === "string" ? (
-                            `date : ${task}`
-                          ) : (
-                            <h4>
-                              - {task.name} :
-                              {typeof task.unit === "boolean" ? (
-                                <>{task.unit ? "done" : "not done"}</>
-                              ) : (
-                                <>
-                                  {task.count} {task.unit}
-                                </>
-                              )}
-                            </h4>
-                          )}
-                        </div>
-                      )
-                    )}
+                    <fieldset>
+                      <h3>What's up today ?</h3>
+                      {Object.values(ThisFavUser.todayList).map(
+                        (task: any, index: number) => (
+                          <div key={index}>
+                            {typeof task === "string" ? (
+                              `date : ${task}`
+                            ) : (
+                              <h4>
+                                - {task.name} :
+                                {typeof task.unit === "boolean" ? (
+                                  <>{task.unit ? "done" : "not done"}</>
+                                ) : (
+                                  <>
+                                    {task.count} {task.unit}
+                                  </>
+                                )}
+                              </h4>
+                            )}
+                          </div>
+                        )
+                      )}
+                    </fieldset>
                   </>
                 )}
-                {thisUser.lists && (
-                  <div>
-                    <h3>Favorites : </h3>
-                    <ul>
-                      {Object.keys(thisUser.lists).map(
+
+                {ThisFavUser.lists && (
+                  <fieldset>
+                    <h3>
+                      Favorites :
+                      <IconOpen
+                        show={showFavorites}
+                        setShow={setShowFavorites}
+                      />
+                    </h3>
+                    <ul className={showFavorites ? "active" : "hidden"}>
+                      {Object.keys(ThisFavUser.lists).map(
                         (favlist: any, index: number) => (
                           <li key={index}>
                             <h4>{favlist}</h4>
-                            <ul>
-                              {Object.values(thisUser.lists[favlist]).map(
+                            <IconOpen
+                              show={showThisFav[index] || false}
+                              setShow={(value: boolean) => {
+                                const newShowThisFav = [...showThisFav];
+                                newShowThisFav[index] = value;
+                                setShowThisFav(newShowThisFav);
+                              }}
+                            />
+                            <ul
+                              className={
+                                showThisFav[index] ? "active" : "hidden"
+                              }
+                            >
+                              {Object.values(ThisFavUser.lists[favlist]).map(
                                 (task: any, index: number) => (
                                   <li key={index}>
                                     <h5>{task.name}</h5>
@@ -135,17 +158,148 @@ const Page: React.FC = () => {
                         )
                       )}
                     </ul>
-                  </div>
+                  </fieldset>
                 )}
-                <h3>Fetch some data :</h3>
-
-                <button>custom task :</button>
-                <button>custom chall :</button>
+                <fieldset></fieldset>
               </div>
             )}
           </Modal>
         </div>
+        <button
+          onClick={async () => {
+            const data = await fetchAllData("custom");
+            setAllCustomTasks(data);
+            console.log("data", data);
+          }}
+        >
+          {allCustomTasks ? "custon tasks FETCHED !" : "Fetch Custom tasks"}
+        </button>
+
+        <button
+          onClick={async () => {
+            const data = await fetchAllData("customChall");
+            setAllChallenges(data);
+            console.log("data", data);
+          }}
+        >
+          {allChallenges ? "challenges FETCHED !" : "Fetch Challenges"}
+        </button>
       </div>
+      <div className="container">
+        {allCustomTasks && (
+          <>
+            <h2>Custom task</h2>
+            <button onClick={() => setshowingCustomTasks(allCustomTasks)}>
+              show it
+            </button>
+          </>
+        )}
+        {allChallenges && (
+          <>
+            <h2>Challenges</h2>
+            <button onClick={() => setShowingChallenges(allChallenges)}>
+              show Challenges
+            </button>
+          </>
+        )}
+
+        {showingCustomTasks &&
+          showingCustomTasks.map((data: any, index: number) => (
+            <div className="smaller-container" key={index}>
+              <h4>User ID: {data.id}</h4>
+              {Object.entries(data)
+                .filter(([key]) => key !== "id")
+                .map(([key, value], i) => (
+                  <fieldset key={i}>
+                    {typeof value === "object" &&
+                      value !== null &&
+                      Object.entries(value).map(([key, value], index) => (
+                        <div key={index}>
+                          <strong>{key}:</strong> {value as ReactNode}
+                        </div>
+                      ))}
+                  </fieldset>
+                ))}
+            </div>
+          ))}
+        {showingChallenges &&
+          showingChallenges.map((data: any, index: number) => (
+            <div className="smaller-container" key={index}>
+              <h4>User ID: {data.id}</h4>
+              <button
+                onClick={() =>
+                  setShowPerf((prev) => ({
+                    ...prev,
+                    [data.id]: !prev[data.id],
+                  }))
+                }
+              >
+                {showPerf[data.id]
+                  ? "Hide perfs of this user?"
+                  : "Show perfs of this user?"}
+              </button>
+
+              {Object.entries(data)
+                .filter(([key]) => key !== "id")
+                .map(([key, value], i) => (
+                  <fieldset key={i}>
+                    {typeof value === "object" &&
+                      value !== null &&
+                      Object.entries(value).map(([key, value], index) => (
+                        <div
+                          key={index}
+                          className={
+                            key === "perf"
+                              ? showPerf[data.id]
+                                ? "active"
+                                : "hidden"
+                              : ""
+                          }
+                        >
+                          <strong>{key}: </strong>
+                          {key === "selectedImprovement" &&
+                          Array.isArray(value) ? (
+                            value.map((item, index) => (
+                              <div key={index}>{item}</div>
+                            ))
+                          ) : key === "perf" &&
+                            typeof value === "object" &&
+                            value !== null ? (
+                            Object.entries(value).map(([key, value], index) => (
+                              <div key={index}>
+                                <strong>{key}: </strong>
+                                {typeof value === "object" && value !== null ? (
+                                  Object.entries(value).map(
+                                    ([key, value], index) => (
+                                      <div key={index}>
+                                        <strong>{key}:</strong>{" "}
+                                        {value as ReactNode}
+                                      </div>
+                                    )
+                                  )
+                                ) : (
+                                  <>{value as ReactNode}</>
+                                )}
+                              </div>
+                            ))
+                          ) : (
+                            <>{value as ReactNode}</>
+                          )}
+                        </div>
+                      ))}
+                  </fieldset>
+                ))}
+            </div>
+          ))}
+      </div>
+      <button
+        onClick={async () => {
+          const data = await fetchAllData("historic");
+          setAllHistoric(data);
+        }}
+      >
+        {allHistoric ? "historic FETCHED !" : "Fetch Historic"}
+      </button>
     </div>
   );
 };
