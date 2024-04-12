@@ -6,3 +6,10 @@
 .list-exo li {
   margin: 10px;
 }
+
+.exercices {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
+  padding: 10px;
+}
