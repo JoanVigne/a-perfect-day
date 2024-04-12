@@ -1,0 +1,8 @@
+.list-exo {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.list-exo li {
+  margin: 10px;
+}

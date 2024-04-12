@@ -30,6 +30,14 @@ const Footer = () => {
               Improve
             </Link>
           </li>
+          <li>
+            <Link
+              href="/workout"
+              className={pathname == "/workout" ? "active" : ""}
+            >
+              Workout
+            </Link>
+          </li>
           {/*  <li>
             <Link
               href="/historic"
