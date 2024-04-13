@@ -1,7 +1,9 @@
 "use client";
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import ReactModal from "react-modal";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 interface Exercice {
   name: string;
@@ -29,6 +31,9 @@ const FormWorkout = () => {
   // form :
   const [messageForm, setMessageForm] = useState("");
   const [workout, setWorkout] = useState({});
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [exercicesChosen, setExercicesChosen] = useState([]); // [id,id,id
   function submitRawWorkout(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -39,7 +44,10 @@ const FormWorkout = () => {
       return;
     }
     const description = formData.get("description");
-    const exercices = formData.getAll("exercices");
+    const exerciceIds = Array.from(formData.getAll("exercices")) as string[];
+    const exercices = Object.values(exoFromDb).filter((exo: any) =>
+      exerciceIds.includes(exo.id)
+    );
     const id = "workout" + Math.random().toString(36);
     console.log(name, id, description, exercices);
     const rawWorkout = {
@@ -50,24 +58,17 @@ const FormWorkout = () => {
     };
     console.log("rawWorkout", rawWorkout);
     setWorkout(rawWorkout);
+    setExercicesChosen(exercices as never[]);
+    setModalOpen(true);
   }
-  function submitWorkout(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log("workout", workout);
+  // drag and drop
+  function handleOnDragEnd(result: any) {
+    if (!result.destination) return;
+    const items = Array.from(exercicesChosen);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setExercicesChosen(items);
   }
-  // drag and drop :
-  let draggedExo: any;
-  function dragStart(event: React.DragEvent<HTMLDivElement>) {
-    draggedExo = event.currentTarget;
-  }
-  function dragOver(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    const closestExo = event.currentTarget;
-    if (closestExo && closestExo.parentNode) {
-      closestExo.parentNode.insertBefore(draggedExo, closestExo);
-    }
-  }
-
   return (
     <div>
       <form action="" onSubmit={submitRawWorkout}>
@@ -80,6 +81,7 @@ const FormWorkout = () => {
         <button type="button" onClick={fetchExoFromDb}>
           {Object.values(exoFromDb).length > 0 ? "" : "See the exercices"}
         </button>
+
         <ul className="list-exo">
           {exoFromDb &&
             Object.values(exoFromDb).map((exo: any) => {
@@ -96,6 +98,61 @@ const FormWorkout = () => {
               );
             })}
         </ul>
+        <ReactModal
+          isOpen={!!modalOpen}
+          onRequestClose={() => setModalOpen(false)}
+          shouldCloseOnOverlayClick={true}
+          ariaHideApp={false}
+        >
+          <button onClick={() => setModalOpen(false)}>Close</button>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="exercises">
+              {(provided) => (
+                <ul {...provided.droppableProps} ref={provided.innerRef}>
+                  {exercicesChosen.map((exo: any, index: number) => (
+                    <Draggable key={exo.id} draggableId={exo.id} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <h3>{exo.name}</h3>
+
+                          {exercicesChosen.length - 1 === index ? (
+                            "End of training"
+                          ) : (
+                            <>
+                              <label htmlFor="interval">
+                                Time between series
+                              </label>
+                              <input
+                                type="number"
+                                name="interval"
+                                id="interval"
+                                placeholder="1.30"
+                              />
+                              <label htmlFor="rest">
+                                Time before next exercice{" "}
+                              </label>
+                              <input
+                                type="number"
+                                name="rest"
+                                id="rest"
+                                placeholder="2.30"
+                              />
+                            </>
+                          )}
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </ReactModal>
         <TemporaryMessage message={messageForm} timeInMS={2000} type="" />
         <button type="submit">Continue</button>
       </form>

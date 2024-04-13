@@ -13,3 +13,11 @@
   margin: 10px;
   padding: 10px;
 }
+.ReactModalPortal ul {
+  margin: 10px;
+}
+.ReactModalPortal ul li {
+  margin: 5px;
+  padding: 30px;
+  border: 1px black solid;
+}
