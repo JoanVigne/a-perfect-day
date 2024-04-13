@@ -13,11 +13,33 @@
   margin: 10px;
   padding: 10px;
 }
+.ReactModalPortal * {
+  color: var(--color-black);
+}
 .ReactModalPortal ul {
   margin: 10px;
 }
 .ReactModalPortal ul li {
   margin: 5px;
-  padding: 30px;
+}
+.ReactModalPortal ul li h3 {
   border: 1px black solid;
+}
+.ReactModalPortal ul li .times {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.ReactModalPortal ul li .times input {
+  width: 40px;
+  background-color: var(--color-dark-grey);
+  color: white;
+}
+button {
+  background-color: var(--color-green);
+  color: white;
+  border: none;
+  padding: 10px;
+  margin: 10px;
 }
