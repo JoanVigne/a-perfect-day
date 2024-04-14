@@ -13,6 +13,11 @@
   --color-green: rgb(3 143 3);
   --color-red: rgb(199 0 0);
   --color-active-link: rgb(45, 170, 170);
+  --button-gradient: linear-gradient(
+    to right,
+    var(--color-dark-green),
+    var(--color-green)
+  );
 }
 
 * {

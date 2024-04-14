@@ -10,7 +10,7 @@ const Icon = ({ nameImg, onClick }: Props) => {
     <img
       src={`/icon/${nameImg}.png`}
       alt={nameImg}
-      className={nameImg + " icon"}
+      className={"icon " + nameImg}
       onClick={onClick}
     />
   );

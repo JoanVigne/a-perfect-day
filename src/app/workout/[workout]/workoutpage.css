@@ -1,12 +1,13 @@
 .container-exo {
   background-color: var(--color-dark-grey);
-  margin: 10px 2px;
+  margin: 15px 2px;
   border-radius: 3px;
 }
 
 .serie {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .serie label {
@@ -16,6 +17,74 @@
 
 .serie label input[type="number"] {
   width: 40px;
-  height: 15px;
+  height: 20px;
   background-color: var(--color-black);
+}
+
+/* timer */
+.container-time {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: var(--color-dark-grey);
+}
+
+.container-time input {
+  background-color: var(--color-black);
+}
+.chronometer,
+.timer {
+  height: 50px;
+  border: 3px solid var(--color-dark-green);
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container-time .switch {
+  height: 40px;
+  position: relative;
+  padding: 2px;
+
+  border: solid 1px transparent;
+  background-image: linear-gradient(
+      var(--color-dark-grey),
+      var(--color-dark-grey)
+    ),
+    linear-gradient(to right, var(--color-dark-green), var(--color-green));
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.container-time .secondes {
+  width: 60px;
+  text-align: end;
+}
+
+.buttonsPlusAndMinus {
+  display: flex;
+  flex-direction: column;
+  margin: 0 5px;
+}
+.buttonsPlusAndMinus button {
+  padding: 2px;
+  border: 1px solid var(--color-active-link);
+}
+
+/* icon */
+.icon.play,
+.icon.pause,
+.icon.reset {
+  margin: 0 5px;
+}
+.icon.play,
+.icon.pause {
+  width: 30px;
+  height: 30px;
+}
+.icon.reset {
+  width: 19px;
+  height: 19px;
 }

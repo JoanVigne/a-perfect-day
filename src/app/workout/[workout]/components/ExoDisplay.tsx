@@ -1,3 +1,4 @@
+import Icon from "@/components/Icon";
 import React, { use, useEffect, useState } from "react";
 
 interface Props {
@@ -15,25 +16,32 @@ const ExoDisplay: React.FC<Props> = ({ exo }) => {
         }, []);
         return (
           <div key={index} className="container-exo">
-            <h3>{exercise.name}</h3>
+            <h3>
+              {exercise.name}{" "}
+              <Icon nameImg="modify" onClick={() => console.log("modify")} />
+            </h3>
             <h3>equipment: {exercise.equipment}</h3>
             <h3>
-              Number of Series:
-              <select
-                name="series"
-                id="series"
-                onChange={(e) => setNumberOfSeries(Number(e.target.value))}
-                value={numberOfSeries}
-              >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-              </select>
+              Number of Series: {numberOfSeries}
+              <div className="buttonsPlusAndMinus">
+                {" "}
+                <button
+                  onClick={() =>
+                    setNumberOfSeries((prevSeries) => prevSeries + 1)
+                  }
+                >
+                  ++
+                </button>
+                <button
+                  onClick={() =>
+                    setNumberOfSeries((prevSeries) =>
+                      prevSeries > 1 ? prevSeries - 1 : 1
+                    )
+                  }
+                >
+                  --
+                </button>
+              </div>
             </h3>
             {Array.from({ length: numberOfSeries }).map((_, index) => (
               <div className="serie" key={index}>
