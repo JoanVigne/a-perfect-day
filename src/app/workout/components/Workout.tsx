@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 interface Props {
@@ -12,7 +13,18 @@ interface WorkoutType {
 }
 
 const Workout: React.FC<Props> = ({ workout }) => {
-  return <>{workout.name}</>;
+  return (
+    <div className="workout-container">
+      <div className="infos">
+        <h3>{workout.name}</h3>
+        <p>{workout.description}</p>
+      </div>
+      <div className="perf">
+        <h4>Last time : date</h4>
+        <Link href={`/workout/${workout.id}`}>Train now</Link>
+      </div>
+    </div>
+  );
 };
 
 export default Workout;
