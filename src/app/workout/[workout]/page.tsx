@@ -6,8 +6,15 @@ import ExoDisplay from "./components/ExoDisplay";
 import Timer from "./components/Timer";
 import TimeTotal from "./components/TimeTotal";
 import Chronometer from "./components/Chronometer";
+import { sendToWorkout } from "@/firebase/db/workout";
+import { useAuthContext } from "@/context/AuthContext";
 
+interface UserData {
+  email: string;
+  uid: string;
+}
 const Page = () => {
+  const { user } = useAuthContext() as { user: UserData };
   const [slug, setSlug] = useState<string | null>(null);
   const [thisWorkout, setThisWorkout] = useState<any>(null);
 
@@ -27,15 +34,35 @@ const Page = () => {
   }, [slug]);
 
   const getThisWorkout = () => {
-    const workoutsLS = getItemFromLocalStorage("workouts");
-    Object.values(workoutsLS).map((workout: any) => {
+    const dataWorkouts = getItemFromLocalStorage("workouts");
+    Object.values(dataWorkouts).map((workout: any) => {
       if (workout.id === slug) {
         setThisWorkout(workout);
       }
     });
   };
   function perfSubmit(data: any) {
-    console.log("inside page :", data);
+    const date = new Date();
+    const dateStr = date.toISOString().substring(0, 10);
+    console.log("dateStr", dateStr);
+    const perfData = {
+      [dateStr]: data,
+    };
+    console.log("perfData", perfData);
+    const dataWorkout = thisWorkout;
+    console.log("dataWorkout", dataWorkout);
+    if (dataWorkout && dataWorkout.perf) {
+      dataWorkout.perf = { ...dataWorkout.perf, ...perfData };
+    } else {
+      dataWorkout.perf = perfData;
+    }
+    console.log("updated dataWorkout", dataWorkout);
+    const dataWorkouts = getItemFromLocalStorage("workouts");
+    if (!dataWorkouts) return console.log("no workouts in LS");
+    dataWorkouts[dataWorkout.id] = dataWorkout;
+    console.log("RESULT ::: ", dataWorkouts);
+    const mess = sendToWorkout(dataWorkout, user.uid);
+    console.log("mess", mess);
   }
   return (
     <div>
@@ -75,7 +102,6 @@ const Page = () => {
           </div>
 
           <ExoDisplay exo={thisWorkout.exercices} onSubmit={perfSubmit} />
-          <button className="save">I finished my workout</button>
         </>
       )}
     </div>

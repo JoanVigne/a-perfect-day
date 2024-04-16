@@ -129,35 +129,3 @@ const FormWorkout = () => {
 };
 
 export default FormWorkout;
-
-/* {exercicesChosen.length - 1 === index ? (
-  "End of training"
-) : (
-  <>
-    <div className="times">
-      <label htmlFor="interval">
-        Time between series
-      </label>
-      <input
-        type="number"
-        name="interval"
-        id="interval"
-        placeholder="1.30"
-      />
-      min
-    </div>
-    <div className="times">
-      {" "}
-      <label htmlFor="rest">
-        Time before next exercice
-      </label>
-      <input
-        type="number"
-        name="rest"
-        id="rest"
-        placeholder="2.30"
-      />
-      min
-    </div>
-  </>
-)} */

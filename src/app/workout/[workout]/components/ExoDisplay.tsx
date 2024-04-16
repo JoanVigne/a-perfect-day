@@ -3,25 +3,26 @@ import React, { useEffect, useState } from "react";
 
 interface Props {
   exo: any[];
-  onSubmit: (data: any[]) => void;
+  onSubmit: (data: any) => void;
 }
 
 const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
-  const [formData, setFormData] = useState<any[]>(Array(exo.length).fill({}));
+  const [formData, setFormData] = useState<any>({});
 
   const handleInputChange =
-    (exerciseIndex: number, seriesIndex: number, field: string) =>
+    (exerciseId: string, seriesIndex: number, field: string) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prevFormData) => {
-        const newFormData = [...prevFormData];
-        newFormData[exerciseIndex] = {
-          ...newFormData[exerciseIndex],
-          [`${field}${seriesIndex}`]: e.target.value,
-        };
+      setFormData((prevFormData: any) => {
+        const newFormData = { ...prevFormData };
+        if (!newFormData[exerciseId]) {
+          newFormData[exerciseId] = {
+            exoOrder: Object.keys(prevFormData).length,
+          };
+        }
+        newFormData[exerciseId][`${field}${seriesIndex}`] = e.target.value;
         return newFormData;
       });
     };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("inside exodisplay :", formData);
@@ -30,14 +31,14 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {exo.map((exercise, exerciseIndex) => {
+      {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         useEffect(() => {
           // if we got previous choice of serie for this exo, set from it
           // setNumberOfSeries(previousTime)
         }, []);
         return (
-          <div key={exerciseIndex} className="container-exo">
+          <div key={exercise.id} className="container-exo">
             <h3>
               {exercise.name}{" "}
               <Icon nameImg="modify" onClick={() => console.log("modify")} />
@@ -46,17 +47,18 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
             <h3>
               Number of Series: {numberOfSeries}
               <div className="buttonsPlusMinusSeries">
-                {" "}
                 <button
+                  type="button"
                   onClick={() =>
                     setNumberOfSeries((prevSeries) =>
-                      prevSeries > 1 ? prevSeries - 1 : 1
+                      prevSeries > 0 ? prevSeries - 1 : 0
                     )
                   }
                 >
                   --
                 </button>
                 <button
+                  type="button"
                   onClick={() =>
                     setNumberOfSeries((prevSeries) => prevSeries + 1)
                   }
@@ -75,7 +77,7 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
                     name={`weight${seriesIndex}`}
                     id={`weight${seriesIndex}`}
                     onChange={handleInputChange(
-                      exerciseIndex,
+                      exercise.id,
                       seriesIndex,
                       "weight"
                     )}
@@ -88,7 +90,7 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
                     name={`reps${seriesIndex}`}
                     id={`reps${seriesIndex}`}
                     onChange={handleInputChange(
-                      exerciseIndex,
+                      exercise.id,
                       seriesIndex,
                       "reps"
                     )}
@@ -101,7 +103,7 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
                     name={`interval${seriesIndex}`}
                     id={`interval${seriesIndex}`}
                     onChange={handleInputChange(
-                      exerciseIndex,
+                      exercise.id,
                       seriesIndex,
                       "int"
                     )}
@@ -112,7 +114,7 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
           </div>
         );
       })}
-      <button type="submit">Submit</button>
+      <button type="submit">Finish workout</button>
     </form>
   );
 };
