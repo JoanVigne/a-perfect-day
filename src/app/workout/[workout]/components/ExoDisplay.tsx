@@ -25,7 +25,6 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
     };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("inside exodisplay :", formData);
     onSubmit(formData);
   };
 

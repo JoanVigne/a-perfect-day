@@ -18,6 +18,7 @@ const Page = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [slug, setSlug] = useState<string | null>(null);
   const [thisWorkout, setThisWorkout] = useState<any>(null);
+  const [durationWorkout, setDurationWorkout] = useState<string>("");
 
   const [chronoOrTimer, setChronoOrTimer] = useState(true);
   const [finished, setFinished] = useState(false);
@@ -42,28 +43,34 @@ const Page = () => {
       }
     });
   };
-  function perfSubmit(data: any) {
+  async function perfSubmit(data: any) {
     const date = new Date();
     const dateStr = date.toISOString().substring(0, 10);
-    console.log("dateStr", dateStr);
     const perfData = {
       [dateStr]: data,
     };
-    console.log("perfData", perfData);
     const dataWorkout = thisWorkout;
-    console.log("dataWorkout", dataWorkout);
     if (dataWorkout && dataWorkout.perf) {
       dataWorkout.perf = { ...dataWorkout.perf, ...perfData };
     } else {
       dataWorkout.perf = perfData;
+    }
+    const duration = {
+      [dateStr]: durationWorkout,
+    };
+    if (dataWorkout && dataWorkout.duration) {
+      dataWorkout.duration = { ...dataWorkout.duration, ...duration };
+    } else {
+      dataWorkout.duration = duration;
     }
     console.log("updated dataWorkout", dataWorkout);
     const dataWorkouts = getItemFromLocalStorage("workouts");
     if (!dataWorkouts) return console.log("no workouts in LS");
     dataWorkouts[dataWorkout.id] = dataWorkout;
     console.log("RESULT ::: ", dataWorkouts);
-    /*  const mess = sendToWorkout(dataWorkout, user.uid);
-    console.log("mess", mess); */
+
+    const mess = sendToWorkout(dataWorkout, user.uid);
+    console.log("mess", mess);
     setFinished(true);
   }
 
@@ -72,7 +79,12 @@ const Page = () => {
       {thisWorkout && (
         <>
           <header>
-            <TimeTotal stopOnFinish={finished} />
+            <TimeTotal
+              stopOnFinish={finished}
+              onTimeFinish={(time) => {
+                setDurationWorkout(time);
+              }}
+            />
           </header>
 
           <h1>{thisWorkout.name}</h1>

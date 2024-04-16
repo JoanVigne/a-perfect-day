@@ -1,10 +1,12 @@
 import Icon from "@/components/Icon";
+import { format } from "path";
 import React, { useState, useEffect, useRef } from "react";
 
 interface Props {
   stopOnFinish: boolean;
+  onTimeFinish?: (time: string) => void;
 }
-const TimeTotal: React.FC<Props> = ({ stopOnFinish }) => {
+const TimeTotal: React.FC<Props> = ({ stopOnFinish, onTimeFinish }) => {
   const [seconds, setSeconds] = useState<number>(0);
   const [isActive, setIsActive] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -26,6 +28,10 @@ const TimeTotal: React.FC<Props> = ({ stopOnFinish }) => {
   useEffect(() => {
     if (stopOnFinish) {
       setIsActive(false);
+      if (onTimeFinish) {
+        console.log(formatTime());
+        onTimeFinish(formatTime());
+      }
     }
   }, [stopOnFinish]);
 

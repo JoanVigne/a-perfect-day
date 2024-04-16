@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   workout: WorkoutType;
@@ -10,9 +10,20 @@ interface WorkoutType {
   description: string;
   creationDate: string;
   exercices: string[];
+  perf: Array<any> | null;
 }
 
 const Workout: React.FC<Props> = ({ workout }) => {
+  const [lastTime, setLastTime] = useState<string | null>(null);
+  useEffect(() => {
+    if (workout.perf) {
+      const dates = Object.keys(workout.perf);
+      const lastDate = dates.sort()[dates.length - 1];
+      if (lastDate) {
+        setLastTime(lastDate);
+      }
+    }
+  }, []);
   return (
     <div className="workout-container">
       <div className="infos">
@@ -20,8 +31,11 @@ const Workout: React.FC<Props> = ({ workout }) => {
         <p>{workout.description}</p>
       </div>
       <div className="perf">
-        <h4>Last time : date</h4>
+        <h4>{workout.perf ? <>Last time : {lastTime}</> : <>no data yet</>}</h4>
         <Link href={`/workout/${workout.id}`}>Train now</Link>
+        <Link href={`/workout/${workout.id}/stats`}>
+          Check the statistic about this workout
+        </Link>
       </div>
     </div>
   );

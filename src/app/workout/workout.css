@@ -51,3 +51,12 @@ button {
   color: black;
   border-radius: 3px;
 }
+.workout-container a {
+  margin: 5px;
+  padding: 5px;
+  background-color: var(--color-active-link);
+}
+.workout-container .perf {
+  display: flex;
+  align-items: center;
+}
