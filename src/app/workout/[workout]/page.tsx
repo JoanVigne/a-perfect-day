@@ -8,6 +8,7 @@ import TimeTotal from "./components/TimeTotal";
 import Chronometer from "./components/Chronometer";
 import { sendToWorkout } from "@/firebase/db/workout";
 import { useAuthContext } from "@/context/AuthContext";
+import Link from "next/link";
 
 interface UserData {
   email: string;
@@ -19,7 +20,7 @@ const Page = () => {
   const [thisWorkout, setThisWorkout] = useState<any>(null);
 
   const [chronoOrTimer, setChronoOrTimer] = useState(true);
-
+  const [finished, setFinished] = useState(false);
   useEffect(() => {
     const pathslug = window.location.pathname.split("/").pop();
     if (pathslug) {
@@ -61,15 +62,17 @@ const Page = () => {
     if (!dataWorkouts) return console.log("no workouts in LS");
     dataWorkouts[dataWorkout.id] = dataWorkout;
     console.log("RESULT ::: ", dataWorkouts);
-    const mess = sendToWorkout(dataWorkout, user.uid);
-    console.log("mess", mess);
+    /*  const mess = sendToWorkout(dataWorkout, user.uid);
+    console.log("mess", mess); */
+    setFinished(true);
   }
+
   return (
     <div>
       {thisWorkout && (
         <>
           <header>
-            <TimeTotal />
+            <TimeTotal stopOnFinish={finished} />
           </header>
 
           <h1>{thisWorkout.name}</h1>
@@ -100,8 +103,17 @@ const Page = () => {
             {chronoOrTimer && <Timer />}
             {!chronoOrTimer && <Chronometer />}
           </div>
-
-          <ExoDisplay exo={thisWorkout.exercices} onSubmit={perfSubmit} />
+          {finished ? (
+            <div className="containerLinks">
+              <h2>Workout performances saved ! </h2>
+              <Link href={`/workout/${thisWorkout.id}/stats`}>
+                Check the statistic about this workout
+              </Link>
+              <Link href={`/workout`}>Back to the main page</Link>
+            </div>
+          ) : (
+            <ExoDisplay exo={thisWorkout.exercices} onSubmit={perfSubmit} />
+          )}
         </>
       )}
     </div>

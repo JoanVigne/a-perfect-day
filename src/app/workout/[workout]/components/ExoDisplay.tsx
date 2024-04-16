@@ -67,50 +67,62 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
                 </button>
               </div>
             </h3>
-            {Array.from({ length: numberOfSeries }).map((_, seriesIndex) => (
-              <div className="serie" key={seriesIndex}>
-                <label htmlFor={`weight${seriesIndex}`}>
-                  kg:
-                  <input
-                    type="number"
-                    step="0.01"
-                    name={`weight${seriesIndex}`}
-                    id={`weight${seriesIndex}`}
-                    onChange={handleInputChange(
-                      exercise.id,
-                      seriesIndex,
-                      "weight"
-                    )}
-                  />
-                </label>
-                <label htmlFor={`reps${seriesIndex}`}>
-                  reps:
-                  <input
-                    type="number"
-                    name={`reps${seriesIndex}`}
-                    id={`reps${seriesIndex}`}
-                    onChange={handleInputChange(
-                      exercise.id,
-                      seriesIndex,
-                      "reps"
-                    )}
-                  />
-                </label>
-                <label htmlFor={`interval${seriesIndex}`}>
-                  {seriesIndex === numberOfSeries - 1 ? "rest" : "int"}:
-                  <input
-                    type="number"
-                    name={`interval${seriesIndex}`}
-                    id={`interval${seriesIndex}`}
-                    onChange={handleInputChange(
-                      exercise.id,
-                      seriesIndex,
-                      "int"
-                    )}
-                  />
-                </label>
-              </div>
-            ))}
+            <table>
+              <thead>
+                <tr>
+                  <th>Serie</th>
+                  <th>Weight</th>
+                  <th>Reps</th>
+                  <th>Rest</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: numberOfSeries }).map(
+                  (_, seriesIndex) => (
+                    <tr key={seriesIndex}>
+                      <td>{seriesIndex + 1}</td>
+                      <td>
+                        <input
+                          type="number"
+                          step="0.01"
+                          name={`weight${seriesIndex}`}
+                          id={`weight${seriesIndex}`}
+                          onChange={handleInputChange(
+                            exercise.id,
+                            seriesIndex,
+                            "weight"
+                          )}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          name={`reps${seriesIndex}`}
+                          id={`reps${seriesIndex}`}
+                          onChange={handleInputChange(
+                            exercise.id,
+                            seriesIndex,
+                            "reps"
+                          )}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          name={`interval${seriesIndex}`}
+                          id={`interval${seriesIndex}`}
+                          onChange={handleInputChange(
+                            exercise.id,
+                            seriesIndex,
+                            "int"
+                          )}
+                        />
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
           </div>
         );
       })}
