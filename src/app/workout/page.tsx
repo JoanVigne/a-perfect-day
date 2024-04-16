@@ -17,6 +17,7 @@ interface WorkoutType {
   description: string;
   creationDate: string;
   exercices: string[];
+  perf: Array<any> | null;
 }
 interface Workouts {
   [key: string]: WorkoutType;
