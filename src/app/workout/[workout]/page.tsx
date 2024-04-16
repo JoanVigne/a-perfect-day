@@ -34,6 +34,9 @@ const Page = () => {
       }
     });
   };
+  function perfSubmit(data: any) {
+    console.log("inside page :", data);
+  }
   return (
     <div>
       {thisWorkout && (
@@ -56,15 +59,23 @@ const Page = () => {
                 setChronoOrTimer(!chronoOrTimer);
               }}
             >
-              Chrono or timer?
+              {chronoOrTimer ? (
+                <>
+                  Chrono / <strong>timer?</strong>
+                </>
+              ) : (
+                <>
+                  <strong>Chrono</strong> / timer?
+                </>
+              )}
             </button>
 
             {chronoOrTimer && <Timer />}
             {!chronoOrTimer && <Chronometer />}
           </div>
 
-          <ExoDisplay exo={thisWorkout.exercices} />
-          <button>I finished my workout</button>
+          <ExoDisplay exo={thisWorkout.exercices} onSubmit={perfSubmit} />
+          <button className="save">I finished my workout</button>
         </>
       )}
     </div>

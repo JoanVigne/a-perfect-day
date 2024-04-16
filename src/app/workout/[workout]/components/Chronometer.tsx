@@ -29,30 +29,32 @@ const Chronometer = () => {
     setIsActive(false);
   };
 
+  const increment = () => {
+    setSeconds((prevSeconds) => prevSeconds + 10);
+  };
+
+  const decrement = () => {
+    setSeconds((prevSeconds) => (prevSeconds > 10 ? prevSeconds - 10 : 0));
+  };
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
   return (
     <div className="chronometer">
-      <div className="secondes">{seconds}s</div>
+      <div className="time">
+        {minutes}m {remainingSeconds}s
+      </div>
+      <div className="buttonsPlusAndMinus">
+        <button onClick={increment}>+10s</button>
+        <button onClick={decrement}>-10s</button>
+      </div>
       {isActive ? (
-        <Icon
-          nameImg="pause"
-          onClick={() => {
-            handleStartStop();
-          }}
-        />
+        <Icon nameImg="pause" onClick={handleStartStop} />
       ) : (
-        <Icon
-          nameImg="play"
-          onClick={() => {
-            handleStartStop();
-          }}
-        />
+        <Icon nameImg="play" onClick={handleStartStop} />
       )}
-      <Icon
-        nameImg="reset"
-        onClick={() => {
-          handleReset();
-        }}
-      />
+      <Icon nameImg="reset" onClick={handleReset} />
     </div>
   );
 };

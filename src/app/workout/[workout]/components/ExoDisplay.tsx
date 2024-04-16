@@ -1,21 +1,43 @@
 import Icon from "@/components/Icon";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   exo: any[];
+  onSubmit: (data: any[]) => void;
 }
 
-const ExoDisplay: React.FC<Props> = ({ exo }) => {
+const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
+  const [formData, setFormData] = useState<any[]>(Array(exo.length).fill({}));
+
+  const handleInputChange =
+    (exerciseIndex: number, seriesIndex: number, field: string) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prevFormData) => {
+        const newFormData = [...prevFormData];
+        newFormData[exerciseIndex] = {
+          ...newFormData[exerciseIndex],
+          [`${field}${seriesIndex}`]: e.target.value,
+        };
+        return newFormData;
+      });
+    };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("inside exodisplay :", formData);
+    onSubmit(formData);
+  };
+
   return (
-    <>
-      {exo.map((exercise, index) => {
+    <form onSubmit={handleSubmit}>
+      {exo.map((exercise, exerciseIndex) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         useEffect(() => {
           // if we got previous choice of serie for this exo, set from it
           // setNumberOfSeries(previousTime)
         }, []);
         return (
-          <div key={index} className="container-exo">
+          <div key={exerciseIndex} className="container-exo">
             <h3>
               {exercise.name}{" "}
               <Icon nameImg="modify" onClick={() => console.log("modify")} />
@@ -23,15 +45,8 @@ const ExoDisplay: React.FC<Props> = ({ exo }) => {
             <h3>equipment: {exercise.equipment}</h3>
             <h3>
               Number of Series: {numberOfSeries}
-              <div className="buttonsPlusAndMinus">
+              <div className="buttonsPlusMinusSeries">
                 {" "}
-                <button
-                  onClick={() =>
-                    setNumberOfSeries((prevSeries) => prevSeries + 1)
-                  }
-                >
-                  ++
-                </button>
                 <button
                   onClick={() =>
                     setNumberOfSeries((prevSeries) =>
@@ -41,32 +56,55 @@ const ExoDisplay: React.FC<Props> = ({ exo }) => {
                 >
                   --
                 </button>
+                <button
+                  onClick={() =>
+                    setNumberOfSeries((prevSeries) => prevSeries + 1)
+                  }
+                >
+                  ++
+                </button>
               </div>
             </h3>
-            {Array.from({ length: numberOfSeries }).map((_, index) => (
-              <div className="serie" key={index}>
-                <label htmlFor={`weight${index}`}>
+            {Array.from({ length: numberOfSeries }).map((_, seriesIndex) => (
+              <div className="serie" key={seriesIndex}>
+                <label htmlFor={`weight${seriesIndex}`}>
                   kg:
                   <input
                     type="number"
-                    name={`weight${index}`}
-                    id={`weight${index}`}
+                    step="0.01"
+                    name={`weight${seriesIndex}`}
+                    id={`weight${seriesIndex}`}
+                    onChange={handleInputChange(
+                      exerciseIndex,
+                      seriesIndex,
+                      "weight"
+                    )}
                   />
                 </label>
-                <label htmlFor={`reps${index}`}>
+                <label htmlFor={`reps${seriesIndex}`}>
                   reps:
                   <input
                     type="number"
-                    name={`reps${index}`}
-                    id={`reps${index}`}
+                    name={`reps${seriesIndex}`}
+                    id={`reps${seriesIndex}`}
+                    onChange={handleInputChange(
+                      exerciseIndex,
+                      seriesIndex,
+                      "reps"
+                    )}
                   />
                 </label>
-                <label htmlFor={`interval${index}`}>
-                  {index === numberOfSeries - 1 ? "rest" : "int"}:
+                <label htmlFor={`interval${seriesIndex}`}>
+                  {seriesIndex === numberOfSeries - 1 ? "rest" : "int"}:
                   <input
                     type="number"
-                    name={`interval${index}`}
-                    id={`interval${index}`}
+                    name={`interval${seriesIndex}`}
+                    id={`interval${seriesIndex}`}
+                    onChange={handleInputChange(
+                      exerciseIndex,
+                      seriesIndex,
+                      "int"
+                    )}
                   />
                 </label>
               </div>
@@ -74,7 +112,8 @@ const ExoDisplay: React.FC<Props> = ({ exo }) => {
           </div>
         );
       })}
-    </>
+      <button type="submit">Submit</button>
+    </form>
   );
 };
 
