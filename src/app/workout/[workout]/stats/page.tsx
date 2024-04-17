@@ -2,6 +2,8 @@
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { useEffect, useState } from "react";
 import "../workoutpage.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface Exercise {
   name: string;
@@ -41,6 +43,7 @@ const page = () => {
 
   return (
     <div>
+      <Header />
       {workout ? (
         <div>
           <h1>{workout.name}</h1>
@@ -80,6 +83,7 @@ const page = () => {
                       </div>
                     );
                   })}
+                <Footer />
               </div>
             ))}
           </div>

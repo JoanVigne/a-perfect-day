@@ -2,11 +2,10 @@
 import TemporaryMessage from "@/components/TemporaryMessage";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
 import React, { useEffect, useState } from "react";
-import ReactModal from "react-modal";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import FormExoOrderModal from "./FormExoOrderModal";
 import { sendToWorkout } from "@/firebase/db/workout";
 import { useAuthContext } from "@/context/AuthContext";
+import Icon from "@/components/Icon";
 
 interface UserData {
   email: string;
@@ -16,7 +15,6 @@ interface Exercice {
   name: string;
   id: string;
   description: string;
-  creationDate: string;
 }
 interface Workout {
   name: string;
@@ -41,7 +39,7 @@ const FormWorkout = () => {
   const [workout, setWorkout] = useState({});
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [exercicesChosen, setExercicesChosen] = useState([]); // [id,id,id
+  const [exercicesChosen, setExercicesChosen] = useState([]);
   function submitRawWorkout(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -53,9 +51,13 @@ const FormWorkout = () => {
     }
     const description = formData.get("description");
     const exerciceIds = Array.from(formData.getAll("exercices")) as string[];
-    const exercices = Object.values(exoFromDb).filter((exo: any) =>
+    const exercicesFromDb = Object.values(exoFromDb).filter((exo: any) =>
       exerciceIds.includes(exo.id)
     );
+    const exoPersoSelected = exoPerso.filter((exo: any) =>
+      exerciceIds.includes(exo.id)
+    );
+    const exercices = [...exercicesFromDb, ...exoPersoSelected];
     const id = "workout" + Math.random().toString(36);
     console.log(name, id, description, exercices);
     const rawWorkout = {
@@ -74,7 +76,8 @@ const FormWorkout = () => {
     result.exercices = exercicesChosen;
     console.log("result", result);
     // send to db
-    sendToWorkout(result, user.uid);
+    await sendToWorkout(result, user.uid);
+    window.location.reload();
   }
   // drag and drop
   function handleOnDragEnd(result: any) {
@@ -85,34 +88,60 @@ const FormWorkout = () => {
     setExercicesChosen(items);
     console.log(items);
   }
+
+  // perso exo :
+  const [exoPerso, setExoPerso] = useState<Exercice[]>([]);
+  function addExoPerso() {
+    const input = document.getElementById("persoExercice") as HTMLInputElement;
+    if (input.value) {
+      const newExo = {
+        name: input.value,
+        id: `exoPerso${input.value.replace(/\s+/g, "")}${exoPerso.length}`,
+        description: "Exercice created by me",
+      };
+      setExoPerso((prev) => [...prev, newExo]);
+      input.value = "";
+    }
+  }
   return (
     <div>
+      <h2>Create a workout</h2>
       <form action="" onSubmit={submitRawWorkout}>
         <label htmlFor="name">Name</label>
         <input type="text" name="name" id="name" required />
         <label htmlFor="description">Description</label>
         <input type="text" name="description" id="description" />
         <label htmlFor="exercices">Select exercices</label>
-
         <button type="button" onClick={fetchExoFromDb}>
-          {Object.values(exoFromDb).length > 0 ? "" : "See the exercices"}
+          {Object.values(exoFromDb).length > 0
+            ? ""
+            : "See the database exercices"}
         </button>
-
+        <div>or</div>
+        <div className="container-perso-exo">
+          <label htmlFor="persoExercice">Personalyze exercice</label>
+          <input type="text" name="persoExercice" id="persoExercice" />
+          <Icon nameImg="add" onClick={addExoPerso} />
+        </div>
         <ul className="list-exo">
           {exoFromDb &&
-            Object.values(exoFromDb).map((exo: any) => {
-              return (
-                <li key={exo.name}>
-                  <input
-                    type="checkbox"
-                    name="exercices"
-                    id={exo.name}
-                    value={exo.id}
-                  />
-                  <label htmlFor={exo.name}>{exo.name}</label>
-                </li>
-              );
-            })}
+            [...Object.values(exoFromDb), ...exoPerso].map(
+              (exo: any, index: number) => {
+                return (
+                  <li key={exo.name || index}>
+                    <input
+                      type="checkbox"
+                      name="exercices"
+                      id={exo.name || `tempExo${index}`}
+                      value={exo.id || `tempExo${index}`}
+                    />
+                    <label htmlFor={exo.name || `tempExo${index}`}>
+                      {exo.name || exo}
+                    </label>
+                  </li>
+                );
+              }
+            )}
         </ul>
         <FormExoOrderModal
           modalOpen={modalOpen}

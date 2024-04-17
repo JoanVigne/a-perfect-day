@@ -1,3 +1,7 @@
+.container-perso-exo {
+  display: flex;
+  align-items: center;
+}
 .list-exo {
   display: flex;
   flex-wrap: wrap;

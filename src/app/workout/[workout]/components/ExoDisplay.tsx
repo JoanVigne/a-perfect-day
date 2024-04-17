@@ -96,6 +96,7 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
                       <td>
                         <input
                           type="number"
+                          step="0.01"
                           name={`reps${seriesIndex}`}
                           id={`reps${seriesIndex}`}
                           onChange={handleInputChange(
@@ -108,6 +109,7 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
                       <td>
                         <input
                           type="number"
+                          step="0.01"
                           name={`interval${seriesIndex}`}
                           id={`interval${seriesIndex}`}
                           onChange={handleInputChange(

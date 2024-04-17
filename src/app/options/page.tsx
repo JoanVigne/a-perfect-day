@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { getItemFromLocalStorage } from "../../utils/localstorage";
 import { sendToUsers } from "@/firebase/db/users";
 import { getAuth, signOut } from "firebase/auth";
+import Header from "@/components/Header";
 
 interface UserData {
   email: string;
@@ -85,6 +86,7 @@ const page = () => {
   }
   return (
     <main>
+      <Header />
       <h1 style={{ textAlign: "center" }}>
         Options{" "}
         <button onClick={logOut} className="delete-button">
