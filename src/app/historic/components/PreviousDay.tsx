@@ -1,5 +1,5 @@
 "use client";
-import TemporaryMessage from "../../../components/TemporaryMessage";
+import TemporaryMessage from "../../../components/ui/TemporaryMessage";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 

@@ -19,7 +19,7 @@ import Header from "@/components/Header";
 import { findTasksByType } from "./utils/utils";
 import PreviousDay from "./components/PreviousDay";
 import { useRouter } from "next/navigation";
-import IconOpen from "@/components/IconOpen";
+import IconOpen from "@/components/ui/IconOpen";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

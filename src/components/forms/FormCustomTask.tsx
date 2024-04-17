@@ -1,7 +1,7 @@
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToCustom } from "@/firebase/db/custom";
 import React, { useState } from "react";
-import IconOpen from "./IconOpen";
+import IconOpen from "../ui/IconOpen";
 
 interface FormCustomTaskProps {
   updateCustomTasks: (newCustomTasks: Task[]) => void;

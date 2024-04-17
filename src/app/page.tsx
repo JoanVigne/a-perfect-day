@@ -1,7 +1,7 @@
 "use client";
 
 import Today from "@/components/Today";
-import CommonTasks from "@/components/CommonTasks";
+
 import { useAuthContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
@@ -14,7 +14,7 @@ import Loading from "./loading";
 import { firebaseApp } from "@/firebase/config";
 import Lists from "@/components/Lists";
 import Header from "@/components/Header";
-import TemporaryMessage from "../components/TemporaryMessage";
+import TemporaryMessage from "../components/ui/TemporaryMessage";
 import Link from "next/link";
 import { getItemFromLocalStorage } from "../utils/localstorage";
 
@@ -51,7 +51,7 @@ export default function Home() {
         await firebaseApp;
         setFirebaseInitialized(true);
       } catch (error) {
-        console.error("Error fetching common tasks:", error);
+        console.error("Error set firebase initiialized", error);
       }
     }
     if (user == null || user?.uid == null || user?.uid == undefined) {
@@ -65,7 +65,7 @@ export default function Home() {
           );
           setUserInfo(fetching);
         } catch (error) {
-          console.error("Error fetching common tasks:", error);
+          console.error("Error fetching users:", error);
         }
       };
       checkFBInit();
@@ -199,15 +199,6 @@ export default function Home() {
     <>
       <Header />
       <main>
-        {/*         <button
-          onClick={async () => {
-            const tsx = whichList();
-            console.log("TEST : ", tsx);
-          }}
-        >
-          test
-        </button> */}
-
         <div className="container">
           <h1>Today</h1>
           <Today
@@ -232,10 +223,6 @@ export default function Home() {
             handleAddTask={handleAddTaskToTodayList}
             userId={user?.uid}
           />
-        </div>
-        <div className="container">
-          <h2>Common tasks</h2>
-          <CommonTasks handleAddTask={handleAddTaskToTodayList} />
         </div>
 
         {userInfo && (

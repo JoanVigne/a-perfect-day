@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import TemporaryMessage from "./TemporaryMessage";
-import Icon from "./Icon";
+import TemporaryMessage from "../ui/TemporaryMessage";
+import Icon from "../ui/Icon";
+import "./taskDisplay.css";
 interface Task {
   id: string;
   name: string;
@@ -53,9 +54,10 @@ const TaskDisplay: React.FC<Props> = ({
       <div className="title-inputs">
         <div className="title-details-message">
           <h4>{task.name}</h4>
-          <button onClick={openDetails} className="details">
+          <Icon nameImg="question" onClick={() => openDetails()} />
+          {/* <button onClick={openDetails} className="details">
             ?
-          </button>
+          </button> */}
           <TemporaryMessage
             message={messageAdded}
             type="message-info"

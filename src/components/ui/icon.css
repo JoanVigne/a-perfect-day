@@ -1,14 +1,3 @@
-/* icons and logos */
-
-/* .add-button,
-.minus-button,
-.icon,
-.remove {
-  width: 25px;
-  height: 25px;
-  transition: all 1s;
-} */
-
 .icon {
   width: 25px;
   height: 25px;
@@ -20,6 +9,11 @@
   transition: all 1s;
   background-color: unset;
   padding: 0;
+}
+.icon.question {
+  margin-left: 5px;
+  width: 18px;
+  height: 18px;
 }
 .rotate-right {
   transform: translateX(-10%) rotate(-90deg);

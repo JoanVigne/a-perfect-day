@@ -1,13 +1,12 @@
 "use client";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import CommonTasks from "@/components/CommonTasks";
 import CustomTasks from "@/components/CustomTasks";
-import TemporaryMessage from "@/components/TemporaryMessage";
+import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { updateAllHistoric } from "@/firebase/db/historic";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import Icon from "@/components/Icon";
+import Icon from "@/components/ui/Icon";
 
 interface UserData {
   email: string;
@@ -224,7 +223,6 @@ const Page = () => {
       <div className="container">
         <h2>Forgot one ?</h2>
         <CustomTasks handleAddTask={handleAddTask} userId={user.uid} />
-        <CommonTasks handleAddTask={handleAddTask} />
       </div>
     </>
   );

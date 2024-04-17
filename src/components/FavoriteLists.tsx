@@ -3,9 +3,9 @@ import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { useAuthContext } from "@/context/AuthContext";
 import { sendToUsers } from "@/firebase/db/users";
 import React, { useEffect, useState } from "react";
-import TemporaryMessage from "./TemporaryMessage";
-import IconOpen from "./IconOpen";
-import Icon from "./Icon";
+import TemporaryMessage from "./ui/TemporaryMessage";
+import IconOpen from "./ui/IconOpen";
+import Icon from "./ui/Icon";
 
 interface Props {
   deleteOnOff: boolean;

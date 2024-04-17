@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
-import TemporaryMessage from "./TemporaryMessage";
-import IconOpen from "./IconOpen";
-import Icon from "./Icon";
+import TemporaryMessage from "./ui/TemporaryMessage";
+import IconOpen from "./ui/IconOpen";
+import Icon from "./ui/Icon";
 
 interface UserInfo {
   nickname: string;
@@ -16,8 +16,6 @@ interface Props {
 }
 const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
   const [custom, setCustom] = useState();
-  const [common, setCommon] = useState();
-
   const [showForm, setShowForm] = useState(false);
   const [newFav, setNewFav] = useState<{ [key: string]: any }>({});
 
@@ -26,9 +24,7 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
   useEffect(() => {
     // get les listes de tasks
     const localCustom = localStorage.getItem("custom") as string;
-    const localCommon = localStorage.getItem("common") as string;
     setCustom(JSON.parse(localCustom));
-    setCommon(JSON.parse(localCommon));
     // la liste
   }, [userInfo]);
 
@@ -107,73 +103,46 @@ const Lists: React.FC<Props> = ({ userInfo, functionSetUserInfo }) => {
                   );
                 })
               ) : (
-                <p>
+                <h4>
                   Here will be the tasks you want to add to your new favorite
                   list
-                </p>
+                </h4>
               )}
             </ul>
-            {newFav && Object.keys(newFav).length === 0 ? (
-              <p>Add some tasks from the lists below</p>
-            ) : (
-              <form action="" onSubmit={createANewFavoriteList}>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  placeholder="name of your new list"
-                />
-                <button type="submit">Create Favorite</button>
-              </form>
-            )}
+
+            <form action="" onSubmit={createANewFavoriteList}>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder="name of your new list"
+              />
+              <button type="submit">Create Favorite</button>
+            </form>
           </div>
-          <div className="container-column">
-            <div className="custom">
-              <h3>Custom</h3>
-              <ul>
-                {custom &&
-                  Object.values(custom).map((ele: any, index: number) => {
-                    return (
-                      <li key={index}>
-                        <Icon
-                          nameImg="add"
-                          onClick={() => {
-                            setNewFav((prevState) => ({
-                              ...prevState,
-                              [ele.id]: ele,
-                            }));
-                          }}
-                        />
 
-                        {ele.name}
-                      </li>
-                    );
-                  })}
-              </ul>
-            </div>
-            <div className="common">
-              <h3>Common</h3>
-              <ul>
-                {common &&
-                  Object.values(common).map((ele: any, index: number) => {
-                    return (
-                      <li key={index}>
-                        <Icon
-                          nameImg="add"
-                          onClick={() => {
-                            setNewFav((prevState) => ({
-                              ...prevState,
-                              [ele.id]: ele,
-                            }));
-                          }}
-                        />
+          <div className="custom">
+            <h3>Custom</h3>
+            <ul>
+              {custom &&
+                Object.values(custom).map((ele: any, index: number) => {
+                  return (
+                    <li key={index}>
+                      <Icon
+                        nameImg="add"
+                        onClick={() => {
+                          setNewFav((prevState) => ({
+                            ...prevState,
+                            [ele.id]: ele,
+                          }));
+                        }}
+                      />
 
-                        {ele.name}
-                      </li>
-                    );
-                  })}
-              </ul>
-            </div>
+                      {ele.name}
+                    </li>
+                  );
+                })}
+            </ul>
           </div>
         </div>
       </div>

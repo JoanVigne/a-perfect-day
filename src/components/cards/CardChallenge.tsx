@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import "./cardChallenge.css";
 
 interface Challenge {
   id: string;

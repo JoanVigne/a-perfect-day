@@ -1,4 +1,4 @@
-import TemporaryMessage from "@/components/TemporaryMessage";
+import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { modifyChall } from "@/firebase/db/chall";
 import { getItemFromLocalStorage } from "@/utils/localstorage";

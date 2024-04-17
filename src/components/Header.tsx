@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./header.css";
 import Link from "next/link";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import Icon from "./Icon";
+import Icon from "./ui/Icon";
 
 interface UserInfo {
   nickname: string;

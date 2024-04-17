@@ -33,9 +33,7 @@ const Workout: React.FC<Props> = ({ workout }) => {
       <div className="perf">
         <h4>{workout.perf ? <>Last time : {lastTime}</> : <>no data yet</>}</h4>
         <Link href={`/workout/${workout.id}`}>Train now</Link>
-        <Link href={`/workout/${workout.id}/stats`}>
-          Check the statistic about this workout
-        </Link>
+        <Link href={`/workout/${workout.id}/stats`}>See more</Link>
       </div>
     </div>
   );

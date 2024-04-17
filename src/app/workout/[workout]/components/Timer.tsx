@@ -1,4 +1,4 @@
-import Icon from "@/components/Icon";
+import Icon from "@/components/ui/Icon";
 import React, { useState, useEffect } from "react";
 
 const Timer = () => {

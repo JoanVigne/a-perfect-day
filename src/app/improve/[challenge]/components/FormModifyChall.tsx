@@ -1,6 +1,6 @@
-import Icon from "@/components/Icon";
-import IconOpen from "@/components/IconOpen";
-import TemporaryMessage from "@/components/TemporaryMessage";
+import Icon from "@/components/ui/Icon";
+import IconOpen from "@/components/ui/IconOpen";
+import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import { useAuthContext } from "@/context/AuthContext";
 import { modifyChall, removeFromChall } from "@/firebase/db/chall";
 import { getItemFromLocalStorage } from "@/utils/localstorage";

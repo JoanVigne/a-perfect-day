@@ -119,7 +119,6 @@ form .option {
   display: flex;
 }
 
-.container-new-fav-list .container-column .common,
 .container-new-fav-list .container-column .custom {
   width: 50%;
 }

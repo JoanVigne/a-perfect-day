@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { sendToUsers } from "@/firebase/db/users";
-import IconOpen from "./IconOpen";
+import IconOpen from "./ui/IconOpen";
 
 interface TodaySaveListProps {
   taskList: object;

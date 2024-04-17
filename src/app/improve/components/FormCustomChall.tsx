@@ -1,6 +1,6 @@
-import Icon from "@/components/Icon";
-import IconOpen from "@/components/IconOpen";
-import TemporaryMessage from "@/components/TemporaryMessage";
+import Icon from "@/components/ui/Icon";
+import IconOpen from "@/components/ui/IconOpen";
+import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import { sendToChall } from "@/firebase/db/chall";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 

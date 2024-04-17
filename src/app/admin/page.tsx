@@ -5,7 +5,7 @@ import { checkDB, db } from "@/firebase/db/db";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import "./admin.css";
 import Modal from "react-modal";
-import IconOpen from "@/components/IconOpen";
+import IconOpen from "@/components/ui/IconOpen";
 
 interface UserData {
   email: string;

@@ -1,4 +1,4 @@
-import Load from "@/components/Load";
+import Load from "@/components/ui/Load";
 export default function Loading() {
   return <Load />;
 }

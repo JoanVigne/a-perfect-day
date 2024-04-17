@@ -1,11 +1,11 @@
 "use client";
-import TemporaryMessage from "@/components/TemporaryMessage";
+import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
 import React, { useEffect, useState } from "react";
 import FormExoOrderModal from "./FormExoOrderModal";
 import { sendToWorkout } from "@/firebase/db/workout";
 import { useAuthContext } from "@/context/AuthContext";
-import Icon from "@/components/Icon";
+import Icon from "@/components/ui/Icon";
 
 interface UserData {
   email: string;
@@ -91,7 +91,7 @@ const FormWorkout = () => {
 
   // perso exo :
   const [exoPerso, setExoPerso] = useState<Exercice[]>([]);
-  function addExoPerso() {
+  function addPersoExo() {
     const input = document.getElementById("persoExercice") as HTMLInputElement;
     if (input.value) {
       const newExo = {
@@ -111,38 +111,39 @@ const FormWorkout = () => {
         <input type="text" name="name" id="name" required />
         <label htmlFor="description">Description</label>
         <input type="text" name="description" id="description" />
-        <label htmlFor="exercices">Select exercices</label>
-        <button type="button" onClick={fetchExoFromDb}>
-          {Object.values(exoFromDb).length > 0
-            ? ""
-            : "See the database exercices"}
-        </button>
-        <div>or</div>
-        <div className="container-perso-exo">
-          <label htmlFor="persoExercice">Personalyze exercice</label>
-          <input type="text" name="persoExercice" id="persoExercice" />
-          <Icon nameImg="add" onClick={addExoPerso} />
-        </div>
-        <ul className="list-exo">
-          {exoFromDb &&
-            [...Object.values(exoFromDb), ...exoPerso].map(
-              (exo: any, index: number) => {
-                return (
-                  <li key={exo.name || index}>
-                    <input
-                      type="checkbox"
-                      name="exercices"
-                      id={exo.name || `tempExo${index}`}
-                      value={exo.id || `tempExo${index}`}
-                    />
-                    <label htmlFor={exo.name || `tempExo${index}`}>
-                      {exo.name || exo}
-                    </label>
-                  </li>
-                );
-              }
-            )}
-        </ul>
+        <fieldset>
+          <label htmlFor="exercices">Select exercices</label>
+          {Object.values(exoFromDb).length <= 0 && (
+            <button type="button" onClick={fetchExoFromDb}>
+              See the database exercices
+            </button>
+          )}
+          <div className="container-perso-exo">
+            <label htmlFor="persoExercice">Personalyze exercice</label>
+            <input type="text" name="persoExercice" id="persoExercice" />
+            <Icon nameImg="add" onClick={addPersoExo} />
+          </div>
+          <ul className="list-exo">
+            {exoFromDb &&
+              [...Object.values(exoFromDb), ...exoPerso].map(
+                (exo: any, index: number) => {
+                  return (
+                    <li key={exo.name || index}>
+                      <input
+                        type="checkbox"
+                        name="exercices"
+                        id={exo.name || `tempExo${index}`}
+                        value={exo.id || `tempExo${index}`}
+                      />
+                      <label htmlFor={exo.name || `tempExo${index}`}>
+                        {exo.name || exo}
+                      </label>
+                    </li>
+                  );
+                }
+              )}
+          </ul>
+        </fieldset>
         <FormExoOrderModal
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}

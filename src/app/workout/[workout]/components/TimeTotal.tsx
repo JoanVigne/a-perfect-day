@@ -1,4 +1,4 @@
-import Icon from "@/components/Icon";
+import Icon from "@/components/ui/Icon";
 import { format } from "path";
 import React, { useState, useEffect, useRef } from "react";
 

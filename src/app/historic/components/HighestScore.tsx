@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { findTask } from "../utils/utils";
-import Icon from "@/components/Icon";
+import Icon from "@/components/ui/Icon";
 
 const HighestScore = ({ data, taskName }: { data: any; taskName: string }) => {
   const [highest, setHighest] = useState<number | null>(null);

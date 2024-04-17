@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
-import FormCustomTask from "./FormCustomTask";
+import FormCustomTask from "./forms/FormCustomTask";
 import { removeFromCustom } from "@/firebase/db/custom";
-import Load from "./Load";
-import TemporaryMessage from "./TemporaryMessage";
-import TaskDisplay from "./TaskDisplay";
+import Load from "./ui/Load";
+import TemporaryMessage from "./ui/TemporaryMessage";
+import TaskDisplay from "./cards/TaskDisplay";
 
 interface CustomTasksProps {
   handleAddTask: (task: Task) => void;

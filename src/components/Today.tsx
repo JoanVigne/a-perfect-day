@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import FavoriteLists from "./FavoriteLists";
-import TemporaryMessage from "./TemporaryMessage";
+import TemporaryMessage from "./ui/TemporaryMessage";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import TaskDisplay from "./TaskDisplay";
+import TaskDisplay from "./cards/TaskDisplay";
 
 interface Task {
   unit: boolean | string;
@@ -92,12 +92,7 @@ const Today: React.FC<TodayProps> = ({
         {taskList &&
           Object.values(taskList).map((item, index) => {
             if (Object.keys(taskList).length <= 0) {
-              return (
-                <p key={index}>
-                  Your list is empty. You can add some tasks from the common
-                  task list, or from your custom task list.
-                </p>
-              );
+              return <p key={index}>Your list is empty.</p>;
             }
             // Si la clé est "date", on ne l'affiche pas
             if (typeof item === "string") {

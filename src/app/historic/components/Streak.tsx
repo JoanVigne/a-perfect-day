@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { findTask } from "../utils/utils";
-import Icon from "@/components/Icon";
+import Icon from "@/components/ui/Icon";
 
 const Streak = ({ data, taskName }: { data: any; taskName: string }) => {
   const [streak, setStreak] = useState(0);

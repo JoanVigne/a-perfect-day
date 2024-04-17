@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
-import TemporaryMessage from "@/components/TemporaryMessage";
-import Load from "@/components/Load";
+import TemporaryMessage from "@/components/ui/TemporaryMessage";
+import Load from "@/components/ui/Load";
 
 import FormCustomChall from "./FormCustomChall";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import CardChallenge from "./CardChallenge";
+import CardChallenge from "../../../components/cards/CardChallenge";
 import { removeFromChall } from "@/firebase/db/chall";
 
 interface Props {
