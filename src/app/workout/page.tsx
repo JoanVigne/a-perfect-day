@@ -1,15 +1,12 @@
 "use client";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import FormWorkout from "./components/FormWorkout";
+import FormWorkoutCreate from "../../components/forms/FormWorkoutCreate";
 import "./workout.css";
 import { useEffect, useState } from "react";
-import { get } from "http";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
-import { set } from "firebase/database";
-import { uid } from "chart.js/helpers";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import Workout from "./components/Workout";
+import CardWorkout from "../../components/cards/CardWorkout";
 
 interface WorkoutType {
   name: string;
@@ -45,7 +42,7 @@ export default function Page() {
             {console.log("workouts", workouts)}
             {Object.values(workouts).map((workout: WorkoutType) => (
               <div key={workout.id}>
-                <Workout workout={workout as WorkoutType} />
+                <CardWorkout workout={workout as WorkoutType} />
               </div>
             ))}
           </>
@@ -53,7 +50,7 @@ export default function Page() {
           <p>No workout</p>
         )}
       </div>
-      <FormWorkout />
+      <FormWorkoutCreate />
       <Footer />
     </>
   );

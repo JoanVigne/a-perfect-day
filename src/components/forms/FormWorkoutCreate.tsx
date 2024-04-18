@@ -2,7 +2,7 @@
 import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
 import React, { useEffect, useState } from "react";
-import FormExoOrderModal from "./FormExoOrderModal";
+import ModalDragDropExercices from "../modals/ModalDragDropExercices";
 import { sendToWorkout } from "@/firebase/db/workout";
 import { useAuthContext } from "@/context/AuthContext";
 import Icon from "@/components/ui/Icon";
@@ -23,7 +23,7 @@ interface Workout {
   creationDate: string;
   exercices: string[];
 }
-const FormWorkout = () => {
+const FormWorkoutCreate = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [exoFromDb, setExoFromDb] = useState({});
   // the workout shape :
@@ -144,7 +144,7 @@ const FormWorkout = () => {
               )}
           </ul>
         </fieldset>
-        <FormExoOrderModal
+        <ModalDragDropExercices
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
           exercicesChosen={exercicesChosen}
@@ -158,4 +158,4 @@ const FormWorkout = () => {
   );
 };
 
-export default FormWorkout;
+export default FormWorkoutCreate;

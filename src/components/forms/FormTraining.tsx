@@ -6,7 +6,7 @@ interface Props {
   onSubmit: (data: any) => void;
 }
 
-const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
+const FormTraining: React.FC<Props> = ({ exo, onSubmit }) => {
   const [formData, setFormData] = useState<any>({});
 
   const handleInputChange =
@@ -27,6 +27,36 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
     e.preventDefault();
     onSubmit(formData);
   };
+  /*   async function perfSubmit(data: any) {
+    const date = new Date();
+    const dateStr = date.toISOString().substring(0, 10);
+    const perfData = {
+      [dateStr]: data,
+    };
+    const dataWorkout = thisWorkout;
+    if (dataWorkout && dataWorkout.perf) {
+      dataWorkout.perf = { ...dataWorkout.perf, ...perfData };
+    } else {
+      dataWorkout.perf = perfData;
+    }
+    const duration = {
+      [dateStr]: durationWorkout,
+    };
+    if (dataWorkout && dataWorkout.duration) {
+      dataWorkout.duration = { ...dataWorkout.duration, ...duration };
+    } else {
+      dataWorkout.duration = duration;
+    }
+    console.log("updated dataWorkout", dataWorkout);
+    const dataWorkouts = getItemFromLocalStorage("workouts");
+    if (!dataWorkouts) return console.log("no workouts in LS");
+    dataWorkouts[dataWorkout.id] = dataWorkout;
+    console.log("RESULT ::: ", dataWorkouts);
+
+    const mess = sendToWorkout(dataWorkout, user.uid);
+    console.log("mess", mess);
+    setFinished(true);
+  } */
 
   return (
     <form onSubmit={handleSubmit}>
@@ -132,4 +162,4 @@ const ExoDisplay: React.FC<Props> = ({ exo, onSubmit }) => {
   );
 };
 
-export default ExoDisplay;
+export default FormTraining;

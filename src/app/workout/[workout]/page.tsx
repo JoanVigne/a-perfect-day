@@ -2,10 +2,10 @@
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { useEffect, useState } from "react";
 import "./workoutpage.css";
-import ExoDisplay from "./components/ExoDisplay";
-import Timer from "./components/Timer";
-import TimeTotal from "./components/TimeTotal";
-import Chronometer from "./components/Chronometer";
+import FormTraining from "../../../components/forms/FormTraining";
+import Timer from "../../../components/ui/Timer";
+import TimeTotal from "../../../components/ui/TimeTotal";
+import Chronometer from "../../../components/ui/Chronometer";
 import { sendToWorkout } from "@/firebase/db/workout";
 import { useAuthContext } from "@/context/AuthContext";
 import Link from "next/link";
@@ -124,7 +124,7 @@ const Page = () => {
               <Link href={`/workout`}>Back to the main page</Link>
             </div>
           ) : (
-            <ExoDisplay exo={thisWorkout.exercices} onSubmit={perfSubmit} />
+            <FormTraining exo={thisWorkout.exercices} onSubmit={perfSubmit} />
           )}
         </>
       )}

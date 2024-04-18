@@ -13,7 +13,7 @@ interface WorkoutType {
   perf: Array<any> | null;
 }
 
-const Workout: React.FC<Props> = ({ workout }) => {
+const CardWorkout: React.FC<Props> = ({ workout }) => {
   const [lastTime, setLastTime] = useState<string | null>(null);
   useEffect(() => {
     if (workout.perf) {
@@ -39,4 +39,4 @@ const Workout: React.FC<Props> = ({ workout }) => {
   );
 };
 
-export default Workout;
+export default CardWorkout;

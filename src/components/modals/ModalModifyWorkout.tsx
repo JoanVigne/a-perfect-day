@@ -3,8 +3,8 @@ import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ReactModal from "react-modal";
-import ContainerExoList from "../../components/ContainerExoList";
-
+import ContainerExoList from "../../app/workout/components/ContainerExoList";
+import "./modalModifyWorkout.css";
 interface Props {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;

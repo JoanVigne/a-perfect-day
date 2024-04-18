@@ -10,7 +10,7 @@ interface ModalFormProps {
   handleContinue: (result: any) => void;
 }
 
-const FormExoOrderModal: React.FC<ModalFormProps> = ({
+const ModalDragDropExercices: React.FC<ModalFormProps> = ({
   modalOpen,
   setModalOpen,
   exercicesChosen,
@@ -53,4 +53,4 @@ const FormExoOrderModal: React.FC<ModalFormProps> = ({
   );
 };
 
-export default FormExoOrderModal;
+export default ModalDragDropExercices;

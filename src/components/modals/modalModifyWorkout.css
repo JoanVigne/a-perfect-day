@@ -1,0 +1,15 @@
+.container-two-column {
+  display: flex;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  margin: 15px 0;
+  border-radius: 3px;
+}
+.container-two-column li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border: 1px black solid;
+  padding: 2px;
+  margin: 5px;
+}
