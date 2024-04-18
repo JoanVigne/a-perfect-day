@@ -1,7 +1,6 @@
 "use client";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { useEffect, useState } from "react";
-import "../workoutpage.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Icon from "@/components/ui/Icon";
@@ -95,7 +94,6 @@ const page = () => {
                         </div>
                       );
                     })}
-                  <Footer />
                 </div>
               ))}
           </div>
@@ -103,6 +101,7 @@ const page = () => {
       ) : (
         <>No stats yet in this workout</>
       )}
+      <Footer />
     </div>
   );
 };

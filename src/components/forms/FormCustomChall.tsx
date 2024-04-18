@@ -89,17 +89,18 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
               />
             </div>
             {/* Rendu des autres entrées */}
-            {selectedImprovement.length === 0 ? (
-              <h3>
-                Click on "To improve" if it is the element you are gonna
-                improve.
-              </h3>
-            ) : (
-              <h3>
-                You selected {selectedImprovement.length} elements to improve,
-                no need to fill its value yet
-              </h3>
-            )}
+            {fields.length > 1 &&
+              (selectedImprovement.length === 0 ? (
+                <h3>
+                  Click on "To improve" if it is the element you are gonna
+                  improve.
+                </h3>
+              ) : (
+                <h3>
+                  You selected {selectedImprovement.length} elements to improve,
+                  no need to fill its value yet
+                </h3>
+              ))}
             {fields.slice(1).map((field, index) => (
               <div key={index}>
                 <div className="container-key-value">
@@ -154,21 +155,29 @@ const FormCustomChall: React.FC<Props> = ({ updateCustomChall, userid }) => {
               </div>
             ))}
           </div>
-          <h3>
-            Add fields to add the things you will improve with time
-            <Icon nameImg="add" onClick={() => addField()} />
-          </h3>
-
-          {fields.some((field) => fields[0].value !== "") && (
-            <>
-              <TemporaryMessage
-                message={message}
-                type="message-error"
-                timeInMS={3000}
-              />
-              <button type="submit">Submit</button>
-            </>
+          {fields.length > 1 ? (
+            <h3 onClick={() => addField()}>
+              Add one more ?
+              <Icon nameImg="add" onClick={() => addField()} />
+            </h3>
+          ) : (
+            <h3 onClick={() => addField()}>
+              Add a thing you will improve with time
+              <Icon nameImg="add" onClick={() => addField()} />
+            </h3>
           )}
+
+          {fields.some((field) => fields[0].value !== "") &&
+            fields.length > 1 && (
+              <>
+                <TemporaryMessage
+                  message={message}
+                  type="message-error"
+                  timeInMS={3000}
+                />
+                <button type="submit">Submit</button>
+              </>
+            )}
         </form>
       </div>
     </div>

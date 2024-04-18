@@ -3,7 +3,7 @@ import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import Load from "@/components/ui/Load";
 
-import FormCustomChall from "./FormCustomChall";
+import FormCustomChall from "../../../components/forms/FormCustomChall";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import CardChallenge from "../../../components/cards/CardChallenge";
 import { removeFromChall } from "@/firebase/db/chall";

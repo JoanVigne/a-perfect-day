@@ -1,21 +1,16 @@
 "use client";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { useEffect, useState } from "react";
-import "./workoutpage.css";
+import "../workout.css";
 import FormTraining from "../../../components/forms/FormTraining";
 import Timer from "../../../components/ui/Timer";
 import TimeTotal from "../../../components/ui/TimeTotal";
 import Chronometer from "../../../components/ui/Chronometer";
 import { sendToWorkout } from "@/firebase/db/workout";
-import { useAuthContext } from "@/context/AuthContext";
+
 import Link from "next/link";
 
-interface UserData {
-  email: string;
-  uid: string;
-}
 const Page = () => {
-  const { user } = useAuthContext() as { user: UserData };
   const [slug, setSlug] = useState<string | null>(null);
   const [thisWorkout, setThisWorkout] = useState<any>(null);
   const [durationWorkout, setDurationWorkout] = useState<string>("");
@@ -43,36 +38,6 @@ const Page = () => {
       }
     });
   };
-  async function perfSubmit(data: any) {
-    const date = new Date();
-    const dateStr = date.toISOString().substring(0, 10);
-    const perfData = {
-      [dateStr]: data,
-    };
-    const dataWorkout = thisWorkout;
-    if (dataWorkout && dataWorkout.perf) {
-      dataWorkout.perf = { ...dataWorkout.perf, ...perfData };
-    } else {
-      dataWorkout.perf = perfData;
-    }
-    const duration = {
-      [dateStr]: durationWorkout,
-    };
-    if (dataWorkout && dataWorkout.duration) {
-      dataWorkout.duration = { ...dataWorkout.duration, ...duration };
-    } else {
-      dataWorkout.duration = duration;
-    }
-    console.log("updated dataWorkout", dataWorkout);
-    const dataWorkouts = getItemFromLocalStorage("workouts");
-    if (!dataWorkouts) return console.log("no workouts in LS");
-    dataWorkouts[dataWorkout.id] = dataWorkout;
-    console.log("RESULT ::: ", dataWorkouts);
-
-    const mess = sendToWorkout(dataWorkout, user.uid);
-    console.log("mess", mess);
-    setFinished(true);
-  }
 
   return (
     <div>
@@ -86,10 +51,8 @@ const Page = () => {
               }}
             />
           </header>
-
           <h1>{thisWorkout.name}</h1>
           <h2>{thisWorkout.description}</h2>
-
           <p>
             int = the time you rest between series. rest = time you rest between
             exercices. Both are in minutes. exemple 1.2 for 80seconds.
@@ -124,7 +87,13 @@ const Page = () => {
               <Link href={`/workout`}>Back to the main page</Link>
             </div>
           ) : (
-            <FormTraining exo={thisWorkout.exercices} onSubmit={perfSubmit} />
+            <FormTraining
+              exo={thisWorkout.exercices}
+              thisWorkout={thisWorkout}
+              durationWorkout={durationWorkout}
+              setFinished={setFinished}
+            />
+            /*  <FormTraining exo={thisWorkout.exercices} onSubmit={perfSubmit} /> */
           )}
         </>
       )}

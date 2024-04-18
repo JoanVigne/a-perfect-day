@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import ContainerChallenges from "./components/ContainerChallenges";
 import Link from "next/link";
 import Header from "@/components/Header";
-import ContainerWorldRecords from "./components/ContainerWorldRecords";
+import CardWorldRecord from "@/components/cards/CardWorldRecord";
 
 interface UserData {
   email: string;
@@ -25,37 +25,10 @@ const page = () => {
         <ContainerChallenges userId={user?.uid} />
       </div>
 
-      {/*   <div className="container">
-        <h2>MY Exemples</h2>
-        <div className="task-stat-container">
-          <div className="hero">
-            <h3>nom</h3>
-            <img src="" alt="photo" />
-            <p>exploit</p>
-            <p>stats</p>
-          </div>
-          <div className="hero">
-            <h3>nom</h3>
-            <img src="" alt="photo" />
-            <p>exploit</p>
-            <p>stats</p>
-          </div>
-          <div className="hero">
-            <h3>nom</h3>
-            <img src="" alt="photo" />
-            <p>exploit</p>
-            <p>stats</p>
-          </div>
-          <div className="hero">
-            <h3>nom</h3>
-            <img src="" alt="photo" />
-            <p>exploit</p>
-            <p>stats</p>
-      
-        </div>
+      <div className="container">
+        <h2>World Records</h2>
+        <CardWorldRecord />
       </div>
-          </div> */}
-      <ContainerWorldRecords />
       <Footer />
     </div>
   );

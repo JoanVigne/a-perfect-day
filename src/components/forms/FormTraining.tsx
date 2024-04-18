@@ -1,14 +1,28 @@
 import Icon from "@/components/ui/Icon";
 import React, { useEffect, useState } from "react";
+import { useAuthContext } from "@/context/AuthContext";
+import { getItemFromLocalStorage } from "@/utils/localstorage";
+import { sendToWorkout } from "@/firebase/db/workout";
+import ModalConfirmSend from "../modals/ModalConfirmSend";
 
 interface Props {
   exo: any[];
-  onSubmit: (data: any) => void;
+  thisWorkout: any;
+  durationWorkout: string;
+  setFinished: (finished: boolean) => void;
 }
-
-const FormTraining: React.FC<Props> = ({ exo, onSubmit }) => {
+interface UserData {
+  email: string;
+  uid: string;
+}
+const FormTraining: React.FC<Props> = ({
+  exo,
+  thisWorkout,
+  durationWorkout,
+  setFinished,
+}) => {
   const [formData, setFormData] = useState<any>({});
-
+  const { user } = useAuthContext() as { user: UserData };
   const handleInputChange =
     (exerciseId: string, seriesIndex: number, field: string) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,9 +39,9 @@ const FormTraining: React.FC<Props> = ({ exo, onSubmit }) => {
     };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(formData);
+    perfSubmit(formData);
   };
-  /*   async function perfSubmit(data: any) {
+  async function perfSubmit(data: any) {
     const date = new Date();
     const dateStr = date.toISOString().substring(0, 10);
     const perfData = {
@@ -56,8 +70,8 @@ const FormTraining: React.FC<Props> = ({ exo, onSubmit }) => {
     const mess = sendToWorkout(dataWorkout, user.uid);
     console.log("mess", mess);
     setFinished(true);
-  } */
-
+  }
+  const [isModalVisible, setIsModalVisible] = useState(false);
   return (
     <form onSubmit={handleSubmit}>
       {exo.map((exercise) => {
@@ -157,7 +171,26 @@ const FormTraining: React.FC<Props> = ({ exo, onSubmit }) => {
           </div>
         );
       })}
-      <button type="submit">Finish workout</button>
+      {/*       <button type="submit">Finish workout</button> */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsModalVisible(true);
+        }}
+      >
+        Finish workout
+      </button>
+      <ModalConfirmSend
+        isVisible={isModalVisible}
+        onConfirm={() => {
+          setIsModalVisible(false);
+          perfSubmit(formData);
+        }}
+        onCancel={() => {
+          setIsModalVisible(false);
+        }}
+      />
     </form>
   );
 };

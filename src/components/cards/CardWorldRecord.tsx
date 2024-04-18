@@ -1,10 +1,8 @@
 import React from "react";
-import "./containerWorldRecords.css";
-
-const ContainerWorldRecords = () => {
+import "./cardWorldRecord.css";
+const CardWorldRecord = () => {
   return (
-    <div className="container">
-      <h2>World Records</h2>
+    <div>
       <div className="task-stat-container">
         <div className="hero task-stat-card">
           <h3>Ron Hill </h3>
@@ -37,4 +35,4 @@ const ContainerWorldRecords = () => {
   );
 };
 
-export default ContainerWorldRecords;
+export default CardWorldRecord;
