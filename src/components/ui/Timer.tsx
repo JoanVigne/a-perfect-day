@@ -1,5 +1,6 @@
 import Icon from "@/components/ui/Icon";
 import React, { useState, useEffect } from "react";
+import "./time.css";
 
 const Timer = () => {
   const [seconds, setSeconds] = useState(0);
@@ -110,23 +111,30 @@ const Timer = () => {
   }
   return (
     <div className="timer">
-      {isReset ? (
-        <>
-          <input
-            className="secondes"
-            type="number"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
-          <div className="buttonsPlusAndMinus">
-            <button onClick={() => increment()}>+10s</button>
-            <button onClick={() => decrement()}>-10s</button>
-          </div>
-        </>
-      ) : (
-        <p>{seconds}sec</p>
-      )}
-
+      <div className="time">
+        {isReset ? (
+          <>
+            <input
+              className="secondes"
+              type="number"
+              value={inputValue}
+              onChange={handleInputChange}
+            />
+            <div className="buttonsPlusAndMinus">
+              <button onClick={() => increment()}>+10s</button>
+              <button onClick={() => decrement()}>-10s</button>
+            </div>
+          </>
+        ) : (
+          <p>{seconds}sec</p>
+        )}
+      </div>
+      <Icon
+        nameImg="reset"
+        onClick={() => {
+          handleReset();
+        }}
+      />
       {isActive ? (
         <Icon
           nameImg="pause"
@@ -142,13 +150,6 @@ const Timer = () => {
           }}
         />
       )}
-
-      <Icon
-        nameImg="reset"
-        onClick={() => {
-          handleReset();
-        }}
-      />
     </div>
   );
 };

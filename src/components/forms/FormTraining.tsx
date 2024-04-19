@@ -1,29 +1,28 @@
-import Icon from "@/components/ui/Icon";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { sendToWorkout } from "@/firebase/db/workout";
 import ModalConfirmSend from "../modals/ModalConfirmSend";
 import Button from "../ui/Button";
-
+import "./formTraining.css";
+import TimeTotal from "../ui/TimeTotal";
 interface Props {
   exo: any[];
   thisWorkout: any;
-  durationWorkout: string;
-  setFinished: (finished: boolean) => void;
+  setFinished: (callback: () => void) => void;
 }
+
 interface UserData {
   email: string;
   uid: string;
 }
-const FormTraining: React.FC<Props> = ({
-  exo,
-  thisWorkout,
-  durationWorkout,
-  setFinished,
-}) => {
+
+const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
   const [formData, setFormData] = useState<any>({});
   const { user } = useAuthContext() as { user: UserData };
+  const [isTimerActive, setIsTimerActive] = useState(true);
+  const [finalTime, setFinalTime] = useState("");
+
   const handleInputChange =
     (exerciseId: string, seriesIndex: number, field: string) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,62 +37,52 @@ const FormTraining: React.FC<Props> = ({
         return newFormData;
       });
     };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    perfSubmit(formData);
+    perfSubmit(formData, finalTime);
   };
-  async function perfSubmit(data: any) {
+
+  async function perfSubmit(data: any, finalTime: string) {
     const date = new Date();
     const dateStr = date.toISOString().substring(0, 10);
-    const perfData = {
-      [dateStr]: data,
-    };
-    const dataWorkout = thisWorkout;
-    if (dataWorkout && dataWorkout.perf) {
-      dataWorkout.perf = { ...dataWorkout.perf, ...perfData };
-    } else {
-      dataWorkout.perf = perfData;
-    }
-    const duration = {
-      [dateStr]: durationWorkout,
-    };
-    if (dataWorkout && dataWorkout.duration) {
-      dataWorkout.duration = { ...dataWorkout.duration, ...duration };
-    } else {
-      dataWorkout.duration = duration;
-    }
-    console.log("updated dataWorkout", dataWorkout);
-    const dataWorkouts = getItemFromLocalStorage("workouts");
-    if (!dataWorkouts) return console.log("no workouts in LS");
-    dataWorkouts[dataWorkout.id] = dataWorkout;
-    console.log("RESULT ::: ", dataWorkouts);
+    const perfData = { [dateStr]: data };
+    const duration = { [dateStr]: finalTime };
 
-    const mess = sendToWorkout(dataWorkout, user.uid);
-    console.log("mess", mess);
-    setFinished(true);
+    const updatedWorkout = {
+      ...thisWorkout,
+      perf: { ...thisWorkout.perf, ...perfData },
+      duration: { ...thisWorkout.duration, ...duration },
+    };
+    console.log("duration workout :", finalTime);
+    console.log("updated workout :", updatedWorkout);
+    console.log("duration : ", duration);
+    setFinished(() => {
+      const dataWorkouts = getItemFromLocalStorage("workouts");
+      if (!dataWorkouts) return console.log("no workouts in LS");
+      dataWorkouts[updatedWorkout.id] = updatedWorkout;
+      sendToWorkout(updatedWorkout, user.uid);
+    });
   }
+
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const handleFinishClick = (
-    e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e?.preventDefault();
-    setIsModalVisible(true);
-  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="form-training">
+      <div className="smaller-container">
+        <TimeTotal
+          isActive={isTimerActive}
+          stopOnFinish={!isTimerActive}
+          onTimeFinish={setFinalTime}
+        />
+      </div>
+      <p>Rest is in minutes. exemple 1.2 for 80seconds.</p>
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
-        useEffect(() => {
-          // if we got previous choice of serie for this exo, set from it
-          // setNumberOfSeries(previousTime)
-        }, []);
         return (
           <div key={exercise.id} className="container-exo">
-            <h3>
-              {exercise.name}{" "}
-              <Icon nameImg="modify" onClick={() => console.log("modify")} />
-            </h3>
-            <h3>equipment: {exercise.equipment}</h3>
+            <h3>{exercise.name}</h3>
+            {exercise.equipmentt && <h3>equipment: {exercise.equipment}</h3>}
             <h3>
               Number of Series: {numberOfSeries}
               <div className="buttonsPlusMinusSeries">
@@ -178,23 +167,23 @@ const FormTraining: React.FC<Props> = ({
           </div>
         );
       })}
-      {/*       <button type="submit">Finish workout</button> */}
       <Button
         className="finish"
         type="button"
         value="Finish workout"
-        onClick={handleFinishClick}
+        onClick={(e: any) => {
+          e.preventDefault();
+          setIsTimerActive(false);
+          setIsModalVisible(true);
+        }}
       />
-
       <ModalConfirmSend
         isVisible={isModalVisible}
         onConfirm={() => {
           setIsModalVisible(false);
-          perfSubmit(formData);
+          perfSubmit(formData, finalTime);
         }}
-        onCancel={() => {
-          setIsModalVisible(false);
-        }}
+        onCancel={() => setIsModalVisible(false)}
       />
     </form>
   );

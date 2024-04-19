@@ -1,0 +1,41 @@
+/* timer */
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--color-grey);
+}
+footer button {
+  background-color: var(--color-dark-green);
+}
+
+footer .timer,
+footer .chronometer {
+  display: flex;
+  align-items: center;
+}
+footer .time {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+footer .time .buttonsPlusAndMinus {
+  display: flex;
+  flex-direction: column;
+}
+footer .time input {
+  max-width: 40px;
+  background-color: var(--color-dark-grey);
+}
+
+footer img {
+  margin: 5px;
+}
+
+footer .icon.reset {
+  width: 18px;
+  height: 18px;
+}

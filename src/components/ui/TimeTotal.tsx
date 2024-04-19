@@ -1,23 +1,29 @@
 import Icon from "@/components/ui/Icon";
-import { format } from "path";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import "./time.css";
 
 interface Props {
+  isActive: boolean;
   stopOnFinish: boolean;
-  onTimeFinish?: (time: string) => void;
+  onTimeFinish: React.Dispatch<React.SetStateAction<string>>;
 }
-const TimeTotal: React.FC<Props> = ({ stopOnFinish, onTimeFinish }) => {
+
+const TimeTotal: React.FC<Props> = ({
+  isActive,
+  stopOnFinish,
+  onTimeFinish,
+}) => {
   const [seconds, setSeconds] = useState<number>(0);
-  const [isActive, setIsActive] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (isActive) {
-      intervalRef.current = setInterval(() => {
-        setSeconds((prevSeconds) => prevSeconds + 1);
-      }, 1000);
-    } else if (!isActive && seconds !== 0) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(
+        () => setSeconds((prevSeconds) => prevSeconds + 1),
+        1000
+      );
+    } else if (!isActive && seconds !== 0 && intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
 
     return () => {
@@ -27,22 +33,9 @@ const TimeTotal: React.FC<Props> = ({ stopOnFinish, onTimeFinish }) => {
 
   useEffect(() => {
     if (stopOnFinish) {
-      setIsActive(false);
-      if (onTimeFinish) {
-        console.log(formatTime());
-        onTimeFinish(formatTime());
-      }
+      onTimeFinish && onTimeFinish(formatTime());
     }
   }, [stopOnFinish]);
-
-  const handleStartStop = () => {
-    setIsActive(!isActive);
-  };
-
-  const handleReset = () => {
-    setSeconds(0);
-    setIsActive(false);
-  };
 
   const formatTime = () => {
     const getSeconds = `0${seconds % 60}`.slice(-2);
@@ -53,43 +46,34 @@ const TimeTotal: React.FC<Props> = ({ stopOnFinish, onTimeFinish }) => {
     return `${getHours} : ${getMinutes} : ${getSeconds}`;
   };
 
-  function increment() {
-    setSeconds((prevSeconds) => prevSeconds + 10);
-  }
-
-  function decrement() {
-    setSeconds((prevSeconds) => (prevSeconds > 10 ? prevSeconds - 10 : 0));
-  }
-
   return (
     <div className="timer">
       <h3>
         <Icon
           nameImg="reset"
           onClick={() => {
-            handleReset();
+            setSeconds(0);
           }}
         />
         <div className="buttonsPlusAndMinus">
-          <button onClick={() => increment()}>+10s</button>
-          <button onClick={() => decrement()}>-10s</button>
+          <button
+            type="button"
+            onClick={() => setSeconds((prevSeconds) => prevSeconds + 10)}
+          >
+            +10s
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              setSeconds((prevSeconds) =>
+                prevSeconds > 10 ? prevSeconds - 10 : 0
+              )
+            }
+          >
+            -10s
+          </button>
         </div>
         Total time: {formatTime()}{" "}
-        {isActive ? (
-          <Icon
-            nameImg="pause"
-            onClick={() => {
-              handleStartStop();
-            }}
-          />
-        ) : (
-          <Icon
-            nameImg="play"
-            onClick={() => {
-              handleStartStop();
-            }}
-          />
-        )}
       </h3>
     </div>
   );
