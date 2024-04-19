@@ -1,8 +1,11 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import "./cardWorkout.css";
+import Icon from "../ui/Icon";
 
 interface Props {
   workout: WorkoutType;
+  index: number;
 }
 interface WorkoutType {
   name: string;
@@ -13,8 +16,9 @@ interface WorkoutType {
   perf: Array<any> | null;
 }
 
-const CardWorkout: React.FC<Props> = ({ workout }) => {
+const CardWorkout: React.FC<Props> = ({ workout, index }) => {
   const [lastTime, setLastTime] = useState<string | null>(null);
+  const colorClass = `color-${index % 2}`;
   useEffect(() => {
     if (workout.perf) {
       const dates = Object.keys(workout.perf);
@@ -25,15 +29,23 @@ const CardWorkout: React.FC<Props> = ({ workout }) => {
     }
   }, []);
   return (
-    <div className="workout-container">
+    <div className={`workout-container ${colorClass}`}>
       <div className="infos">
-        <h3>{workout.name}</h3>
+        <h3>
+          {workout.name}{" "}
+          <Icon
+            nameImg="question"
+            onClick={() => {
+              window.location.href = `/workout/${workout.id}/stats`;
+            }}
+          />
+        </h3>
         <p>{workout.description}</p>
       </div>
       <div className="perf">
-        <h4>{workout.perf ? <>Last time : {lastTime}</> : <>no data yet</>}</h4>
         <Link href={`/workout/${workout.id}`}>Train now</Link>
-        <Link href={`/workout/${workout.id}/stats`}>See more</Link>
+
+        <h4>{workout.perf ? <>Last time : {lastTime}</> : <>no data yet</>}</h4>
       </div>
     </div>
   );

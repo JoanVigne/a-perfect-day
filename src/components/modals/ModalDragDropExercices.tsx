@@ -1,7 +1,7 @@
 import React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ReactModal from "react-modal";
-
+import "./modals.css";
 interface ModalFormProps {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;

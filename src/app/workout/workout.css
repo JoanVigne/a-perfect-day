@@ -17,53 +17,6 @@
   margin: 10px;
   padding: 10px;
 }
-.ReactModalPortal * {
-  color: var(--color-black);
-}
-.ReactModalPortal ul {
-  margin: 10px;
-}
-.ReactModalPortal ul li {
-  margin: 5px;
-}
-.ReactModalPortal ul li h3 {
-  border: 1px black solid;
-}
-.ReactModalPortal ul li .times {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-.ReactModalPortal ul li .times input {
-  width: 40px;
-  background-color: var(--color-dark-grey);
-  color: white;
-}
-button {
-  background-color: var(--color-green);
-  color: white;
-  border: none;
-}
-
-/* */
-.workout-container {
-  display: flex;
-  justify-content: space-evenly;
-  padding: 5px;
-  background-color: var(--color-white);
-  color: black;
-  border-radius: 3px;
-}
-.workout-container a {
-  margin: 5px;
-  padding: 5px;
-  background-color: var(--color-active-link);
-}
-.workout-container .perf {
-  display: flex;
-  align-items: center;
-}
 
 /* ancien css de [workout] */
 .container-exo table {

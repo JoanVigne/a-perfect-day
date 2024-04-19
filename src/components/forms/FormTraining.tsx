@@ -4,6 +4,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { sendToWorkout } from "@/firebase/db/workout";
 import ModalConfirmSend from "../modals/ModalConfirmSend";
+import Button from "../ui/Button";
 
 interface Props {
   exo: any[];
@@ -72,6 +73,12 @@ const FormTraining: React.FC<Props> = ({
     setFinished(true);
   }
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const handleFinishClick = (
+    e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e?.preventDefault();
+    setIsModalVisible(true);
+  };
   return (
     <form onSubmit={handleSubmit}>
       {exo.map((exercise) => {
@@ -172,15 +179,13 @@ const FormTraining: React.FC<Props> = ({
         );
       })}
       {/*       <button type="submit">Finish workout</button> */}
-      <button
+      <Button
+        className="finish"
         type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          setIsModalVisible(true);
-        }}
-      >
-        Finish workout
-      </button>
+        value="Finish workout"
+        onClick={handleFinishClick}
+      />
+
       <ModalConfirmSend
         isVisible={isModalVisible}
         onConfirm={() => {

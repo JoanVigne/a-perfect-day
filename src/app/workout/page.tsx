@@ -40,9 +40,9 @@ export default function Page() {
         {workouts && Object.values(workouts as Workouts).length > 0 ? (
           <>
             {console.log("workouts", workouts)}
-            {Object.values(workouts).map((workout: WorkoutType) => (
+            {Object.values(workouts).map((workout: WorkoutType, index) => (
               <div key={workout.id}>
-                <CardWorkout workout={workout as WorkoutType} />
+                <CardWorkout workout={workout as WorkoutType} index={index} />
               </div>
             ))}
           </>
