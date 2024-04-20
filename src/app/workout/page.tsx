@@ -30,7 +30,6 @@ export default function Page() {
     if (localstorage) {
       setWorkouts(localstorage);
     }
-    console.log("workouts", workouts);
   }, []);
   return (
     <>
@@ -39,7 +38,6 @@ export default function Page() {
       <div className="container">
         {workouts && Object.values(workouts as Workouts).length > 0 ? (
           <>
-            {console.log("workouts", workouts)}
             {Object.values(workouts).map((workout: WorkoutType, index) => (
               <div key={workout.id}>
                 <CardWorkout workout={workout as WorkoutType} index={index} />

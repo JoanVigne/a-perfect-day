@@ -1,5 +1,5 @@
 /* timer */
-footer {
+.footerTraining {
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -8,34 +8,34 @@ footer {
   width: 100%;
   background-color: var(--color-grey);
 }
-footer button {
+.footerTraining button {
   background-color: var(--color-dark-green);
 }
 
-footer .timer,
-footer .chronometer {
+.footerTraining .timer,
+.footerTraining .chronometer {
   display: flex;
   align-items: center;
 }
-footer .time {
+.footerTraining .time {
   display: flex;
   align-items: center;
   margin: 0 10px;
 }
-footer .time .buttonsPlusAndMinus {
+.footerTraining .time .buttonsPlusAndMinus {
   display: flex;
   flex-direction: column;
 }
-footer .time input {
+.footerTraining .time input {
   max-width: 40px;
   background-color: var(--color-dark-grey);
 }
 
-footer img {
+.footerTraining img {
   margin: 5px;
 }
 
-footer .icon.reset {
+.footerTraining .icon.reset {
   width: 18px;
   height: 18px;
 }

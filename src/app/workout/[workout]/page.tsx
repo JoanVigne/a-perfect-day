@@ -4,14 +4,13 @@ import FormTraining from "../../../components/forms/FormTraining";
 
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import Link from "next/link";
-import TimeChronometer from "@/components/ui/TimeChronometer";
-import Timer from "@/components/ui/Timer";
+import Footer from "@/components/Footer";
+import FooterTraining from "@/components/FooterTraining";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
   const [thisWorkout, setThisWorkout] = useState<any>(null);
   const [finished, setFinished] = useState(false);
-  const [chornoTimer, setChronoTimer] = useState(false);
   useEffect(() => {
     const pathslug = window.location.pathname.split("/").pop();
     setSlug(pathslug || null);
@@ -36,42 +35,48 @@ const Page = () => {
     <div>
       {thisWorkout && (
         <>
-          <h1>{thisWorkout.name}</h1>
-          <h2>{thisWorkout.description}</h2>
-
           {finished ? (
             <div
               className="containerLinks"
               style={{ display: "flex", flexDirection: "column" }}
             >
-              <h2>Workout performances saved ! </h2>
+              <h2>
+                Performances of <strong>{thisWorkout.name} have been</strong>{" "}
+                saved !{" "}
+              </h2>
               <Link href={`/workout/${thisWorkout.id}/stats`} className="link">
                 Check the statistic about this workout
               </Link>
               <Link href={`/workout`} className="link">
                 Back to the main page
               </Link>
+              <Footer />
             </div>
           ) : (
-            <FormTraining
-              exo={thisWorkout.exercices}
-              thisWorkout={thisWorkout}
-              setFinished={handleFinished}
-            />
+            <>
+              <h1>{thisWorkout.name}</h1>
+              <h2>{thisWorkout.description}</h2>
+              <FormTraining
+                exo={thisWorkout.exercices}
+                thisWorkout={thisWorkout}
+                setFinished={handleFinished}
+              />
+              <FooterTraining />
+              {/* <footer>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setChronoTimer(!chornoTimer);
+                  }}
+                >
+                  {chornoTimer ? "Chrono" : "Timer"}
+                </button>
+                {chornoTimer ? <TimeChronometer /> : <Timer />}
+              </footer> */}
+            </>
           )}
         </>
       )}
-      <footer>
-        <button
-          type="button"
-          onClick={() => {
-            setChronoTimer(!chornoTimer);
-          }}
-        >
-          {chornoTimer ? "Chrono" : "Timer"}
-        </button>
-        {chornoTimer ? <TimeChronometer /> : <Timer />}
-      </footer>
     </div>
   );
 };

@@ -66,7 +66,7 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
   }
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const [isModalVisible2, setIsModalVisible2] = useState(false);
   return (
     <form onSubmit={handleSubmit} className="form-training">
       <div className="smaller-container">
@@ -167,24 +167,53 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
           </div>
         );
       })}
-      <Button
-        className="finish"
-        type="button"
-        value="Finish workout"
-        onClick={(e: any) => {
-          e.preventDefault();
-          setIsTimerActive(false);
-          setIsModalVisible(true);
-        }}
-      />
-      <ModalConfirmSend
-        isVisible={isModalVisible}
-        onConfirm={() => {
-          setIsModalVisible(false);
-          perfSubmit(formData, finalTime);
-        }}
-        onCancel={() => setIsModalVisible(false)}
-      />
+      <div className="buttons-in-line">
+        <Button
+          className="finish"
+          type="button"
+          value="Finish without saving"
+          onClick={(e: any) => {
+            e.preventDefault();
+            setIsTimerActive(false);
+            setIsModalVisible2(true);
+          }}
+        />
+        <ModalConfirmSend
+          isVisible={isModalVisible2}
+          onConfirm={() => {
+            setIsModalVisible2(false);
+            window.location.href = "/workout";
+            /*  perfSubmit(formData, finalTime); */
+          }}
+          onCancel={() => {
+            setIsModalVisible2(false);
+            setIsTimerActive(true);
+          }}
+          message="Are you sure you want to finish without saving your performances?"
+        />
+        <Button
+          className="finish"
+          type="button"
+          value="Finish and save"
+          onClick={(e: any) => {
+            e.preventDefault();
+            setIsTimerActive(false);
+            setIsModalVisible(true);
+          }}
+        />
+        <ModalConfirmSend
+          isVisible={isModalVisible}
+          onConfirm={() => {
+            setIsModalVisible(false);
+            perfSubmit(formData, finalTime);
+          }}
+          onCancel={() => {
+            setIsModalVisible(false);
+            setIsTimerActive(true);
+          }}
+          message="Are you sure you want to finish your wokrout now and save the performances?"
+        />
+      </div>
     </form>
   );
 };

@@ -26,8 +26,6 @@ interface Workout {
 const FormWorkoutCreate = () => {
   const { user } = useAuthContext() as { user: UserData };
   const [exoFromDb, setExoFromDb] = useState({});
-  // the workout shape :
-  //workout =  randomid : { name, description, creation date, exercices: [id,id,id]. }
 
   async function fetchExoFromDb() {
     const data = await fetchDataFromDBToLocalStorage("exercices");
