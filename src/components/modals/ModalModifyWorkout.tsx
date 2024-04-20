@@ -3,8 +3,8 @@ import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import ReactModal from "react-modal";
-import ContainerExoList from "../../app/workout/components/ContainerExoList";
-import "./modals.css";
+import ContainerExoList from "../ContainerExoList";
+import "./modalModifyWorkout.css";
 interface Props {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
@@ -56,6 +56,7 @@ const ModalModifyWorkout: React.FC<Props> = ({
   }
   return (
     <ReactModal
+      className="modify-workout-modal"
       isOpen={modalOpen}
       onRequestClose={() => setModalOpen(false)}
       shouldCloseOnOverlayClick={true}

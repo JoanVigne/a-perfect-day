@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Icon from "@/components/ui/Icon";
 import ModalModifyWorkout from "../../../../components/modals/ModalModifyWorkout";
+import Link from "next/link";
 
 interface Exercise {
   name: string;
@@ -39,6 +40,7 @@ const page = () => {
       if (!workoutls) return;
       const workout = workoutls[pathslug];
       setWorkout(workout);
+      console.log("workout", workout);
     }
   }, []);
   const [modalOpen, setModalOpen] = useState(false);
@@ -59,8 +61,8 @@ const page = () => {
           <h2>{workout.description}</h2>
 
           <div className="container-exo">
-            <h3>Performance:</h3>
-            {workout.perf &&
+            <h3>Performances:</h3>
+            {workout.perf ? (
               Object.entries(workout.perf).map(([date, perfData], index) => (
                 <div key={index}>
                   <h4>{date}</h4>
@@ -95,11 +97,17 @@ const page = () => {
                       );
                     })}
                 </div>
-              ))}
+              ))
+            ) : (
+              <>
+                <h4>No performances yet, go train ? </h4>
+                <Link href={`/workout/${workout.id}`}>Train now</Link>
+              </>
+            )}
           </div>
         </div>
       ) : (
-        <>No stats yet in this workout</>
+        <p>Workout not found</p>
       )}
       <Footer />
     </div>
