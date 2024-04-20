@@ -6,27 +6,22 @@ interface Exercice {
   id: string;
   description: string;
 }
-const ContainerExoList = () => {
-  const [exoFromDb, setExoFromDb] = useState({});
-  // the workout shape :
-  //workout =  randomid : { name, description, creation date, exercices: [id,id,id]. }
-  const [exoPerso, setExoPerso] = useState<Exercice[]>([]);
-  function addPersoExo() {
-    const input = document.getElementById("persoExercice") as HTMLInputElement;
-    if (input.value) {
-      const newExo = {
-        name: input.value,
-        id: `exoPerso${input.value.replace(/\s+/g, "")}${exoPerso.length}`,
-        description: "Exercice created by me",
-      };
-      setExoPerso((prev) => [...prev, newExo]);
-      input.value = "";
-    }
-  }
-  async function fetchExoFromDb() {
-    const data = await fetchDataFromDBToLocalStorage("exercices");
-    setExoFromDb(data);
-  }
+interface Props {
+  exoFromDb: any;
+  fetchExoFromDb: () => void;
+  exoPerso: any[];
+  addPersoExo: () => void;
+  exercicesChosen: any[];
+  onExerciceCheck: (exo: any, isChecked: boolean) => void;
+}
+const ContainerExoList: React.FC<Props> = ({
+  exoFromDb,
+  fetchExoFromDb,
+  exoPerso,
+  addPersoExo,
+  exercicesChosen,
+  onExerciceCheck,
+}) => {
   return (
     <div className="container-exo-list">
       {Object.values(exoFromDb).length <= 0 && (
@@ -50,6 +45,10 @@ const ContainerExoList = () => {
                     name="exercices"
                     id={exo.name || `tempExo${index}`}
                     value={exo.id || `tempExo${index}`}
+                    checked={exercicesChosen.some(
+                      (chosenExo: any) => chosenExo.id === exo.id
+                    )}
+                    onChange={(e) => onExerciceCheck(exo, e.target.checked)}
                   />
                   <label htmlFor={exo.name || `tempExo${index}`}>
                     {exo.name || exo}

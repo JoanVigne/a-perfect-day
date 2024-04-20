@@ -30,7 +30,7 @@ const sendToWorkout = async (data: Data, userId: string) => {
   console.log("updated data :", updatedData);
   await setDoc(ref, updatedData);
   localStorage.setItem("workouts", JSON.stringify(updatedData));
-  console.log("workouts est mis a jour");
+  return "workouts are updated";
 };
 const removeFromCustom = async (data: any, userId: string) => {
   try {

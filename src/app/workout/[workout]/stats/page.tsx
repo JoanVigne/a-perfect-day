@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Icon from "@/components/ui/Icon";
 import ModalModifyWorkout from "../../../../components/modals/ModalModifyWorkout";
 import Link from "next/link";
+import ModalConfirmSend from "@/components/modals/ModalConfirmSend";
 
 interface Exercise {
   name: string;
@@ -44,13 +45,35 @@ const page = () => {
     }
   }, []);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  async function removeWorkout(workout: Workout) {
+    console.log("remove workout", workout);
+  }
   return (
     <div>
       <Header />
+
+      <ModalConfirmSend
+        isVisible={isModalVisible}
+        onConfirm={() => {
+          removeWorkout(workout as Workout);
+          setIsModalVisible(false);
+        }}
+        onCancel={() => {
+          setIsModalVisible(false);
+        }}
+        message="Are you sure you want to modify your workout?"
+      />
       {workout ? (
         <div>
           <h1>
-            {workout.name}{" "}
+            <Icon
+              nameImg="red-bin"
+              onClick={() => {
+                setIsModalVisible(true);
+              }}
+            />
+            {workout.name}
             <Icon nameImg="modify" onClick={() => setModalOpen(true)} />
           </h1>
           <ModalModifyWorkout
