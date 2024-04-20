@@ -62,17 +62,6 @@ const Page = () => {
                 setFinished={handleFinished}
               />
               <FooterTraining />
-              {/* <footer>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setChronoTimer(!chornoTimer);
-                  }}
-                >
-                  {chornoTimer ? "Chrono" : "Timer"}
-                </button>
-                {chornoTimer ? <TimeChronometer /> : <Timer />}
-              </footer> */}
             </>
           )}
         </>

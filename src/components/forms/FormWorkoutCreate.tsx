@@ -37,7 +37,7 @@ const FormWorkoutCreate = () => {
   const [workout, setWorkout] = useState({});
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [exercicesChosen, setExercicesChosen] = useState([]);
+  const [exercicesChosen, setExercicesChosen] = useState<any[]>([]);
   function submitRawWorkout(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -98,6 +98,7 @@ const FormWorkoutCreate = () => {
         description: "Exercice created by me",
       };
       setExoPerso((prev) => [...prev, newExo]);
+      setExercicesChosen((prevExos: any[]) => [...prevExos, newExo]);
       input.value = "";
     }
   }
@@ -132,6 +133,9 @@ const FormWorkoutCreate = () => {
                         name="exercices"
                         id={exo.name || `tempExo${index}`}
                         value={exo.id || `tempExo${index}`}
+                        defaultChecked={exercicesChosen.some(
+                          (chosenExo: any) => chosenExo.id === exo.id
+                        )}
                       />
                       <label htmlFor={exo.name || `tempExo${index}`}>
                         {exo.name || exo}
