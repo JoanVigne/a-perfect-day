@@ -32,25 +32,25 @@ const sendToWorkout = async (data: Data, userId: string) => {
   localStorage.setItem("workouts", JSON.stringify(updatedData));
   return "workouts are updated";
 };
-const removeFromCustom = async (data: any, userId: string) => {
+const removeFromWorkouts = async (data: any, userId: string) => {
   try {
-    const { ref, snapShot } = await checkDB("custom", userId);
+    const { ref, snapShot } = await checkDB("workouts", userId);
     if (!snapShot.exists()) {
       console.log("User ID not found in database");
       return "User ID not found in database";
     }
     const customData = snapShot.data();
     if (!customData) {
-      console.log("Custom data not found in database");
-      return "Custom data not found in database";
+      console.log("Workouts not found in database");
+      return "Workouts not found in database";
     }
 
     await setDoc(ref, data);
-    localStorage.setItem("custom", JSON.stringify(data));
-    return "Task removed";
+    localStorage.setItem("workouts", JSON.stringify(data));
+    return "workout removed";
   } catch (error) {
-    console.error("Error removing custom task:", error);
-    return "Error removing custom task";
+    console.error("Error removing workout", error);
+    return "Error removing workout";
   }
 };
-export { sendToWorkout, removeFromCustom };
+export { sendToWorkout, removeFromWorkouts };
