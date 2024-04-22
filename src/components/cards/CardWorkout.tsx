@@ -31,7 +31,11 @@ const CardWorkout: React.FC<Props> = ({ workout, index }) => {
   return (
     <div className={`workout-container ${colorClass}`}>
       <div className="infos">
-        <h3>
+        <h3
+          onClick={() => {
+            window.location.href = `/workout/${workout.id}/stats`;
+          }}
+        >
           {workout.name}{" "}
           <Icon
             nameImg="question"

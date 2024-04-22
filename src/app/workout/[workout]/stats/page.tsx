@@ -108,9 +108,10 @@ const page = () => {
             workoutToModify={workout}
           />
           <h2>{workout.description}</h2>
-          <ul style={{ display: "flex" }}>
+          <h3>Exos :</h3>
+          <ul>
             {workout.exercices.map((exo, index) => (
-              <li key={index}>
+              <li key={index} style={{ display: "inline-flex" }}>
                 {exo.name}
                 {index !== workout.exercices.length - 1 && <span>,&nbsp;</span>}
               </li>

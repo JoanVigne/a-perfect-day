@@ -131,7 +131,7 @@ const ModalModifyWorkout: React.FC<Props> = ({
           exercicesChosen={exercicesChosen}
           onExerciceCheck={handleExerciceCheck}
         />
-        <h3>drag and drop exercices to chose the order</h3>
+        <h3>drag and drop exercices to choose the order</h3>
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="exercises">
             {(provided) => (

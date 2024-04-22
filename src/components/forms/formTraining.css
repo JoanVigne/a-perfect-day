@@ -14,9 +14,17 @@ header.workout-header {
 .container-exo table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
 }
 
+.container-exo table thead th {
+  width: 25%;
+}
+.show-last-perf {
+  display: block;
+  margin: 5px auto;
+  background-color: var(--color-dark-green);
+  color: white;
+}
 .buttonsPlusMinusSeries {
   display: flex;
   margin: 0 5px;
@@ -30,17 +38,27 @@ header.workout-header {
 .container-exo th,
 .container-exo td {
   border: 1px solid var(--color-black);
-  padding: 10px;
+  padding: 5px;
   text-align: center;
 }
-
+.container-exo .container-input-unilateral .input-validation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container-exo
+  .container-input-unilateral
+  .input-validation:nth-child(2)
+  input {
+  border-top: 1px var(--color-white) solid;
+}
 .container-exo th {
   background-color: var(--color-dark-grey);
   color: var(--color-white);
 }
 
 .container-exo td input[type="number"] {
-  max-width: 60px;
+  max-width: 40px;
   height: 25px;
   background-color: var(--color-dark-grey);
   color: var(--color-white);
@@ -48,6 +66,9 @@ header.workout-header {
   text-align: center;
 }
 
+.form-training .note-exo {
+  height: 35px;
+}
 .form-training .buttons-in-line .finish {
   margin: auto;
   display: block;

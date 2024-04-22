@@ -60,7 +60,7 @@ const page = () => {
     setMessageChangeNickname("Nickname updated");
     setTimeout(() => {
       window.location.href = "/";
-    }, 2500);
+    }, 1500);
   }
   function logOut() {
     let updatedUser;

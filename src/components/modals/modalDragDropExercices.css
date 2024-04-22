@@ -1,0 +1,19 @@
+.drag-drop-modal {
+  background-color: var(--color-black);
+  width: 95%;
+  height: 85%;
+  margin: 25px auto 100px auto;
+  overflow-y: scroll;
+}
+.drag-drop-modal ul {
+  border: 1px var(--color-white) solid;
+}
+.drag-drop-modal ul li {
+  border: 2px var(--color-dark-green) solid;
+}
+.drag-drop-modal .finish {
+  margin: 30px auto;
+  display: block;
+  background-color: var(--color-green);
+  color: var(--color-white);
+}

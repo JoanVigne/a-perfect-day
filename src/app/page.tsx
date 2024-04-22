@@ -225,9 +225,9 @@ export default function Home() {
           />
         </div>
 
-        {userInfo && (
+        {/*    {userInfo && (
           <Lists userInfo={userInfo} functionSetUserInfo={setUserInfo} />
-        )}
+        )} */}
       </main>
       <Footer />
     </>
