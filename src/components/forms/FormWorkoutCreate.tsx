@@ -112,7 +112,7 @@ const FormWorkoutCreate = () => {
         <input type="text" name="description" id="description" />
         <fieldset>
           <label htmlFor="exercices">Select exercices</label>
-          {Object.values(exoFromDb).length <= 0 && (
+          {exoFromDb && Object.values(exoFromDb).length <= 0 && (
             <button type="button" onClick={fetchExoFromDb}>
               See the database exercices
             </button>
