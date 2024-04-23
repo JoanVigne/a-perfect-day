@@ -99,6 +99,7 @@ const FormModifyPreviousDays: React.FC<Props> = ({ thisChall, thisDay }) => {
                   <label>{improvement}:</label>
                   <input
                     placeholder={
+                      thisChall.perf &&
                       thisChall.perf[thisDay.slice(0, 10)]?.[improvement]
                     }
                     type="text"
