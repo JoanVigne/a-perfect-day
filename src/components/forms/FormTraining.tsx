@@ -7,6 +7,8 @@ import Button from "../ui/Button";
 import "./formTraining.css";
 import TimeTotal from "../ui/TimeTotal";
 import Icon from "../ui/Icon";
+import InputFormTraining from "./InputFormTraining";
+
 interface Props {
   exo: any[];
   thisWorkout: any;
@@ -32,11 +34,14 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
         [exerciseId]: event.target.value,
       }));
     };
+  // handleInputChange function
   const handleInputChange =
     (exerciseId: string, seriesIndex: number, field: string) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const key = `${exerciseId}-${field}${seriesIndex}`;
-      const value = e.target.value;
+      let value = e.target.value;
+      // Replace "," with "."
+      value = value.replace(/,/g, ".");
       setFormData((prevFormData: any) => {
         const newFormData = { ...prevFormData };
         if (!newFormData[exerciseId]) {
@@ -47,11 +52,13 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
         newFormData[exerciseId][`${field}${seriesIndex}`] = value;
         return newFormData;
       });
+
       setInputValues((prevInputValues: any) => ({
         ...prevInputValues,
         [key]: value,
       }));
     };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     perfSubmit(formData, finalTime);
@@ -78,9 +85,11 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
       sendToWorkout(updatedWorkout, user.uid);
     });
   }
+
   // placeholder with last perf :
   const previousworkouts = getItemFromLocalStorage("workouts");
   const [lastPerf, setLastPerf] = useState<any>({});
+
   function findLastPerf() {
     console.log("previous workouts :", previousworkouts);
     console.log("thisWorkout :", thisWorkout);
@@ -95,12 +104,21 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
           const lastPerf = workout.perf[maxDateStr];
           setLastPerf(lastPerf);
           console.log("lastperf :", lastPerf);
+          if (lastPerf.noteExo) {
+            setNoteExo(lastPerf.noteExo);
+          }
         }
       }
     });
   }
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);
+
+  useEffect(() => {
+    findLastPerf();
+  }, [thisWorkout]);
+
   return (
     <form onSubmit={handleSubmit} className="form-training">
       <div className="smaller-container">
@@ -110,16 +128,14 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
           onTimeFinish={setFinalTime}
         />
       </div>
-      <button className="show-last-perf" type="button" onClick={findLastPerf}>
-        show my last performance in the form
-      </button>
+
       {lastPerf && (
         <p>
           If you did the same perf as it's written in the input, validate the
           value with the button
         </p>
       )}
-      <p>Rest is in minutes. exemple 1.2 for 80seconds.</p>
+      <p>Rest is in minutes. example 1.2 for 80 seconds.</p>
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         const [unilateral, setUnilateral] = useState<boolean>(false);
@@ -129,18 +145,17 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
           field: string
         ) => {
           const key = `${exerciseId}-${field}${seriesIndex}`;
-          setInputValues((prevInputValues: any) => {
-            const newInputValues = { ...prevInputValues };
-            if (
-              lastPerf[exerciseId] &&
-              lastPerf[exerciseId][`${field}${seriesIndex}`]
-            ) {
-              newInputValues[key] =
-                lastPerf[exerciseId][`${field}${seriesIndex}`];
-            }
-            return newInputValues;
-          });
+          const newValue =
+            lastPerf[exerciseId] &&
+            lastPerf[exerciseId][`${field}${seriesIndex}`]
+              ? lastPerf[exerciseId][`${field}${seriesIndex}`]
+              : "";
+          setInputValues((prevInputValues: any) => ({
+            ...prevInputValues,
+            [key]: newValue,
+          }));
         };
+
         return (
           <div key={exercise.id} className="container-exo">
             <h3>
@@ -188,283 +203,171 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
                     <tr key={seriesIndex}>
                       <td>{seriesIndex + 1}</td>
                       <td className="container-input-unilateral">
-                        <div className="input-validation">
-                          <input
-                            type="number"
-                            step="0.01"
-                            name={`weight${seriesIndex}`}
-                            id={`weight${seriesIndex}`}
-                            onChange={handleInputChange(
+                        <InputFormTraining
+                          type="number"
+                          step="0.01"
+                          name={`weight${seriesIndex}`}
+                          id={`weight${seriesIndex}`}
+                          onChange={handleInputChange(
+                            exercise.id,
+                            seriesIndex,
+                            "weight"
+                          )}
+                          value={
+                            inputValues[
+                              `${exercise.id}-weight${seriesIndex}`
+                            ] || ""
+                          }
+                          placeholder={
+                            lastPerf[exercise.id] &&
+                            lastPerf[exercise.id][`weight${seriesIndex}`]
+                          }
+                          lastPerf={
+                            lastPerf[exercise.id] &&
+                            lastPerf[exercise.id][`weight${seriesIndex}`]
+                          }
+                          onClick={() =>
+                            validatePlaceholder(
                               exercise.id,
                               seriesIndex,
                               "weight"
+                            )
+                          }
+                        />
+                        {unilateral && (
+                          <InputFormTraining
+                            type="number"
+                            step="0.01"
+                            name={`weight${seriesIndex}-unilateral`}
+                            id={`weight${seriesIndex}-unilateral`}
+                            onChange={handleInputChange(
+                              exercise.id,
+                              seriesIndex,
+                              "weight-unilateral"
                             )}
                             value={
                               inputValues[
-                                `${exercise.id}-weight${seriesIndex}`
-                              ] === undefined ||
-                              inputValues[
-                                `${exercise.id}-weight${seriesIndex}`
-                              ] === null
-                                ? ""
-                                : inputValues[
-                                    `${exercise.id}-weight${seriesIndex}`
-                                  ]
+                                `${exercise.id}-weight-unilateral${seriesIndex}`
+                              ] || ""
                             }
                             placeholder={
                               lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`weight${seriesIndex}`]
-                                ? lastPerf[exercise.id][`weight${seriesIndex}`]
-                                : ""
+                              lastPerf[exercise.id][
+                                `weight${seriesIndex}-unilateral`
+                              ]
                             }
-                          />
-                          {lastPerf[exercise.id] &&
-                          lastPerf[exercise.id][`weight${seriesIndex}`] ? (
-                            <Icon
-                              nameImg={
-                                inputValues[
-                                  `${exercise.id}-weight${seriesIndex}`
-                                ]
-                                  ? "validation-white"
-                                  : "validation"
-                              }
-                              onClick={() =>
-                                validatePlaceholder(
-                                  exercise.id,
-                                  seriesIndex,
-                                  "weight"
-                                )
-                              }
-                            />
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                        {unilateral && (
-                          <div className="input-validation">
-                            <input
-                              type="number"
-                              step="0.01"
-                              name={`weight${seriesIndex}-unilateral`}
-                              id={`weight${seriesIndex}-unilateral`}
-                              onChange={handleInputChange(
+                            lastPerf={
+                              lastPerf[exercise.id] &&
+                              lastPerf[exercise.id][
+                                `weight${seriesIndex}-unilateral`
+                              ]
+                            }
+                            onClick={() =>
+                              validatePlaceholder(
                                 exercise.id,
                                 seriesIndex,
                                 "weight-unilateral"
-                              )}
-                              value={
-                                inputValues[
-                                  `${exercise.id}-weight${seriesIndex}-unilateral`
-                                ] === undefined ||
-                                inputValues[
-                                  `${exercise.id}-weight${seriesIndex}-unilateral`
-                                ] === null
-                                  ? ""
-                                  : inputValues[
-                                      `${exercise.id}-weight${seriesIndex}-unilateral`
-                                    ]
-                              }
-                              placeholder={
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][
-                                  `weight${seriesIndex}-unilateral`
-                                ]
-                                  ? lastPerf[exercise.id][
-                                      `weight${seriesIndex}-unilateral`
-                                    ]
-                                  : ""
-                              }
-                            />
-                            {lastPerf[exercise.id] &&
-                            lastPerf[exercise.id][
-                              `weight${seriesIndex}-unilateral`
-                            ] ? (
-                              <Icon
-                                nameImg={
-                                  inputValues[
-                                    `${exercise.id}-weight-unilateral${seriesIndex}`
-                                  ]
-                                    ? "validation-white"
-                                    : "validation"
-                                }
-                                onClick={() =>
-                                  validatePlaceholder(
-                                    exercise.id,
-                                    seriesIndex,
-                                    "weight-unilateral"
-                                  )
-                                }
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </div>
+                              )
+                            }
+                          />
                         )}
                       </td>
                       <td className="container-input-unilateral">
-                        <div className="input-validation">
-                          <input
-                            type="number"
-                            step="0.01"
-                            name={`reps${seriesIndex}`}
-                            id={`reps${seriesIndex}`}
-                            onChange={handleInputChange(
+                        <InputFormTraining
+                          type="number"
+                          step="0.01"
+                          name={`reps${seriesIndex}`}
+                          id={`reps${seriesIndex}`}
+                          onChange={handleInputChange(
+                            exercise.id,
+                            seriesIndex,
+                            "reps"
+                          )}
+                          value={
+                            inputValues[`${exercise.id}-reps${seriesIndex}`] ||
+                            ""
+                          }
+                          placeholder={
+                            lastPerf[exercise.id] &&
+                            lastPerf[exercise.id][`reps${seriesIndex}`]
+                          }
+                          lastPerf={
+                            lastPerf[exercise.id] &&
+                            lastPerf[exercise.id][`reps${seriesIndex}`]
+                          }
+                          onClick={() =>
+                            validatePlaceholder(
                               exercise.id,
                               seriesIndex,
                               "reps"
-                            )}
-                            value={
-                              inputValues[
-                                `${exercise.id}-reps${seriesIndex}`
-                              ] === undefined ||
-                              inputValues[
-                                `${exercise.id}-reps${seriesIndex}`
-                              ] === null
-                                ? ""
-                                : inputValues[
-                                    `${exercise.id}-reps${seriesIndex}`
-                                  ]
-                            }
-                            placeholder={
-                              lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`reps${seriesIndex}`]
-                                ? lastPerf[exercise.id][`reps${seriesIndex}`]
-                                : ""
-                            }
-                          />
-                          {lastPerf[exercise.id] &&
-                          lastPerf[exercise.id][`reps${seriesIndex}`] ? (
-                            <Icon
-                              nameImg={
-                                inputValues[`${exercise.id}-reps${seriesIndex}`]
-                                  ? "validation-white"
-                                  : "validation"
-                              }
-                              onClick={() =>
-                                validatePlaceholder(
-                                  exercise.id,
-                                  seriesIndex,
-                                  "reps"
-                                )
-                              }
-                            />
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
+                            )
+                          }
+                        />
                         {unilateral && (
-                          <div className="input-validation">
-                            <input
-                              type="number"
-                              step="0.01"
-                              name={`reps${seriesIndex}-unilateral`}
-                              id={`reps${seriesIndex}-unilateral`}
-                              onChange={handleInputChange(
-                                exercise.id,
-                                seriesIndex,
-                                "reps-unilateral"
-                              )}
-                              value={
-                                inputValues[
-                                  `${exercise.id}-reps${seriesIndex}-unilateral`
-                                ] === undefined ||
-                                inputValues[
-                                  `${exercise.id}-reps${seriesIndex}-unilateral`
-                                ] === null
-                                  ? ""
-                                  : inputValues[
-                                      `${exercise.id}-reps${seriesIndex}-unilateral`
-                                    ]
-                              }
-                              placeholder={
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][
-                                  `reps${seriesIndex}-unilateral`
-                                ]
-                                  ? lastPerf[exercise.id][
-                                      `reps${seriesIndex}-unilateral`
-                                    ]
-                                  : ""
-                              }
-                            />
-                            {lastPerf[exercise.id] &&
-                            lastPerf[exercise.id][
-                              `reps${seriesIndex}-unilateral`
-                            ] ? (
-                              <Icon
-                                nameImg={
-                                  inputValues[
-                                    `${exercise.id}-reps-unilateral${seriesIndex}`
-                                  ]
-                                    ? "validation-white"
-                                    : "validation"
-                                }
-                                onClick={() =>
-                                  validatePlaceholder(
-                                    exercise.id,
-                                    seriesIndex,
-                                    "reps-unilateral"
-                                  )
-                                }
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                        )}
-                      </td>
-                      <td className="container-input-unilateral">
-                        <div className="input-validation">
-                          <input
+                          <InputFormTraining
                             type="number"
                             step="0.01"
-                            name={`interval${seriesIndex}`}
-                            id={`interval${seriesIndex}`}
+                            name={`reps${seriesIndex}-unilateral`}
+                            id={`reps${seriesIndex}-unilateral`}
                             onChange={handleInputChange(
                               exercise.id,
                               seriesIndex,
-                              "int"
+                              "reps-unilateral"
                             )}
                             value={
                               inputValues[
-                                `${exercise.id}-int${seriesIndex}`
-                              ] === undefined ||
-                              inputValues[
-                                `${exercise.id}-int${seriesIndex}`
-                              ] === null
-                                ? ""
-                                : inputValues[
-                                    `${exercise.id}-int${seriesIndex}`
-                                  ]
+                                `${exercise.id}-reps-unilateral${seriesIndex}`
+                              ] || ""
                             }
                             placeholder={
                               lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`int${seriesIndex}`]
-                                ? lastPerf[exercise.id][`int${seriesIndex}`]
-                                : ""
+                              lastPerf[exercise.id][
+                                `reps${seriesIndex}-unilateral`
+                              ]
+                            }
+                            lastPerf={
+                              lastPerf[exercise.id] &&
+                              lastPerf[exercise.id][
+                                `reps${seriesIndex}-unilateral`
+                              ]
+                            }
+                            onClick={() =>
+                              validatePlaceholder(
+                                exercise.id,
+                                seriesIndex,
+                                "reps-unilateral"
+                              )
                             }
                           />
-                          {lastPerf[exercise.id] &&
-                          lastPerf[exercise.id][`int${seriesIndex}`] ? (
-                            <Icon
-                              nameImg={
-                                inputValues[`${exercise.id}-int${seriesIndex}`]
-                                  ? "validation-white"
-                                  : "validation"
-                              }
-                              onClick={() =>
-                                validatePlaceholder(
-                                  exercise.id,
-                                  seriesIndex,
-                                  "int"
-                                )
-                              }
-                            />
-                          ) : (
-                            ""
+                        )}
+                      </td>
+                      <td className="container-input-unilateral">
+                        <InputFormTraining
+                          type="number"
+                          step="0.01"
+                          name={`interval${seriesIndex}`}
+                          id={`interval${seriesIndex}`}
+                          onChange={handleInputChange(
+                            exercise.id,
+                            seriesIndex,
+                            "int"
                           )}
-                        </div>
+                          value={
+                            inputValues[`${exercise.id}-int${seriesIndex}`] ||
+                            ""
+                          }
+                          placeholder={
+                            lastPerf[exercise.id] &&
+                            lastPerf[exercise.id][`int${seriesIndex}`]
+                          }
+                          lastPerf={
+                            lastPerf[exercise.id] &&
+                            lastPerf[exercise.id][`int${seriesIndex}`]
+                          }
+                          onClick={() =>
+                            validatePlaceholder(exercise.id, seriesIndex, "int")
+                          }
+                        />
                       </td>
                     </tr>
                   )
@@ -473,8 +376,14 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
             </table>
             <textarea
               className="note-exo"
-              placeholder="something to note about this exercice?"
-              value={noteExo[exercise.id] || ""}
+              placeholder="Something to note about this exercise?"
+              value={
+                lastPerf[exercise.id] &&
+                lastPerf[exercise.id]["noteExo"] &&
+                lastPerf[exercise.id]["noteExo"][`exoPerso${exercise.name}`]
+                  ? lastPerf[exercise.id]["noteExo"][`exoPerso${exercise.name}`]
+                  : noteExo[exercise.id] || ""
+              }
               onChange={handleNoteChange(exercise.id)}
             ></textarea>
           </div>
@@ -524,7 +433,7 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
             setIsModalVisible(false);
             setIsTimerActive(true);
           }}
-          message="Are you sure you want to finish your wokrout now and save the performances?"
+          message="Are you sure you want to finish your workout now and save the performances?"
         />
       </div>
     </form>
