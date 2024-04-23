@@ -3,11 +3,18 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import FormWorkoutCreate from "../../components/forms/FormWorkoutCreate";
 import "./workout.css";
-import { useEffect, useState } from "react";
-import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
+import { useContext, useEffect, useState } from "react";
+import {
+  fetchDataFromDBToLocalStorage,
+  fetchOnlyThisIdToLocalStorage,
+} from "@/firebase/db/db";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import CardWorkout from "../../components/cards/CardWorkout";
-
+import { useAuthContext } from "@/context/AuthContext";
+interface UserData {
+  email: string;
+  uid: string;
+}
 interface WorkoutType {
   name: string;
   id: string;
@@ -20,17 +27,18 @@ interface Workouts {
   [key: string]: WorkoutType;
 }
 export default function Page() {
+  const { user } = useAuthContext() as { user: UserData };
   const [workouts, setWorkouts] = useState<Workouts>({});
   useEffect(() => {
     const localstorage = getItemFromLocalStorage("workouts");
     if (!localstorage) {
-      let dbworkouts = fetchDataFromDBToLocalStorage("workouts");
+      let dbworkouts = fetchOnlyThisIdToLocalStorage("workouts", user.uid);
       setWorkouts(dbworkouts as unknown as Workouts);
     }
     if (localstorage) {
       setWorkouts(localstorage);
     }
-  }, []);
+  }, [setWorkouts]);
   return (
     <>
       <Header />

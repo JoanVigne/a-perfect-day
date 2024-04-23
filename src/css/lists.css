@@ -1,12 +1,3 @@
-/* 
-.task .title-inputs .count button {
-  margin: 2px;
-  width: 37px;
-  height: 25px;
-  font-size: 10px;
-  transition: background-color 0.8s ease-out;
-} */
-
 button.save {
   margin: 2px;
   min-width: 35px;

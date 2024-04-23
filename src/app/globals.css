@@ -79,6 +79,7 @@ button {
 }
 input {
   all: unset;
+  font-size: 17px;
 }
 
 .container {
