@@ -21,3 +21,8 @@
 .rotate-down {
   transform: translateX(-10%) rotate(-0deg);
 }
+
+.icon.null {
+  width: 12px;
+  height: 12px;
+}

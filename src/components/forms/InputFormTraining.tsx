@@ -29,16 +29,25 @@ const InputFormTraining: React.FC<Props> = ({
     lastPerf: any,
     placeholder: string
   ) => {
-    if (value === "") {
-      return "validation";
-    } else if (value > lastPerf) {
-      return "fire";
-    } else if (value === lastPerf) {
-      return "validation-white";
-    } else if (value < lastPerf) {
-      return "sad";
+    if (lastPerf) {
+      if (value === "") {
+        return "validation";
+      } else if (value > lastPerf) {
+        return "fire";
+      } else if (value === lastPerf) {
+        return "validation-white";
+      } else if (value < lastPerf) {
+        return "sad";
+      }
     }
-    return "delete"; // default return value
+    if (!lastPerf) {
+      if (value !== "") {
+        return "validation-white";
+      } else {
+        return "null";
+      }
+    }
+    return "null";
   };
   return (
     <div className="input-validation">
@@ -51,14 +60,11 @@ const InputFormTraining: React.FC<Props> = ({
         value={value}
         placeholder={placeholder}
       />
-      {lastPerf ? (
-        <Icon
-          nameImg={getIconName(value, lastPerf, placeholder)}
-          onClick={onClick}
-        />
-      ) : (
-        ""
-      )}
+
+      <Icon
+        nameImg={getIconName(value, lastPerf, placeholder)}
+        onClick={onClick}
+      />
     </div>
   );
 };
