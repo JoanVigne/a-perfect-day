@@ -30,14 +30,20 @@ export default function Page() {
   const { user } = useAuthContext() as { user: UserData };
   const [workouts, setWorkouts] = useState<Workouts>({});
   useEffect(() => {
-    const localstorage = getItemFromLocalStorage("workouts");
-    if (!localstorage) {
-      let dbworkouts = fetchOnlyThisIdToLocalStorage("workouts", user.uid);
-      setWorkouts(dbworkouts as unknown as Workouts);
-    }
-    if (localstorage) {
-      setWorkouts(localstorage);
-    }
+    const fetchWorkouts = async () => {
+      const localstorage = getItemFromLocalStorage("workouts");
+      if (!localstorage) {
+        let dbworkouts = await fetchOnlyThisIdToLocalStorage(
+          "workouts",
+          user.uid
+        );
+        setWorkouts(dbworkouts as unknown as Workouts);
+      } else {
+        setWorkouts(localstorage);
+      }
+    };
+
+    fetchWorkouts();
   }, [setWorkouts]);
   return (
     <>
