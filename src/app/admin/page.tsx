@@ -6,6 +6,8 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import "./admin.css";
 import Modal from "react-modal";
 import IconOpen from "@/components/ui/IconOpen";
+import FormExo from "./FormExo";
+import FormWorkoutCommon from "./FormWorkoutCommon";
 
 interface UserData {
   email: string;
@@ -52,8 +54,11 @@ const Page: React.FC = () => {
   return (
     <div>
       <h1>Welcome, Admin!</h1>
+      <FormExo />
+      <FormWorkoutCommon />
       <div className="container">
         <div className="smaller-container">
+          <h2>USERS</h2>
           <button
             onClick={async () => {
               const usersDB = await fetchAllData("users");
@@ -63,11 +68,12 @@ const Page: React.FC = () => {
             Fetch user infos ( id, list of today, favorite lists and nickname)
           </button>
 
-          <h2>All the users :</h2>
+          <h3>All the users :</h3>
           <ul>
             {users.map((user: any, index: number) => (
               <li key={index}>
                 <h3>{user.nickname}</h3>
+                <h3>id: {user.id.substring(0, 10)}</h3>
                 <button
                   onClick={() => {
                     checkThisFavUser(user);
@@ -88,79 +94,43 @@ const Page: React.FC = () => {
             {ThisFavUser && (
               <div>
                 <fieldset>
-                  <h4>Name : {ThisFavUser.nickname}</h4>
-                  <h4>id : {ThisFavUser.id}</h4>
+                  <h4>Nickname : {ThisFavUser.nickname}</h4>
+                  <h4 style={{ wordBreak: "break-all" }}>
+                    complete id : {ThisFavUser.id}
+                  </h4>
                 </fieldset>
                 {ThisFavUser.todayList && (
                   <>
                     <fieldset>
-                      <h3>What's up today ?</h3>
-                      {Object.values(ThisFavUser.todayList).map(
-                        (task: any, index: number) => (
-                          <div key={index}>
-                            {typeof task === "string" ? (
-                              `date : ${task}`
-                            ) : (
-                              <h4>
-                                - {task.name} :
-                                {typeof task.unit === "boolean" ? (
-                                  <>{task.unit ? "done" : "not done"}</>
-                                ) : (
-                                  <>
-                                    {task.count} {task.unit}
-                                  </>
-                                )}
-                              </h4>
-                            )}
-                          </div>
-                        )
-                      )}
+                      <h3>List routine of last connection</h3>
+                      <ul>
+                        {Object.values(ThisFavUser.todayList).map(
+                          (task: any, index: number) => (
+                            <li key={index}>
+                              {typeof task === "string" ? (
+                                `date : ${task.substring(0, 10)}`
+                              ) : (
+                                <>
+                                  - {task.name} :
+                                  {typeof task.unit === "boolean" ? (
+                                    <span>
+                                      {" "}
+                                      {task.unit ? "done" : "not done"}
+                                    </span>
+                                  ) : (
+                                    <span>
+                                      {task.count} {task.unit}
+                                    </span>
+                                  )}
+                                </>
+                              )}
+                            </li>
+                          )
+                        )}
+                      </ul>
                     </fieldset>
                   </>
                 )}
-
-                {ThisFavUser.lists && (
-                  <fieldset>
-                    <h3>
-                      Favorites :
-                      <IconOpen
-                        show={showFavorites}
-                        setShow={setShowFavorites}
-                      />
-                    </h3>
-                    <ul className={showFavorites ? "active" : "hidden"}>
-                      {Object.keys(ThisFavUser.lists).map(
-                        (favlist: any, index: number) => (
-                          <li key={index}>
-                            <h4>{favlist}</h4>
-                            <IconOpen
-                              show={showThisFav[index] || false}
-                              setShow={(value: boolean) => {
-                                const newShowThisFav = [...showThisFav];
-                                newShowThisFav[index] = value;
-                                setShowThisFav(newShowThisFav);
-                              }}
-                            />
-                            <ul
-                              className={
-                                showThisFav[index] ? "active" : "hidden"
-                              }
-                            >
-                              {Object.values(ThisFavUser.lists[favlist]).map(
-                                (task: any, index: number) => (
-                                  <li key={index}>
-                                    <h5>{task.name}</h5>
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </fieldset>
-                )}
-                <fieldset></fieldset>
               </div>
             )}
           </Modal>

@@ -26,3 +26,8 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
+.list-exo ul li {
+  flex-direction: column;
+  align-items: flex-start;
+}
