@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import LineChart from "../../../components/ui/LineChart";
-import LineChart0to100 from "../../../components/ui/LineChart0to100";
-import LineChart0to60 from "../../../components/ui/LineChart0to60";
+import ChartLine0to100 from "../../../components/ui/ChartLine0to100";
+import ChartLine0to60 from "../../../components/ui/ChartLine0to60";
 import ChartLine from "@/components/ui/ChartLine";
 
 interface Perf {
@@ -138,7 +137,6 @@ const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
           tileClassName={() => ""}
           days={days}
         />
-        <LineChart thisChall={thisChall} />
         {thisChall &&
           thisChall.perf &&
           thisChall.selectedImprovement.map((improvement, index) => {
@@ -161,7 +159,7 @@ const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
             if (timeUnits.includes(improvement)) {
               return (
                 <li key={improvement}>
-                  <LineChart0to60
+                  <ChartLine0to60
                     perf={thisChall.perf}
                     selectedImprovement={improvement}
                     color={index}
@@ -171,7 +169,7 @@ const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
             } else {
               return (
                 <li key={improvement}>
-                  <LineChart0to100
+                  <ChartLine0to100
                     perf={thisChall.perf}
                     selectedImprovement={improvement}
                     color={index}

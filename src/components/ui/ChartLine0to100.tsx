@@ -43,7 +43,7 @@ const colors = [
     borderColor: "rgb(153, 102, 255)",
   },
 ];
-const LineChart0to100: React.FC<Props> = ({
+const ChartLine0to100: React.FC<Props> = ({
   perf,
   selectedImprovement,
   color,
@@ -115,7 +115,7 @@ const LineChart0to100: React.FC<Props> = ({
               <option value="7">Last week</option>
               <option value="30">Last month</option>
               <option value="90">Last 3 months</option>
-              <option value="all">All</option>
+              <option value="365">Last year</option>
             </select>
           </div>
           <Line data={data} options={options} key={renderKey} />
@@ -125,4 +125,4 @@ const LineChart0to100: React.FC<Props> = ({
   );
 };
 
-export default LineChart0to100;
+export default ChartLine0to100;
