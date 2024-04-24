@@ -31,7 +31,7 @@ const InputFormTraining: React.FC<Props> = ({
   ) => {
     if (lastPerf) {
       if (value === "") {
-        return "validation";
+        return "equal";
       } else if (value > lastPerf) {
         return "fire";
       } else if (value === lastPerf) {

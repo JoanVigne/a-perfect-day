@@ -1,5 +1,5 @@
 "use client";
-import TemporaryMessage from "../../../components/ui/TemporaryMessage";
+import TemporaryMessage from "./TemporaryMessage";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 
@@ -25,7 +25,7 @@ interface Props {
   data: { [shortDate: string]: DayData };
 }
 
-const PreviousDay: React.FC<Props> = ({ date, data }) => {
+const CalendarRoutine: React.FC<Props> = ({ date, data }) => {
   // calendar :
   const [value, onChange] = useState<Value>(new Date());
   //
@@ -77,4 +77,4 @@ const PreviousDay: React.FC<Props> = ({ date, data }) => {
   );
 };
 
-export default PreviousDay;
+export default CalendarRoutine;

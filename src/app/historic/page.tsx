@@ -6,18 +6,16 @@ import { checkDB } from "@/firebase/db/db";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
-import BarChart from "./components/BarChart";
 import Footer from "@/components/Footer";
 import { getItemFromLocalStorage } from "../../utils/localstorage";
-import LineChart from "./components/LineChart";
 
-import Streak from "./components/Streak";
-import Count from "./components/Count";
-import LastTime from "./components/LastTime";
-import HighestScore from "./components/HighestScore";
+import Streak from "../../components/cards/historicPage/Streak";
+import Count from "../../components/cards/historicPage/Count";
+import LastTime from "../../components/cards/historicPage/LastTime";
+import HighestScore from "../../components/cards/historicPage/HighestScore";
 import Header from "@/components/Header";
 import { findTasksByType } from "./utils/utils";
-import PreviousDay from "./components/PreviousDay";
+import CalendarRoutine from "../../components/ui/CalendarRoutine";
 import { useRouter } from "next/navigation";
 import IconOpen from "@/components/ui/IconOpen";
 
@@ -198,19 +196,10 @@ const Page = () => {
           </div>
         </div>
 
-        {/*  <h2>TEST</h2>
-        {topThreeTasks.map((task) => (
-          <LineChart key={task} data={sortedByDate} task={task} />
-        ))}
-
-        <h2>Your 3 most frequent tasks</h2>
-        {topThreeTasks.map((task) => (
-          <BarChart key={task} data={sortedByDate} task={task} />
-        ))} */}
         <div className="container">
           <h2>Change a data in my historic</h2>
           <p>par task ? par date ? </p>
-          {dataHistoric && <PreviousDay data={dataHistoric} date="rien" />}
+          {dataHistoric && <CalendarRoutine data={dataHistoric} date="rien" />}
         </div>
       </main>
       <Footer />

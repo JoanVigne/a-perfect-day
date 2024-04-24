@@ -1,7 +1,7 @@
 import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
-import FormModifyPreviousDays from "./FormModifyPreviousDays";
+import FormModifyPreviousDays from "../forms/FormModifyPreviousDays";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];

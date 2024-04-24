@@ -2,10 +2,10 @@
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import Footer from "@/components/Footer";
 import React, { useEffect, useState } from "react";
-import FormModifyChall from "./components/FormModifyChall";
-import FormImproved from "./components/FormImproved";
-import CalendarChall from "./components/CalendarChall";
-import ShowPerfs from "./components/ShowPerfs";
+import FormModifyChall from "../../../components/forms/FormModifyChall";
+import FormImproved from "../../../components/forms/FormImproved";
+import CalendarChall from "../../../components/ui/CalendarChall";
+import ShowPerfs from "./ShowPerfs";
 import Header from "@/components/Header";
 
 const Page = () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { findTask } from "../utils/utils";
+import { findTask } from "../../../app/historic/utils/utils";
 import Icon from "@/components/ui/Icon";
 
 const LastTime = ({ data, taskName }: { data: any; taskName: string }) => {

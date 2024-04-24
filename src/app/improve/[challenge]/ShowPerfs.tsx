@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./lineChart.css";
-import LineChart from "./LineChart";
-import LineChart0to100 from "./LineChart0to100";
-import LineChart0to60 from "./LineChart0to60";
+import LineChart from "../../../components/ui/LineChart";
+import LineChart0to100 from "../../../components/ui/LineChart0to100";
+import LineChart0to60 from "../../../components/ui/LineChart0to60";
+import ChartLine from "@/components/ui/ChartLine";
 
 interface Perf {
   [key: string]: any;
@@ -23,6 +23,33 @@ interface Props {
 const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
   const [latestPerformance, setLatestPerformance] = useState<Perf | null>(null);
 
+  const [data, setData] = useState<any>({ datasets: [] });
+  const colors = [
+    {
+      backgroundColor: "rgba(255, 99, 132, 0.2)",
+      borderColor: "rgb(255, 99, 132)",
+    },
+    {
+      backgroundColor: "rgba(54, 162, 235, 0.2)",
+      borderColor: "rgb(54, 162, 235)",
+    },
+    {
+      backgroundColor: "rgba(1, 107, 1, 1)",
+      borderColor: "rgba(1, 107, 1, 1)",
+    },
+    {
+      backgroundColor: "rgba(255, 205, 86, 0.2)",
+      borderColor: "rgb(255, 205, 86)",
+    },
+    {
+      backgroundColor: "rgba(75, 192, 192, 0.2)",
+      borderColor: "rgb(75, 192, 192)",
+    },
+    {
+      backgroundColor: "rgba(153, 102, 255, 0.2)",
+      borderColor: "rgb(153, 102, 255)",
+    },
+  ];
   useEffect(() => {
     if (thisChall.perf) {
       const performances = Object.values(thisChall.perf);
@@ -35,7 +62,47 @@ const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     )[0];
   }
+  // functions for ChartLine :
+  const [days, setDays] = useState("90");
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    setDays(value === "all" ? "365" : value);
+  };
+  const generateDatasets = (improvements: string[], dates: string[]) => {
+    if (!improvements || !dates || !thisChall.perf) {
+      return [];
+    }
+    return improvements.map((improvement, index) => ({
+      label: improvement,
+      data: dates.map((date) => {
+        const value = thisChall.perf[date]?.[improvement];
+        if (typeof value === "string") {
+          const valueCheck = value.replace(",", ".");
+          return !isNaN(Number(valueCheck)) ? Number(valueCheck) : value;
+        }
+        return value;
+      }),
+      fill: false,
+      hidden: false,
+      spanGaps: true,
+      backgroundColor: colors[index % colors.length].backgroundColor,
+      borderColor: colors[index % colors.length].borderColor,
+    }));
+  };
 
+  const toggleDataset = (index: number) => {
+    setData((currentData: any) => ({
+      ...currentData,
+      datasets: currentData.datasets.map(
+        (dataset: any, datasetIndex: number) => {
+          if (datasetIndex === index) {
+            return { ...dataset, hidden: !dataset.hidden };
+          }
+          return dataset;
+        }
+      ),
+    }));
+  };
   return (
     <div>
       {thisChall.selectedImprovement &&
@@ -61,6 +128,16 @@ const ShowPerfs: React.FC<Props> = ({ thisChall }) => {
         <p>Here will be your performances in charts.</p>
       )}
       <ul>
+        <ChartLine
+          data={thisChall.perf}
+          task={thisChall.selectedImprovement}
+          onSelectChange={handleSelectChange}
+          formatDate={(date) => `${date.getMonth() + 1}-${date.getDate()}`}
+          generateDatasets={generateDatasets}
+          toggleDataset={toggleDataset}
+          tileClassName={() => ""}
+          days={days}
+        />
         <LineChart thisChall={thisChall} />
         {thisChall &&
           thisChall.perf &&
