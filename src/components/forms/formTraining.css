@@ -1,5 +1,6 @@
 .form-training {
   margin-bottom: 90px;
+  border: none;
 }
 
 header.workout-header {
@@ -13,15 +14,31 @@ header.workout-header {
 .manual {
   border: 1px var(--color-active-link) solid;
   text-align: center;
+  padding: 5px;
+}
+.container-exo {
+  background-color: var(--color-grey);
+  margin: 15px 0;
+}
+.container-exo h3 {
+  justify-content: flex-start;
+  padding: 2px 8px;
+  background-color: var(--color-black);
+}
+.container-exo .unilateral-button {
+  background-color: var(--color-dark-green);
   padding: 3px;
+  margin: 3px;
 }
 .container-exo table {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 3px;
 }
 
 .container-exo table thead th {
   width: 25%;
+  font-size: 13px;
 }
 .show-last-perf {
   display: block;
@@ -37,12 +54,13 @@ header.workout-header {
   padding: 2px;
   border: 1px solid var(--color-active-link);
   min-width: 20px;
+  margin: 3px;
 }
 
 .container-exo th,
 .container-exo td {
   border: 1px solid var(--color-black);
-  padding: 5px;
+  padding: 4px 5px;
   text-align: center;
 }
 .container-exo .container-input-unilateral .input-validation {
@@ -56,10 +74,6 @@ header.workout-header {
   input {
   border-top: 1px var(--color-white) solid;
 }
-.container-exo th {
-  background-color: var(--color-dark-grey);
-  color: var(--color-white);
-}
 
 .container-exo td input[type="number"] {
   max-width: 40px;
@@ -72,6 +86,12 @@ header.workout-header {
 
 .form-training .note-exo {
   height: 35px;
+  width: 100%;
+  margin: 0;
+  border: none;
+  box-sizing: border-box; /* Add this line */
+  padding: 0 10px;
+  background-color: var(--color-dark-grey);
 }
 .form-training .buttons-in-line .finish {
   margin: auto;

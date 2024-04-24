@@ -27,7 +27,7 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
   const [noteExo, setNoteExo] = useState<{ [key: string]: string }>({});
   const [inputValues, setInputValues] = useState<Record<string, number>>({});
   const handleNoteChange =
-    (exerciseId: string) => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    (exerciseId: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setNoteExo((prevNoteExo) => ({
         ...prevNoteExo,
         [exerciseId]: event.target.value,
@@ -128,7 +128,7 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
         {lastPerf && (
           <p>
             Your last performances are already pre-filled. Press the button
-            equal if you do the same.
+            equal if you do the same, type if you did different.
           </p>
         )}
       </div>
@@ -161,38 +161,41 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
           <div key={exercise.id} className="container-exo">
             <h3>
               {exercise.name}
-              <button type="button" onClick={() => setUnilateral(!unilateral)}>
+              <button
+                className="unilateral-button"
+                type="button"
+                onClick={() => setUnilateral(!unilateral)}
+              >
                 unilateral?
               </button>
             </h3>
             {exercise.equipmentt && <h3>equipment: {exercise.equipment}</h3>}
-            <h3>
-              Number of Series: {numberOfSeries}
-              <div className="buttonsPlusMinusSeries">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setNumberOfSeries((prevSeries) =>
-                      prevSeries > 0 ? prevSeries - 1 : 0
-                    )
-                  }
-                >
-                  --
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setNumberOfSeries((prevSeries) => prevSeries + 1)
-                  }
-                >
-                  ++
-                </button>
-              </div>
-            </h3>
             <table>
               <thead>
                 <tr>
-                  <th>Serie</th>
+                  <th>
+                    Serie{" "}
+                    <div className="buttonsPlusMinusSeries">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setNumberOfSeries((prevSeries) =>
+                            prevSeries > 0 ? prevSeries - 1 : 0
+                          )
+                        }
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setNumberOfSeries((prevSeries) => prevSeries + 1)
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </th>
                   <th>Weight</th>
                   <th>Reps</th>
                   <th>Rest (ex:1.3)</th>
@@ -375,9 +378,10 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
                 )}
               </tbody>
             </table>
-            <textarea
+
+            <input
               className="note-exo"
-              placeholder="Something to note about this exercise?"
+              placeholder={`Note about ${exercise.name}?`}
               value={
                 lastPerf[exercise.id] &&
                 lastPerf[exercise.id]["noteExo"] &&
@@ -386,7 +390,7 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
                   : noteExo[exercise.id] || ""
               }
               onChange={handleNoteChange(exercise.id)}
-            ></textarea>
+            />
           </div>
         );
       })}

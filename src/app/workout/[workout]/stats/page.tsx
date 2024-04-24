@@ -110,12 +110,15 @@ const page = () => {
           <h2>{workout.description}</h2>
           <h3>Exos :</h3>
           <ul>
-            {workout.exercices.map((exo, index) => (
-              <li key={index} style={{ display: "inline-flex" }}>
-                {exo.name}
-                {index !== workout.exercices.length - 1 && <span>,&nbsp;</span>}
-              </li>
-            ))}
+            {workout.exercices &&
+              workout.exercices.map((exo, index) => (
+                <li key={index} style={{ display: "inline-flex" }}>
+                  {exo.name}
+                  {index !== workout.exercices.length - 1 && (
+                    <span>,&nbsp;</span>
+                  )}
+                </li>
+              ))}
           </ul>
           <div className="container-exo">
             <h3>Performances:</h3>
