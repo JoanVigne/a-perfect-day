@@ -27,7 +27,7 @@ interface Props {
   task: string;
 }
 
-const BarChart: React.FC<Props> = ({ data, task }) => {
+const ChartBar: React.FC<Props> = ({ data, task }) => {
   const taskData: { [date: string]: number } = {};
 
   let unit: string | undefined;
@@ -78,4 +78,4 @@ const BarChart: React.FC<Props> = ({ data, task }) => {
   );
 };
 
-export default BarChart;
+export default ChartBar;

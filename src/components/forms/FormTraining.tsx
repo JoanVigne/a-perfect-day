@@ -6,7 +6,6 @@ import ModalConfirmSend from "../modals/ModalConfirmSend";
 import Button from "../ui/Button";
 import "./formTraining.css";
 import TimeTotal from "../ui/TimeTotal";
-import Icon from "../ui/Icon";
 import InputFormTraining from "./InputFormTraining";
 
 interface Props {
@@ -253,13 +252,13 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
                             placeholder={
                               lastPerf[exercise.id] &&
                               lastPerf[exercise.id][
-                                `weight${seriesIndex}-unilateral`
+                                `weight-unilateral${seriesIndex}`
                               ]
                             }
                             lastPerf={
                               lastPerf[exercise.id] &&
                               lastPerf[exercise.id][
-                                `weight${seriesIndex}-unilateral`
+                                `weight-unilateral${seriesIndex}`
                               ]
                             }
                             onClick={() =>
@@ -322,13 +321,13 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
                             placeholder={
                               lastPerf[exercise.id] &&
                               lastPerf[exercise.id][
-                                `reps${seriesIndex}-unilateral`
+                                `reps-unilateral${seriesIndex}`
                               ]
                             }
                             lastPerf={
                               lastPerf[exercise.id] &&
                               lastPerf[exercise.id][
-                                `reps${seriesIndex}-unilateral`
+                                `reps-unilateral${seriesIndex}`
                               ]
                             }
                             onClick={() =>
