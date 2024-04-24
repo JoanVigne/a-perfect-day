@@ -10,7 +10,11 @@ header.workout-header {
   height: 50px;
   background-color: var(--color-grey);
 }
-
+.manual {
+  border: 1px var(--color-active-link) solid;
+  text-align: center;
+  padding: 3px;
+}
 .container-exo table {
   width: 100%;
   border-collapse: collapse;

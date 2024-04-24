@@ -90,8 +90,6 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
   const [lastPerf, setLastPerf] = useState<any>({});
 
   function findLastPerf() {
-    console.log("previous workouts :", previousworkouts);
-    console.log("thisWorkout :", thisWorkout);
     Object.values(previousworkouts).forEach((workout: any) => {
       if (workout.id === thisWorkout.id) {
         if (workout.perf) {
@@ -102,7 +100,6 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
           const maxDateStr = maxDate.toISOString().substring(0, 10);
           const lastPerf = workout.perf[maxDateStr];
           setLastPerf(lastPerf);
-          console.log("lastperf :", lastPerf);
           if (lastPerf.noteExo) {
             setNoteExo(lastPerf.noteExo);
           }
@@ -127,14 +124,14 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
           onTimeFinish={setFinalTime}
         />
       </div>
-
-      {lastPerf && (
-        <p>
-          If you did the same perf as it's written in the input, validate the
-          value with the button
-        </p>
-      )}
-      <p>Rest is in minutes. example 1.2 for 80 seconds.</p>
+      <div className="manual">
+        {lastPerf && (
+          <p>
+            Your last performances are already pre-filled. Press the button
+            equal if you do the same.
+          </p>
+        )}
+      </div>
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         const [unilateral, setUnilateral] = useState<boolean>(false);
@@ -149,10 +146,15 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
             lastPerf[exerciseId][`${field}${seriesIndex}`]
               ? lastPerf[exerciseId][`${field}${seriesIndex}`]
               : "";
-          setInputValues((prevInputValues: any) => ({
-            ...prevInputValues,
-            [key]: newValue,
-          }));
+          /*  if (inputValues[key]) {
+            console.log("inputValues :", inputValues[key]);
+          } */
+          if (!inputValues[key]) {
+            setInputValues((prevInputValues: any) => ({
+              ...prevInputValues,
+              [key]: newValue,
+            }));
+          }
         };
 
         return (

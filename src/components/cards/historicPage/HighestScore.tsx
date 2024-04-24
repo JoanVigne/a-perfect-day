@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { findTask } from "../../../app/historic/utils/utils";
+import { findTask } from "../../../utils/findTask";
 import Icon from "@/components/ui/Icon";
 
 const HighestScore = ({ data, taskName }: { data: any; taskName: string }) => {

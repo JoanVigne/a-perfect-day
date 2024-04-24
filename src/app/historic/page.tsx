@@ -14,7 +14,7 @@ import Count from "../../components/cards/historicPage/Count";
 import LastTime from "../../components/cards/historicPage/LastTime";
 import HighestScore from "../../components/cards/historicPage/HighestScore";
 import Header from "@/components/Header";
-import { findTasksByType } from "./utils/utils";
+import { findTasksByType } from "../../utils/findTask";
 import CalendarRoutine from "../../components/ui/CalendarRoutine";
 import { useRouter } from "next/navigation";
 import IconOpen from "@/components/ui/IconOpen";
