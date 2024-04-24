@@ -17,19 +17,3 @@
   margin: 10px;
   padding: 10px;
 }
-
-/* icon */
-.icon.play,
-.icon.pause,
-.icon.reset {
-  margin: 0 5px;
-}
-.icon.play,
-.icon.pause {
-  width: 30px;
-  height: 30px;
-}
-.icon.reset {
-  width: 19px;
-  height: 19px;
-}

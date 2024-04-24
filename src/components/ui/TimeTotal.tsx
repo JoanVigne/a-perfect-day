@@ -1,6 +1,5 @@
 import Icon from "@/components/ui/Icon";
 import React, { useEffect, useState, useRef } from "react";
-import "./time.css";
 
 interface Props {
   isActive: boolean;

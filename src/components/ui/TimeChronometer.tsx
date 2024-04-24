@@ -1,6 +1,5 @@
 import Icon from "@/components/ui/Icon";
 import React, { useState, useEffect, useRef } from "react";
-import "./time.css";
 
 const TimeChronometer = () => {
   const [seconds, setSeconds] = useState(0);
@@ -44,7 +43,7 @@ const TimeChronometer = () => {
   return (
     <div className="chronometer">
       <div className="time">
-        <div>
+        <div className="time-chrono">
           {minutes}m {remainingSeconds}s
         </div>
         <div className="buttonsPlusAndMinus">

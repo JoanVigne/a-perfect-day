@@ -8,11 +8,21 @@ const FooterTraining = () => {
     <footer className="footerTraining">
       <button
         type="button"
+        className={chornoTimer ? "active" : ""}
         onClick={() => {
-          setChronoTimer(!chornoTimer);
+          setChronoTimer(true);
         }}
       >
-        {chornoTimer ? "Chrono" : "Timer"}
+        Chrono
+      </button>
+      <button
+        type="button"
+        className={!chornoTimer ? "active" : ""}
+        onClick={() => {
+          setChronoTimer(false);
+        }}
+      >
+        Timer
       </button>
       {chornoTimer ? <TimeChronometer /> : <Timer />}
     </footer>

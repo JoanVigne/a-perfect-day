@@ -1,6 +1,5 @@
 import Icon from "@/components/ui/Icon";
 import React, { useState, useEffect } from "react";
-import "./time.css";
 
 const Timer = () => {
   const [seconds, setSeconds] = useState(0);
