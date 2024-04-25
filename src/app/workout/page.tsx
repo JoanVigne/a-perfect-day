@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import FormWorkoutCreate from "../../components/forms/FormWorkoutCreate";
 import "./workout.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import CardWorkout from "../../components/cards/CardWorkout";
