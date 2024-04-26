@@ -168,8 +168,36 @@ const page = () => {
                                     {[...Array(3)].map((_, i) => (
                                       <tr key={i}>
                                         <td>{i + 1}-</td>
-                                        <td>{exerciseData[`weight${i}`]}</td>
-                                        <td>{exerciseData[`reps${i}`]}</td>
+                                        <td>
+                                          {exerciseData[`weight${i}`]}
+                                          {exerciseData[
+                                            `weight-unilateral${i}`
+                                          ] && (
+                                            <>
+                                              -
+                                              {
+                                                exerciseData[
+                                                  `weight-unilateral${i}`
+                                                ]
+                                              }
+                                            </>
+                                          )}
+                                        </td>
+                                        <td>
+                                          {exerciseData[`reps${i}`]}
+                                          {exerciseData[
+                                            `reps-unilateral${i}`
+                                          ] && (
+                                            <>
+                                              -
+                                              {
+                                                exerciseData[
+                                                  `reps-unilateral${i}`
+                                                ]
+                                              }
+                                            </>
+                                          )}
+                                        </td>
                                         <td>{exerciseData[`int${i}`]}</td>
                                       </tr>
                                     ))}

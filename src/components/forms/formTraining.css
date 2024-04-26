@@ -2,7 +2,14 @@
   margin-bottom: 90px;
   border: none;
 }
-
+.form-training input[type="date"] {
+  display: block;
+  height: 35px;
+  margin: 5px auto;
+  padding: 0 10px;
+  background-color: var(--color-grey);
+  border-radius: 3px;
+}
 header.workout-header {
   display: flex;
   justify-content: center;
@@ -19,6 +26,7 @@ header.workout-header {
 .container-exo {
   background-color: var(--color-dark-grey);
   margin: 15px 0;
+  border-bottom: 1px var(--color-white) solid;
 }
 .container-exo h3 {
   padding: 2px 8px;
@@ -82,7 +90,11 @@ header.workout-header {
   border: none;
   text-align: center;
 }
-
+.form-training .container-cleannote-note {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-black);
+}
 .form-training .note-exo {
   height: 35px;
   width: 100%;

@@ -1,13 +1,16 @@
 .container-date-perf {
   border: 1px var(--color-green) solid;
 }
-.container-perf {
+.container-date-perf .container-perf {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-.container-exo {
-  border: 1px var(--color-white) solid;
+.container-date-perf .container-exo {
+  border-left: 1px var(--color-white) solid;
+  border-right: 1px var(--color-white) solid;
+  border-bottom: 1px var(--color-white) solid;
   text-align: center;
+  padding: 2px;
 }
 .container-exo h4 {
   text-decoration: underline;

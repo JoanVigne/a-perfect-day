@@ -7,6 +7,7 @@ import Button from "../ui/Button";
 import "./formTraining.css";
 import TimeTotal from "../ui/TimeTotal";
 import InputFormTraining from "./InputFormTraining";
+import Icon from "../ui/Icon";
 
 interface Props {
   exo: any[];
@@ -23,6 +24,9 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
   const [formData, setFormData] = useState<any>({});
   const { user } = useAuthContext() as { user: UserData };
   const [isTimerActive, setIsTimerActive] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().substring(0, 10)
+  );
   const [finalTime, setFinalTime] = useState("");
   const [noteExo, setNoteExo] = useState<{ [key: string]: string }>({});
   const [inputValues, setInputValues] = useState<Record<string, number>>({});
@@ -65,17 +69,14 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
   };
 
   async function perfSubmit(data: any, finalTime: string) {
-    const date = new Date();
-    const dateStr = date.toISOString().substring(0, 10);
-    const perfData = { [dateStr]: { ...data, noteExo } };
-    const duration = { [dateStr]: finalTime };
+    const perfData = { [selectedDate]: { ...data, noteExo } };
+    const duration = { [selectedDate]: finalTime };
 
     const updatedWorkout = {
       ...thisWorkout,
       perf: { ...thisWorkout.perf, ...perfData },
       duration: { ...thisWorkout.duration, ...duration },
     };
-    console.log("updated workout :", updatedWorkout);
 
     setFinished(() => {
       const dataWorkouts = getItemFromLocalStorage("workouts");
@@ -117,6 +118,11 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
 
   return (
     <form onSubmit={handleSubmit} className="form-training">
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
+      />
       <div className="smaller-container">
         <TimeTotal
           isActive={isTimerActive}
@@ -124,14 +130,14 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
           onTimeFinish={setFinalTime}
         />
       </div>
-      <div className="manual">
-        {lastPerf && (
-          <p>
-            Your last performances are already pre-filled. Press the button
-            equal if you did the same, type if you did different.
-          </p>
-        )}
-      </div>
+
+      {lastPerf && (
+        <p className="manual">
+          Your last performances are already pre-filled. Press the button equal
+          if you did the same, type if you did different.
+        </p>
+      )}
+
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         const [unilateral, setUnilateral] = useState<boolean>(false);
@@ -393,19 +399,32 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
                 )}
               </tbody>
             </table>
-
-            <input
-              className="note-exo"
-              placeholder={`Note about ${exercise.name}?`}
-              value={
-                lastPerf[exercise.id] &&
-                lastPerf[exercise.id]["noteExo"] &&
-                lastPerf[exercise.id]["noteExo"][`exoPerso${exercise.name}`]
-                  ? lastPerf[exercise.id]["noteExo"][`exoPerso${exercise.name}`]
-                  : noteExo[exercise.id] || ""
-              }
-              onChange={handleNoteChange(exercise.id)}
-            />
+            <div className="container-cleannote-note">
+              <Icon
+                nameImg="clean"
+                onClick={() => {
+                  setNumberOfSeries(3);
+                  setNoteExo((prevNoteExo) => ({
+                    ...prevNoteExo,
+                    [exercise.id]: "",
+                  }));
+                }}
+              />
+              <input
+                className="note-exo"
+                placeholder={`Note about ${exercise.name}?`}
+                value={
+                  lastPerf[exercise.id] &&
+                  lastPerf[exercise.id]["noteExo"] &&
+                  lastPerf[exercise.id]["noteExo"][`exoPerso${exercise.name}`]
+                    ? lastPerf[exercise.id]["noteExo"][
+                        `exoPerso${exercise.name}`
+                      ]
+                    : noteExo[exercise.id] || ""
+                }
+                onChange={handleNoteChange(exercise.id)}
+              />
+            </div>
           </div>
         );
       })}
