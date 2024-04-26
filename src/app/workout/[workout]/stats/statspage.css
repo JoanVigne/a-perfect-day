@@ -1,0 +1,17 @@
+.container-date-perf {
+  border: 1px var(--color-green) solid;
+}
+.container-perf {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.container-exo {
+  border: 1px var(--color-white) solid;
+  text-align: center;
+}
+.container-exo h4 {
+  text-decoration: underline;
+}
+.container-exo table {
+  width: 100%;
+}

@@ -214,11 +214,11 @@ export default function Home() {
           />
 
           <Link className="link" href="/historic">
-            Check out the Historic of my routine
+            Historic of my routine
           </Link>
         </div>
         <div className="container">
-          <h2>Custom tasks</h2>
+          <h2>My tasks</h2>
           <CustomTasks
             handleAddTask={handleAddTaskToTodayList}
             userId={user?.uid}

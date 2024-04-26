@@ -16,6 +16,8 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "A perfect day",
   description: `"The real courage is not to do what you want, but to do what you ought to do, even when you don't want to do it" - Winston Churchill. "Es handelt sich nicht darum, zu wollen oder nicht zu wollen, sondern zu müssen" - Friedrich Nietzsche. "Fais ce que tu dois et advienne que pourra." `,
+  /*   image: "/path/to/your/preview-image.jpg",
+  url: "https://your-website.com", */
 };
 
 export default function RootLayout({
@@ -25,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
+      {/* <Head>
         <title>{metadata.title as string}</title>
         <meta name="description" content={metadata.description as string} />
         <link rel="icon" href="/path/to/your/favicon.ico" />
@@ -37,7 +39,7 @@ export default function RootLayout({
         <meta property="og:image" content="/path/to/your/preview-image.jpg" />
         <meta property="og:url" content="https://your-website.com" />
         <meta name="twitter:card" content="summary_large_image" />
-      </Head>
+      </Head> */}
       <body className={inter.className}>
         <AuthContextProvider>{children}</AuthContextProvider>
       </body>

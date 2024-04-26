@@ -10,6 +10,7 @@ import ModalConfirmSend from "@/components/modals/ModalConfirmSend";
 import { useAuthContext } from "@/context/AuthContext";
 import { removeFromWorkouts } from "@/firebase/db/workout";
 import IconOpen from "@/components/ui/IconOpen";
+import "./statspage.css";
 interface Exercise {
   name: string;
   equipment: string;
@@ -120,12 +121,12 @@ const page = () => {
                 </li>
               ))}
           </ul>
-          <div className="container-exo">
+          <div className="">
             <h3>Performances:</h3>
             <h4>by date :</h4>
             {workout.perf ? (
               Object.entries(workout.perf).map(([date, perfData], index) => (
-                <div key={index}>
+                <div key={index} className="container-date-perf">
                   <h4
                     style={{
                       marginLeft: "20px",
@@ -141,39 +142,44 @@ const page = () => {
                     />{" "}
                     {date}{" "}
                   </h4>
-
-                  {showPerf[date] &&
-                    Object.entries(perfData)
-                      .sort((a, b) => a[1].exoOrder - b[1].exoOrder)
-                      .map(([exerciseId, exerciseData], index) => {
-                        const exercise =
-                          workout.exercices[exerciseData.exoOrder];
-                        return (
-                          <div key={index}>
-                            <h4>{exercise.name}</h4>
-                            <table>
-                              <thead>
-                                <tr>
-                                  <th>Serie</th>
-                                  <th>Weight</th>
-                                  <th>Reps</th>
-                                  <th>Rest</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {[...Array(3)].map((_, i) => (
-                                  <tr key={i}>
-                                    <td>{i + 1}</td>
-                                    <td>{exerciseData[`weight${i}`]}</td>
-                                    <td>{exerciseData[`reps${i}`]}</td>
-                                    <td>{exerciseData[`int${i}`]}</td>
+                  <div className="container-perf">
+                    {showPerf[date] &&
+                      Object.entries(perfData)
+                        .filter(([key]) => key !== "noteExo")
+                        .sort((a, b) => a[1].exoOrder - b[1].exoOrder)
+                        .map(([exerciseId, exerciseData], index) => {
+                          const exercise =
+                            workout.exercices[exerciseData.exoOrder];
+                          return (
+                            <div key={index} className="container-exo">
+                              <h4>{exercise.name}</h4>
+                              <table>
+                                <thead>
+                                  <tr>
+                                    <th></th>
+                                    <th>Wei.</th>
+                                    <th>Reps</th>
+                                    <th>Rest</th>
                                   </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        );
-                      })}
+                                </thead>
+                                <tbody>
+                                  {[...Array(3)].map((_, i) => (
+                                    <tr key={i}>
+                                      <td>{i + 1}-</td>
+                                      <td>{exerciseData[`weight${i}`]}</td>
+                                      <td>{exerciseData[`reps${i}`]}</td>
+                                      <td>{exerciseData[`int${i}`]}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                              {perfData.noteExo && (
+                                <p>Note : {perfData.noteExo[exerciseId]}</p>
+                              )}
+                            </div>
+                          );
+                        })}
+                  </div>
                 </div>
               ))
             ) : (
