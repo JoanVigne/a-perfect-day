@@ -8,6 +8,7 @@ import "./formTraining.css";
 import TimeTotal from "../ui/TimeTotal";
 import InputFormTraining from "./InputFormTraining";
 import Icon from "../ui/Icon";
+import ModalCheckPerf from "../modals/ModalCheckPerf";
 
 interface Props {
   exo: any[];
@@ -141,6 +142,7 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         const [unilateral, setUnilateral] = useState<boolean>(false);
+        const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
         useEffect(() => {
           if (
             lastPerf[exercise.id] &&
@@ -178,9 +180,24 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
             });
           }
         };
+
         return (
           <div key={exercise.id} className="container-exo">
+            <ModalCheckPerf
+              isVisible={showModalCheckPerf}
+              close={() => setShowModalCheckPerf(false)}
+              perf={showModalCheckPerf && exercise?.name}
+              perfid={showModalCheckPerf && exercise?.id}
+              workoutid={showModalCheckPerf && thisWorkout.id}
+            />
             <h3>
+              <button
+                type="button"
+                className="unilateral-button"
+                onClick={() => setShowModalCheckPerf(true)}
+              >
+                show perf of
+              </button>
               {exercise.name}
               <button
                 className="unilateral-button"
