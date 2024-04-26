@@ -125,63 +125,65 @@ const page = () => {
             <h3>Performances:</h3>
             <h4>by date :</h4>
             {workout.perf ? (
-              Object.entries(workout.perf).map(([date, perfData], index) => (
-                <div key={index} className="container-date-perf">
-                  <h4
-                    style={{
-                      marginLeft: "20px",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <IconOpen
-                      show={showPerf[date] || false}
-                      setShow={(show: boolean) =>
-                        setShowPerf((prev) => ({ ...prev, [date]: show }))
-                      }
-                    />{" "}
-                    {date}{" "}
-                  </h4>
-                  <div className="container-perf">
-                    {showPerf[date] &&
-                      Object.entries(perfData)
-                        .filter(([key]) => key !== "noteExo")
-                        .sort((a, b) => a[1].exoOrder - b[1].exoOrder)
-                        .map(([exerciseId, exerciseData], index) => {
-                          const exercise =
-                            workout.exercices[exerciseData.exoOrder];
-                          return (
-                            <div key={index} className="container-exo">
-                              <h4>{exercise.name}</h4>
-                              <table>
-                                <thead>
-                                  <tr>
-                                    <th></th>
-                                    <th>Wei.</th>
-                                    <th>Reps</th>
-                                    <th>Rest</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {[...Array(3)].map((_, i) => (
-                                    <tr key={i}>
-                                      <td>{i + 1}-</td>
-                                      <td>{exerciseData[`weight${i}`]}</td>
-                                      <td>{exerciseData[`reps${i}`]}</td>
-                                      <td>{exerciseData[`int${i}`]}</td>
+              Object.entries(workout.perf)
+                .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
+                .map(([date, perfData], index) => (
+                  <div key={index} className="container-date-perf">
+                    <h4
+                      style={{
+                        marginLeft: "20px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <IconOpen
+                        show={showPerf[date] || false}
+                        setShow={(show: boolean) =>
+                          setShowPerf((prev) => ({ ...prev, [date]: show }))
+                        }
+                      />{" "}
+                      {date}{" "}
+                    </h4>
+                    <div className="container-perf">
+                      {showPerf[date] &&
+                        Object.entries(perfData)
+                          .filter(([key]) => key !== "noteExo")
+                          .sort((a, b) => a[1].exoOrder - b[1].exoOrder)
+                          .map(([exerciseId, exerciseData], index) => {
+                            const exercise =
+                              workout.exercices[exerciseData.exoOrder];
+                            return (
+                              <div key={index} className="container-exo">
+                                <h4>{exercise.name}</h4>
+                                <table>
+                                  <thead>
+                                    <tr>
+                                      <th></th>
+                                      <th>Wei.</th>
+                                      <th>Reps</th>
+                                      <th>Rest</th>
                                     </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                              {perfData.noteExo && (
-                                <p>Note : {perfData.noteExo[exerciseId]}</p>
-                              )}
-                            </div>
-                          );
-                        })}
+                                  </thead>
+                                  <tbody>
+                                    {[...Array(3)].map((_, i) => (
+                                      <tr key={i}>
+                                        <td>{i + 1}-</td>
+                                        <td>{exerciseData[`weight${i}`]}</td>
+                                        <td>{exerciseData[`reps${i}`]}</td>
+                                        <td>{exerciseData[`int${i}`]}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                                {perfData.noteExo && (
+                                  <p>Note : {perfData.noteExo[exerciseId]}</p>
+                                )}
+                              </div>
+                            );
+                          })}
+                    </div>
                   </div>
-                </div>
-              ))
+                ))
             ) : (
               <>
                 <h4>No performances yet, go train ? </h4>

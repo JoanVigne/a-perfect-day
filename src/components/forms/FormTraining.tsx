@@ -41,6 +41,12 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
       let value = e.target.value;
       // Replace "," with "."
       value = value.replace(/,/g, ".");
+
+      setInputValues((prevInputValues: any) => ({
+        ...prevInputValues,
+        [key]: value,
+      }));
+
       setFormData((prevFormData: any) => {
         const newFormData = { ...prevFormData };
         if (!newFormData[exerciseId]) {
@@ -51,11 +57,6 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
         newFormData[exerciseId][`${field}${seriesIndex}`] = value;
         return newFormData;
       });
-
-      setInputValues((prevInputValues: any) => ({
-        ...prevInputValues,
-        [key]: value,
-      }));
     };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,9 +75,8 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
       perf: { ...thisWorkout.perf, ...perfData },
       duration: { ...thisWorkout.duration, ...duration },
     };
-    console.log("duration workout :", finalTime);
     console.log("updated workout :", updatedWorkout);
-    console.log("duration : ", duration);
+
     setFinished(() => {
       const dataWorkouts = getItemFromLocalStorage("workouts");
       if (!dataWorkouts) return console.log("no workouts in LS");
@@ -128,13 +128,21 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
         {lastPerf && (
           <p>
             Your last performances are already pre-filled. Press the button
-            equal if you do the same, type if you did different.
+            equal if you did the same, type if you did different.
           </p>
         )}
       </div>
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         const [unilateral, setUnilateral] = useState<boolean>(false);
+        useEffect(() => {
+          if (
+            lastPerf[exercise.id] &&
+            lastPerf[exercise.id][`weight-unilateral0`]
+          ) {
+            setUnilateral(true);
+          }
+        }, [lastPerf, exercise.id]);
         const validatePlaceholder = (
           exerciseId: string,
           seriesIndex: number,
@@ -146,17 +154,24 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
             lastPerf[exerciseId][`${field}${seriesIndex}`]
               ? lastPerf[exerciseId][`${field}${seriesIndex}`]
               : "";
-          /*  if (inputValues[key]) {
-            console.log("inputValues :", inputValues[key]);
-          } */
           if (!inputValues[key]) {
             setInputValues((prevInputValues: any) => ({
               ...prevInputValues,
               [key]: newValue,
             }));
+
+            setFormData((prevFormData: any) => {
+              const newFormData = { ...prevFormData };
+              if (!newFormData[exerciseId]) {
+                newFormData[exerciseId] = {
+                  exoOrder: Object.keys(prevFormData).length,
+                };
+              }
+              newFormData[exerciseId][`${field}${seriesIndex}`] = newValue;
+              return newFormData;
+            });
           }
         };
-
         return (
           <div key={exercise.id} className="container-exo">
             <h3>
