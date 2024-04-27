@@ -196,7 +196,7 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
                 className="unilateral-button"
                 onClick={() => setShowModalCheckPerf(true)}
               >
-                show perf of
+                previous perf
               </button>
               {exercise.name}
               <button
@@ -204,7 +204,7 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
                 type="button"
                 onClick={() => setUnilateral(!unilateral)}
               >
-                unilateral?
+                uni lateral?
               </button>
             </h3>
             {exercise.equipmentt && <h3>equipment: {exercise.equipment}</h3>}

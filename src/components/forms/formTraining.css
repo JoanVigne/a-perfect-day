@@ -29,13 +29,14 @@ header.workout-header {
   border-bottom: 1px var(--color-white) solid;
 }
 .container-exo h3 {
-  padding: 2px 8px;
+  padding: 2px 0;
   background-color: var(--color-black);
 }
 .container-exo .unilateral-button {
   background-color: var(--color-dark-green);
   padding: 3px;
   margin: 3px;
+  width: 55px;
 }
 .container-exo table {
   width: 100%;
@@ -46,6 +47,7 @@ header.workout-header {
 .container-exo table thead th {
   width: 25%;
   font-size: 13px;
+  padding: 4px 0;
 }
 .show-last-perf {
   display: block;
@@ -55,12 +57,12 @@ header.workout-header {
 }
 .buttonsPlusMinusSeries {
   display: flex;
-  margin: 0 5px;
+  justify-content: center;
 }
 .buttonsPlusMinusSeries button {
   padding: 2px;
   border: 1px solid var(--color-active-link);
-  min-width: 20px;
+  min-width: 16px;
   margin: 3px;
 }
 

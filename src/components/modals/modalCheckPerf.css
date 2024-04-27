@@ -1,0 +1,24 @@
+.modal-perf-exo {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  margin: 5px;
+}
+.container-perf-exo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.container-perf-exo .container-date-exo {
+  border: 1px var(--color-white) solid;
+  margin: 1px;
+}
+.container-perf-exo table {
+  width: 100%;
+  text-align: center;
+}
+.modal-perf-exo button {
+  background-color: var(--color-dark-green);
+  color: var(--color-white);
+  border: none;
+  padding: 5px;
+  margin: 5px;
+}

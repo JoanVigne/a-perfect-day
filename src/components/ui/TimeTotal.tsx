@@ -1,5 +1,6 @@
 import Icon from "@/components/ui/Icon";
 import React, { useEffect, useState, useRef } from "react";
+import "./time.css";
 
 interface Props {
   isActive: boolean;
@@ -46,8 +47,9 @@ const TimeTotal: React.FC<Props> = ({
   };
 
   return (
-    <div className="timer">
-      <h3>
+    <div className="container-time-total">
+      <h3>Total time</h3>
+      <div className="container-without-title">
         <Icon
           nameImg="reset"
           onClick={() => {
@@ -72,8 +74,8 @@ const TimeTotal: React.FC<Props> = ({
             -10s
           </button>
         </div>
-        Total time: {formatTime()}{" "}
-      </h3>
+        <h3>{formatTime()} </h3>
+      </div>
     </div>
   );
 };

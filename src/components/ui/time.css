@@ -1,0 +1,18 @@
+.container-time-total h3 {
+  display: flex;
+}
+.container-time-total .container-without-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.container-time-total .container-without-title h3 {
+  width: 105px;
+}
+
+.container-time-total .buttonsPlusAndMinus button {
+  padding: 2px;
+  border: 1px solid var(--color-active-link);
+  min-width: 16px;
+  margin: 3px;
+}
