@@ -75,7 +75,7 @@ const Timer = () => {
     setSeconds(0);
     setIsActive(false);
     setIsReset(true);
-    setInputValue("1.3");
+    setInputValue(lastInputValue || "1.3");
   };
   function increment() {
     setInputValue((prevValue) => {
