@@ -22,12 +22,18 @@ const TimeTotal: React.FC<Props> = ({
   useEffect(() => {
     if (isActive) {
       noSleep.enable();
+    } else {
+      noSleep.disable();
+    }
+  }, [isActive]);
+
+  useEffect(() => {
+    if (isActive) {
       intervalRef.current = setInterval(
         () => setSeconds((prevSeconds) => prevSeconds + 1),
         1000
       );
     } else if (!isActive && seconds !== 0 && intervalRef.current) {
-      noSleep.disable();
       clearInterval(intervalRef.current);
     }
 
@@ -85,7 +91,7 @@ const TimeTotal: React.FC<Props> = ({
             setHideTime(!hideTime);
           }}
         />
-        {hideTime ? <h3>{formatTime()} </h3> : <h3></h3>}
+        {hideTime ? <h3></h3> : <h3>{formatTime()} </h3>}
       </div>
     </div>
   );
