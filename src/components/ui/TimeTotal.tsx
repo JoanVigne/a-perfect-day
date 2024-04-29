@@ -1,6 +1,7 @@
 import Icon from "@/components/ui/Icon";
 import React, { useEffect, useState, useRef } from "react";
 import "./time.css";
+import NoSleep from "nosleep.js";
 
 interface Props {
   isActive: boolean;
@@ -16,14 +17,17 @@ const TimeTotal: React.FC<Props> = ({
   const [seconds, setSeconds] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [hideTime, setHideTime] = useState(false);
+  const noSleep = new NoSleep();
 
   useEffect(() => {
     if (isActive) {
+      noSleep.enable();
       intervalRef.current = setInterval(
         () => setSeconds((prevSeconds) => prevSeconds + 1),
         1000
       );
     } else if (!isActive && seconds !== 0 && intervalRef.current) {
+      noSleep.disable();
       clearInterval(intervalRef.current);
     }
 
