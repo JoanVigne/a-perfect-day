@@ -17,6 +17,10 @@ header {
   background-color: var(--color-grey);
   padding: 0;
 }
+.HeaderTraining .buttonsPlusAndMinus {
+  display: flex;
+  flex-wrap: wrap;
+}
 .HeaderTraining .row-two {
   display: flex;
   width: 100%;
@@ -30,12 +34,13 @@ header {
 .HeaderTraining .row-two .buttons button {
   margin: 2px;
 }
+.HeaderTraining .row-two .buttons button.active {
+  border: 2px var(--color-active-link) solid;
+}
 .HeaderTraining .row-two .buttonsPlusAndMinus {
   flex-direction: column;
 }
-.HeaderTraining .buttonsPlusAndMinus {
-  display: flex;
-}
+
 .HeaderTraining .buttonsPlusAndMinus button {
   padding: 2px;
   border: 1px solid var(--color-active-link);

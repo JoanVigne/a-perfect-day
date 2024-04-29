@@ -17,6 +17,7 @@ const TimeTotal: React.FC<Props> = ({
   const [seconds, setSeconds] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [hideTime, setHideTime] = useState(false);
+  // to ensure screen doesn't sleep
   const noSleep = new NoSleep();
 
   useEffect(() => {
