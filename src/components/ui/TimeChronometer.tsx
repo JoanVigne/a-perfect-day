@@ -43,12 +43,12 @@ const TimeChronometer = () => {
   return (
     <div className="chronometer">
       <div className="time">
-        <div className="time-chrono">
-          {minutes}m {remainingSeconds}s
-        </div>
         <div className="buttonsPlusAndMinus">
           <button onClick={increment}>+10s</button>
           <button onClick={decrement}>-10s</button>
+        </div>
+        <div className="time-chrono">
+          {minutes}m {remainingSeconds}s
         </div>
       </div>
       <Icon nameImg="reset" onClick={handleReset} />

@@ -5,7 +5,6 @@ import { sendToWorkout } from "@/firebase/db/workout";
 import ModalConfirmSend from "../modals/ModalConfirmSend";
 import Button from "../ui/Button";
 import "./formTraining.css";
-import TimeTotal from "../ui/TimeTotal";
 import InputFormTraining from "./InputFormTraining";
 import Icon from "../ui/Icon";
 import ModalCheckPerf from "../modals/ModalCheckPerf";
@@ -14,6 +13,10 @@ interface Props {
   exo: any[];
   thisWorkout: any;
   setFinished: (callback: () => void) => void;
+  isTimerActive: boolean;
+  setIsTimerActive: React.Dispatch<React.SetStateAction<boolean>>;
+  finalTime: string;
+  setFinalTime: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface UserData {
@@ -21,14 +24,20 @@ interface UserData {
   uid: string;
 }
 
-const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
+const FormTraining: React.FC<Props> = ({
+  exo,
+  thisWorkout,
+  setFinished,
+  isTimerActive,
+  setIsTimerActive,
+  finalTime,
+  setFinalTime,
+}) => {
   const [formData, setFormData] = useState<any>({});
   const { user } = useAuthContext() as { user: UserData };
-  const [isTimerActive, setIsTimerActive] = useState(true);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().substring(0, 10)
   );
-  const [finalTime, setFinalTime] = useState("");
   const [noteExo, setNoteExo] = useState<{ [key: string]: string }>({});
   const [inputValues, setInputValues] = useState<Record<string, number>>({});
   const handleNoteChange =
@@ -124,13 +133,6 @@ const FormTraining: React.FC<Props> = ({ exo, thisWorkout, setFinished }) => {
         value={selectedDate}
         onChange={(e) => setSelectedDate(e.target.value)}
       />
-      <div className="smaller-container">
-        <TimeTotal
-          isActive={isTimerActive}
-          stopOnFinish={!isTimerActive}
-          onTimeFinish={setFinalTime}
-        />
-      </div>
 
       {lastPerf && (
         <p className="manual">

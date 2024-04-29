@@ -5,12 +5,18 @@ import FormTraining from "../../../components/forms/FormTraining";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import FooterTraining from "@/components/FooterTraining";
+import TimeTotal from "@/components/ui/TimeTotal";
+import TimeChronometer from "@/components/ui/TimeChronometer";
+import Timer from "@/components/ui/Timer";
+import "@/components/header.css";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
   const [thisWorkout, setThisWorkout] = useState<any>(null);
+  const [chornoTimer, setChronoTimer] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [isTimerActive, setIsTimerActive] = useState(true);
+  const [finalTime, setFinalTime] = useState("");
   useEffect(() => {
     const pathslug = window.location.pathname.split("/").pop();
     setSlug(pathslug || null);
@@ -33,6 +39,39 @@ const Page = () => {
 
   return (
     <div>
+      <header className="HeaderTraining">
+        <TimeTotal
+          isActive={isTimerActive}
+          stopOnFinish={!isTimerActive}
+          onTimeFinish={setFinalTime}
+        />
+
+        <div className="row-two">
+          <div className="buttons">
+            <button
+              type="button"
+              className={chornoTimer ? "active" : ""}
+              onClick={() => {
+                setChronoTimer(true);
+              }}
+            >
+              Chrono
+            </button>
+            <button
+              type="button"
+              className={!chornoTimer ? "active" : ""}
+              onClick={() => {
+                setChronoTimer(false);
+              }}
+            >
+              Timer
+            </button>
+          </div>
+
+          {chornoTimer ? <TimeChronometer /> : <Timer />}
+        </div>
+      </header>
+
       {thisWorkout && (
         <>
           {finished ? (
@@ -60,8 +99,11 @@ const Page = () => {
                 exo={thisWorkout.exercices}
                 thisWorkout={thisWorkout}
                 setFinished={handleFinished}
+                isTimerActive={isTimerActive}
+                setIsTimerActive={setIsTimerActive}
+                finalTime={finalTime}
+                setFinalTime={setFinalTime}
               />
-              <FooterTraining />
             </>
           )}
         </>

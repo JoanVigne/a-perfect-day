@@ -15,6 +15,7 @@ const TimeTotal: React.FC<Props> = ({
 }) => {
   const [seconds, setSeconds] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [hideTime, setHideTime] = useState(false);
 
   useEffect(() => {
     if (isActive) {
@@ -48,33 +49,39 @@ const TimeTotal: React.FC<Props> = ({
 
   return (
     <div className="container-time-total">
+      <Icon
+        nameImg="reset"
+        onClick={() => {
+          setSeconds(0);
+        }}
+      />
+      <div className="buttonsPlusAndMinus">
+        <button
+          type="button"
+          onClick={() => setSeconds((prevSeconds) => prevSeconds + 10)}
+        >
+          +10s
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            setSeconds((prevSeconds) =>
+              prevSeconds > 10 ? prevSeconds - 10 : 0
+            )
+          }
+        >
+          -10s
+        </button>
+      </div>
       <h3>Total time</h3>
       <div className="container-without-title">
         <Icon
-          nameImg="reset"
+          nameImg="hide-white"
           onClick={() => {
-            setSeconds(0);
+            setHideTime(!hideTime);
           }}
         />
-        <div className="buttonsPlusAndMinus">
-          <button
-            type="button"
-            onClick={() => setSeconds((prevSeconds) => prevSeconds + 10)}
-          >
-            +10s
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              setSeconds((prevSeconds) =>
-                prevSeconds > 10 ? prevSeconds - 10 : 0
-              )
-            }
-          >
-            -10s
-          </button>
-        </div>
-        <h3>{formatTime()} </h3>
+        {hideTime ? <h3>{formatTime()} </h3> : <h3></h3>}
       </div>
     </div>
   );

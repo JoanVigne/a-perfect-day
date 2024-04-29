@@ -113,19 +113,19 @@ const Timer = () => {
       <div className="time">
         {isReset ? (
           <>
+            <div className="buttonsPlusAndMinus">
+              <button onClick={() => increment()}>+10s</button>
+              <button onClick={() => decrement()}>-10s</button>
+            </div>
             <input
               className="secondes"
               type="number"
               value={inputValue}
               onChange={handleInputChange}
             />
-            <div className="buttonsPlusAndMinus">
-              <button onClick={() => increment()}>+10s</button>
-              <button onClick={() => decrement()}>-10s</button>
-            </div>
           </>
         ) : (
-          <p>{seconds}sec</p>
+          <div className="time-chrono">{seconds}sec</div>
         )}
       </div>
       <Icon

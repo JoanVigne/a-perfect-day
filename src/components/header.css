@@ -5,3 +5,62 @@ header {
   padding: 7px;
   background-color: var(--color-grey);
 }
+
+/* timer */
+.HeaderTraining {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--color-grey);
+  padding: 0;
+}
+.HeaderTraining .row-two {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.HeaderTraining button {
+  background-color: var(--color-dark-green);
+}
+
+.HeaderTraining .timer,
+.HeaderTraining .chronometer {
+  display: flex;
+  align-items: center;
+}
+.HeaderTraining .time {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0 10px;
+}
+
+.HeaderTraining .time input {
+  max-width: 50px;
+  text-align: center;
+  background-color: var(--color-dark-grey);
+}
+.HeaderTraining .time .time-chrono {
+  font-size: 20px;
+}
+.HeaderTraining .time p {
+  font-size: 20px;
+}
+
+.HeaderTraining img {
+  margin: 6px;
+  width: 30px;
+  height: 30px;
+}
+.HeaderTraining .icon.hide-white {
+  width: 24px;
+  height: 24px;
+}
+.HeaderTraining .icon.reset {
+  width: 25px;
+  height: 25px;
+}
