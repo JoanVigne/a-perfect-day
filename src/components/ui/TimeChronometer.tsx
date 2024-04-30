@@ -51,12 +51,14 @@ const TimeChronometer = () => {
           {minutes}m {remainingSeconds}s
         </div>
       </div>
-      <Icon nameImg="reset" onClick={handleReset} />
-      {isActive ? (
-        <Icon nameImg="pause" onClick={handleStartStop} />
-      ) : (
-        <Icon nameImg="play" onClick={handleStartStop} />
-      )}
+      <div className="buttons">
+        <Icon nameImg="reset" onClick={handleReset} />
+        {isActive ? (
+          <Icon nameImg="pause" onClick={handleStartStop} />
+        ) : (
+          <Icon nameImg="play" onClick={handleStartStop} />
+        )}
+      </div>
     </div>
   );
 };

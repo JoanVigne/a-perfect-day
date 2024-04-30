@@ -24,18 +24,20 @@ header {
 .HeaderTraining .row-two {
   display: flex;
   width: 100%;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
 }
 .HeaderTraining .row-two .buttons {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
 }
 .HeaderTraining .row-two .buttons button {
   margin: 2px;
 }
 .HeaderTraining .row-two .buttons button.active {
   border: 2px var(--color-active-link) solid;
+  width: 50px;
 }
 .HeaderTraining .row-two .buttonsPlusAndMinus {
   flex-direction: column;
@@ -72,6 +74,7 @@ header {
 }
 .HeaderTraining .time .time-chrono {
   font-size: 20px;
+  min-width: 80px;
 }
 .HeaderTraining .time p {
   font-size: 20px;

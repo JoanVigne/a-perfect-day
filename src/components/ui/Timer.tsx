@@ -2,27 +2,33 @@ import Icon from "@/components/ui/Icon";
 import React, { useState, useEffect } from "react";
 
 const Timer = () => {
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState<number | null>(null);
   const [isActive, setIsActive] = useState(false);
   const [inputValue, setInputValue] = useState("1.3");
   const [lastInputValue, setLastInputValue] = useState("");
-  const [isReset, setIsReset] = useState(true);
+  const [isResetting, setIsResetting] = useState(false);
+  const minutes = seconds ? Math.floor(seconds / 60) : 0;
+  const remainingSeconds = seconds ? seconds % 60 : 0;
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
-    if (isActive && seconds > 0) {
+    if (isActive && seconds !== null && seconds > 0) {
       interval = setInterval(() => {
-        setSeconds((prevSeconds) => prevSeconds - 1);
+        setSeconds((prevSeconds) =>
+          prevSeconds !== null ? prevSeconds - 1 : null
+        );
       }, 1000);
-    } else if (seconds === 0) {
-      setIsActive(false);
+    } else if (!isResetting && seconds === 0) {
+      const audio = new Audio("/ring.mp3");
+      audio.play();
     }
 
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive, seconds]);
+  }, [isActive, seconds, isResetting]);
+
   const convertToDecimalTime = (time: string) => {
     if (time === null || time === undefined) return null;
     const timeWithPoint = time.includes(",") ? time.replace(",", ".") : time;
@@ -53,18 +59,13 @@ const Timer = () => {
         alert("Please enter a valid number.");
         return;
       }
-
       const timeInMinutes: number | null = convertToDecimalTime(timeValue);
       if (timeInMinutes === null) {
         return;
       }
-
       const timeInSeconds = Math.round(timeInMinutes * 60);
-
-      setSeconds((prevSeconds) => prevSeconds || timeInSeconds);
+      setSeconds(timeInSeconds);
       setIsActive(true);
-      setIsReset(false);
-      setInputValue("1.3");
     }
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,10 +73,11 @@ const Timer = () => {
   };
 
   const handleReset = () => {
-    setSeconds(0);
+    setIsResetting(true);
+    setSeconds(null);
     setIsActive(false);
-    setIsReset(true);
     setInputValue(lastInputValue || "1.3");
+    setIsResetting(false);
   };
   function increment() {
     setInputValue((prevValue) => {
@@ -98,20 +100,18 @@ const Timer = () => {
       let integerPart = Math.floor(newValue);
       let decimalPart = newValue - integerPart;
 
-      if (decimalPart > 0.6) {
-        integerPart -= 1;
+      if (decimalPart >= 0.6) {
         decimalPart = 0.5;
       }
 
       newValue = integerPart + decimalPart;
-      console.log("newValue", newValue);
       return newValue.toFixed(2);
     });
   }
   return (
     <div className="timer">
       <div className="time">
-        {isReset ? (
+        {!isActive ? (
           <>
             <div className="buttonsPlusAndMinus">
               <button onClick={() => increment()}>+10s</button>
@@ -125,30 +125,15 @@ const Timer = () => {
             />
           </>
         ) : (
-          <div className="time-chrono">{seconds}sec</div>
+          <div className="time-chrono">
+            {minutes}m {remainingSeconds}s
+          </div>
         )}
       </div>
-      <Icon
-        nameImg="reset"
-        onClick={() => {
-          handleReset();
-        }}
-      />
-      {isActive ? (
-        <Icon
-          nameImg="pause"
-          onClick={() => {
-            handleStart();
-          }}
-        />
-      ) : (
-        <Icon
-          nameImg="play"
-          onClick={() => {
-            handleStart();
-          }}
-        />
-      )}
+      <div className="buttons">
+        <Icon nameImg="reset" onClick={handleReset} />
+        {!isActive && <Icon nameImg="play" onClick={handleStart} />}
+      </div>
     </div>
   );
 };
