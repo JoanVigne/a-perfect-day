@@ -29,15 +29,18 @@ header {
 }
 .HeaderTraining .row-two .buttons {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
 }
 .HeaderTraining .row-two .buttons button {
   margin: 2px;
+  width: -webkit-fill-available;
+}
+.HeaderTraining .row-two .buttons .icon {
+  margin: 3px;
 }
 .HeaderTraining .row-two .buttons button.active {
   border: 2px var(--color-active-link) solid;
-  width: 50px;
 }
 .HeaderTraining .row-two .buttonsPlusAndMinus {
   flex-direction: column;
@@ -67,14 +70,14 @@ header {
 }
 
 .HeaderTraining .time input {
-  max-width: 70px;
+  max-width: 45px;
   height: 26px;
   text-align: center;
   background-color: var(--color-dark-grey);
 }
 .HeaderTraining .time .time-chrono {
-  font-size: 20px;
-  min-width: 80px;
+  font-size: 40px;
+  min-width: 78px;
 }
 .HeaderTraining .time p {
   font-size: 20px;

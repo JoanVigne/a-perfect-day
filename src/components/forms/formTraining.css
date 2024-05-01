@@ -4,8 +4,8 @@
 }
 .form-training input[type="date"] {
   display: block;
-  height: 35px;
-  margin: 5px auto;
+  height: 26px;
+  margin: 1px auto;
   padding: 0 10px;
   background-color: var(--color-grey);
   border-radius: 3px;
@@ -75,6 +75,7 @@ header.workout-header {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
 }
 .container-exo
   .container-input-unilateral
@@ -84,7 +85,7 @@ header.workout-header {
 }
 
 .container-exo td input[type="number"] {
-  max-width: 40px;
+  max-width: 33px;
   height: 25px;
   background-color: var(--color-black);
   color: var(--color-white);
@@ -122,4 +123,17 @@ header.workout-header {
 
 .form-training .buttons-in-line .finish:last-child {
   border: 2px solid var(--color-active-link);
+}
+
+.icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.plus-one {
+  padding: 0 5px;
+  border: 1px solid var(--color-active-link);
+  border-radius: 10px;
+  min-width: 16px;
+  margin: 3px;
 }

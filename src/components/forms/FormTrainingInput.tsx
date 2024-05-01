@@ -60,11 +60,27 @@ const InputFormTraining: React.FC<Props> = ({
         value={value}
         placeholder={placeholder}
       />
-
-      <Icon
-        nameImg={getIconName(value, lastPerf, placeholder)}
-        onClick={onClick}
-      />
+      <div className="icons">
+        <Icon
+          nameImg={getIconName(value, lastPerf, placeholder)}
+          onClick={onClick}
+        />
+        {!name.includes("interval") ? (
+          <div
+            className="plus-one"
+            onClick={() => console.log("add one to placeholder or 1")}
+          >
+            +
+          </div>
+        ) : (
+          lastPerf && (
+            <Icon
+              nameImg="play"
+              onClick={() => console.log("start le timer !")}
+            />
+          )
+        )}
+      </div>
     </div>
   );
 };

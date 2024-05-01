@@ -37,8 +37,10 @@ const TimeChronometer = () => {
     setSeconds((prevSeconds) => (prevSeconds > 10 ? prevSeconds - 10 : 0));
   };
 
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
+  const minutes = Math.floor(seconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const remainingSeconds = (seconds % 60).toString().padStart(2, "0");
 
   return (
     <div className="chronometer">
@@ -48,7 +50,7 @@ const TimeChronometer = () => {
           <button onClick={decrement}>-10s</button>
         </div>
         <div className="time-chrono">
-          {minutes}m {remainingSeconds}s
+          {minutes}: {remainingSeconds}
         </div>
       </div>
       <div className="buttons">

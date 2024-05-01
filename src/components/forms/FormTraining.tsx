@@ -5,7 +5,7 @@ import { sendToWorkout } from "@/firebase/db/workout";
 import ModalConfirmSend from "../modals/ModalConfirmSend";
 import Button from "../ui/Button";
 import "./formTraining.css";
-import InputFormTraining from "./InputFormTraining";
+import InputFormTraining from "./FormTrainingInput";
 import Icon from "../ui/Icon";
 import ModalCheckPerf from "../modals/ModalCheckPerf";
 
@@ -39,6 +39,8 @@ const FormTraining: React.FC<Props> = ({
     new Date().toISOString().substring(0, 10)
   );
   const [noteExo, setNoteExo] = useState<{ [key: string]: string }>({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible2, setIsModalVisible2] = useState(false);
   const [inputValues, setInputValues] = useState<Record<string, number>>({});
   const handleNoteChange =
     (exerciseId: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,13 +83,11 @@ const FormTraining: React.FC<Props> = ({
   async function perfSubmit(data: any, finalTime: string) {
     const perfData = { [selectedDate]: { ...data, noteExo } };
     const duration = { [selectedDate]: finalTime };
-
     const updatedWorkout = {
       ...thisWorkout,
       perf: { ...thisWorkout.perf, ...perfData },
       duration: { ...thisWorkout.duration, ...duration },
     };
-
     setFinished(() => {
       const dataWorkouts = getItemFromLocalStorage("workouts");
       if (!dataWorkouts) return console.log("no workouts in LS");
@@ -95,11 +95,9 @@ const FormTraining: React.FC<Props> = ({
       sendToWorkout(updatedWorkout, user.uid);
     });
   }
-
   // placeholder with last perf :
   const previousworkouts = getItemFromLocalStorage("workouts");
   const [lastPerf, setLastPerf] = useState<any>({});
-
   function findLastPerf() {
     Object.values(previousworkouts).forEach((workout: any) => {
       if (workout.id === thisWorkout.id) {
@@ -118,9 +116,6 @@ const FormTraining: React.FC<Props> = ({
       }
     });
   }
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalVisible2, setIsModalVisible2] = useState(false);
 
   useEffect(() => {
     findLastPerf();
@@ -143,6 +138,16 @@ const FormTraining: React.FC<Props> = ({
 
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
+        useEffect(() => {
+          const numberOfSeriesInLastPerf =
+            lastPerf && lastPerf[exercise.id]
+              ? Object.keys(lastPerf[exercise.id]).filter((key) =>
+                  key.startsWith("reps")
+                ).length
+              : 3;
+
+          setNumberOfSeries(numberOfSeriesInLastPerf);
+        }, [lastPerf, exercise.id]);
         const [unilateral, setUnilateral] = useState<boolean>(false);
         const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
         useEffect(() => {

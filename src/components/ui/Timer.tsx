@@ -7,8 +7,14 @@ const Timer = () => {
   const [inputValue, setInputValue] = useState("1.3");
   const [lastInputValue, setLastInputValue] = useState("");
   const [isResetting, setIsResetting] = useState(false);
-  const minutes = seconds ? Math.floor(seconds / 60) : 0;
-  const remainingSeconds = seconds ? seconds % 60 : 0;
+  const minutes = seconds
+    ? Math.floor(seconds / 60)
+        .toString()
+        .padStart(2, "0")
+    : "00";
+  const remainingSeconds = seconds
+    ? (seconds % 60).toString().padStart(2, "0")
+    : "00";
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -22,6 +28,7 @@ const Timer = () => {
     } else if (!isResetting && seconds === 0) {
       const audio = new Audio("/ring.mp3");
       audio.play();
+      handleReset();
     }
 
     return () => {
@@ -126,7 +133,7 @@ const Timer = () => {
           </>
         ) : (
           <div className="time-chrono">
-            {minutes}m {remainingSeconds}s
+            {minutes}: {remainingSeconds}
           </div>
         )}
       </div>

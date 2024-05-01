@@ -45,31 +45,34 @@ const Page = () => {
           stopOnFinish={!isTimerActive}
           onTimeFinish={setFinalTime}
         />
+        {finished ? (
+          ""
+        ) : (
+          <div className="row-two">
+            <div className="buttons">
+              <button
+                type="button"
+                className={chornoTimer ? "active" : ""}
+                onClick={() => {
+                  setChronoTimer(true);
+                }}
+              >
+                Chrono
+              </button>
+              <button
+                type="button"
+                className={!chornoTimer ? "active" : ""}
+                onClick={() => {
+                  setChronoTimer(false);
+                }}
+              >
+                Timer
+              </button>
+            </div>
 
-        <div className="row-two">
-          <div className="buttons">
-            <button
-              type="button"
-              className={chornoTimer ? "active" : ""}
-              onClick={() => {
-                setChronoTimer(true);
-              }}
-            >
-              Chrono
-            </button>
-            <button
-              type="button"
-              className={!chornoTimer ? "active" : ""}
-              onClick={() => {
-                setChronoTimer(false);
-              }}
-            >
-              Timer
-            </button>
+            {chornoTimer ? <TimeChronometer /> : <Timer />}
           </div>
-
-          {chornoTimer ? <TimeChronometer /> : <Timer />}
-        </div>
+        )}
       </header>
 
       {thisWorkout && (
