@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Icon from "../ui/Icon";
 
 interface Props {
@@ -24,30 +24,37 @@ const InputFormTraining: React.FC<Props> = ({
   lastPerf,
   onClick,
 }) => {
-  const getIconName = (
-    value: string | number,
-    lastPerf: any,
-    placeholder: string
-  ) => {
+  const [comparisonResult, setComparisonResult] = useState<string | null>(null);
+
+  const handleBlur = () => {
     if (lastPerf) {
-      if (value === "") {
-        return "equal";
-      } else if (value > lastPerf) {
-        return "fire";
+      if (value < lastPerf) {
+        setComparisonResult("sad");
       } else if (value === lastPerf) {
-        return "validation-white";
-      } else if (value < lastPerf) {
-        return "sad";
+        setComparisonResult("validation");
+      } else if (value > lastPerf) {
+        setComparisonResult("fire");
       }
+    } else if (value !== "") {
+      setComparisonResult("validation");
+    } else {
+      setComparisonResult("null");
     }
-    if (!lastPerf) {
-      if (value !== "") {
-        return "validation-white";
-      } else {
-        return "null";
-      }
+  };
+
+  const icon = (comparisonResult: string | null) => {
+    switch (comparisonResult) {
+      case "sad":
+        return <Icon nameImg="sad" onClick={onClick} />;
+      case "validation":
+        return <Icon nameImg="validation" onClick={onClick} />;
+      case "fire":
+        return <Icon nameImg="fire" onClick={onClick} />;
+      case "null":
+        return <Icon nameImg="null" onClick={onClick} />;
+      default:
+        return null;
     }
-    return "null";
   };
   return (
     <div className="input-validation">
@@ -57,28 +64,33 @@ const InputFormTraining: React.FC<Props> = ({
         name={name}
         id={id}
         onChange={onChange}
+        onBlur={handleBlur}
         value={value}
         placeholder={placeholder}
       />
       <div className="icons">
-        <Icon
-          nameImg={getIconName(value, lastPerf, placeholder)}
-          onClick={onClick}
-        />
-        {!name.includes("interval") ? (
-          <div
-            className="plus-one"
-            onClick={() => console.log("add one to placeholder or 1")}
-          >
-            +
-          </div>
-        ) : (
-          lastPerf && (
-            <Icon
-              nameImg="play"
-              onClick={() => console.log("start le timer !")}
-            />
-          )
+        {/* weight and reps : */}
+        {!name.includes("interval") && (
+          <>
+            {icon(comparisonResult)}
+            <div
+              className="plus-one"
+              onClick={() => console.log("add one to placeholder or 1")}
+            >
+              +
+            </div>
+          </>
+        )}
+        {/* REST: */}
+        {name.includes("interval") && (
+          <Icon
+            nameImg="play"
+            onClick={() =>
+              console.log(
+                "start le timer and put the previous timer if no value or placeholder!"
+              )
+            }
+          />
         )}
       </div>
     </div>

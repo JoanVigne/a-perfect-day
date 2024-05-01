@@ -56,20 +56,28 @@ header.workout-header {
 }
 .buttonsPlusMinusSeries {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }
 .buttonsPlusMinusSeries button {
   padding: 2px;
   border: 1px solid var(--color-active-link);
   min-width: 16px;
-  margin: 3px;
 }
 
 .container-exo th,
 .container-exo td {
   border: 1px solid var(--color-black);
-  padding: 4px 5px;
+  padding: 4px 1px;
   text-align: center;
+}
+.container-exo th .same-checkbox {
+  all: revert;
+  filter: invert(100%) hue-rotate(18deg) brightness(3.7);
+  accent-color: var(--color-black);
+}
+.container-exo th .same-label {
+  padding: 0;
+  margin: 0;
 }
 .container-exo .container-input-unilateral .input-validation {
   display: flex;
@@ -130,10 +138,11 @@ header.workout-header {
   justify-content: space-between;
   align-items: center;
 }
-.plus-one {
+.plus-one,
+.equal {
   padding: 0 5px;
   border: 1px solid var(--color-active-link);
   border-radius: 10px;
   min-width: 16px;
-  margin: 3px;
+  margin: 1px;
 }

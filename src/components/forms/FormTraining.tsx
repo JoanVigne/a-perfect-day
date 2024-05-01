@@ -50,7 +50,8 @@ const FormTraining: React.FC<Props> = ({
       }));
     };
   // handleInputChange function
-  const handleInputChange =
+
+  /*   const handleInputChange =
     (exerciseId: string, seriesIndex: number, field: string) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const key = `${exerciseId}-${field}${seriesIndex}`;
@@ -73,7 +74,7 @@ const FormTraining: React.FC<Props> = ({
         newFormData[exerciseId][`${field}${seriesIndex}`] = value;
         return newFormData;
       });
-    };
+    }; */
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -129,15 +130,11 @@ const FormTraining: React.FC<Props> = ({
         onChange={(e) => setSelectedDate(e.target.value)}
       />
 
-      {lastPerf && (
-        <p className="manual">
-          Your last performances are already pre-filled. Press the button equal
-          if you did the same, type if you did different.
-        </p>
-      )}
-
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
+        const [isSameWeightChecked, setIsSameWeightChecked] = useState(true);
+        const [isSameRepsChecked, setIsSameRepsChecked] = useState(true);
+        const [isSameRestChecked, setIsSameRestChecked] = useState(true);
         useEffect(() => {
           const numberOfSeriesInLastPerf =
             lastPerf && lastPerf[exercise.id]
@@ -148,6 +145,46 @@ const FormTraining: React.FC<Props> = ({
 
           setNumberOfSeries(numberOfSeriesInLastPerf);
         }, [lastPerf, exercise.id]);
+        const handleInputChange =
+          (exerciseId: string, seriesIndex: number, field: string) =>
+          (e: React.ChangeEvent<HTMLInputElement>) => {
+            const key = `${exerciseId}-${field}${seriesIndex}`;
+            let value = e.target.value;
+            // Replace "," with "."
+            value = value.replace(/,/g, ".");
+
+            setInputValues((prevInputValues: any) => ({
+              ...prevInputValues,
+              [key]: value,
+            }));
+
+            setFormData((prevFormData: any) => {
+              const newFormData = { ...prevFormData };
+              if (!newFormData[exerciseId]) {
+                newFormData[exerciseId] = {
+                  exoOrder: Object.keys(prevFormData).length,
+                };
+              }
+              newFormData[exerciseId][`${field}${seriesIndex}`] = value;
+              return newFormData;
+            });
+
+            if (seriesIndex === 0) {
+              if (
+                (field === "weight" && isSameWeightChecked) ||
+                (field === "reps" && isSameRepsChecked) ||
+                (field === "int" && isSameRestChecked)
+              ) {
+                for (let i = 1; i < numberOfSeries; i++) {
+                  const otherKey = `${exerciseId}-${field}${i}`;
+                  setInputValues((prevInputValues: any) => ({
+                    ...prevInputValues,
+                    [otherKey]: value,
+                  }));
+                }
+              }
+            }
+          };
         const [unilateral, setUnilateral] = useState<boolean>(false);
         const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
         useEffect(() => {
@@ -218,8 +255,14 @@ const FormTraining: React.FC<Props> = ({
             <table>
               <thead>
                 <tr>
+                  <th>Serie </th>
+                  <th>Weight</th>
+                  <th>Reps</th>
+                  <th>Rest (ex:1.3)</th>
+                </tr>
+                <tr>
                   <th>
-                    Serie{" "}
+                    {" "}
                     <div className="buttonsPlusMinusSeries">
                       <button
                         type="button"
@@ -241,9 +284,39 @@ const FormTraining: React.FC<Props> = ({
                       </button>
                     </div>
                   </th>
-                  <th>Weight</th>
-                  <th>Reps</th>
-                  <th>Rest (ex:1.3)</th>
+                  <th>
+                    <label htmlFor="same-weight" className="same-label"></label>
+                    <input
+                      type="checkbox"
+                      name="same-weight"
+                      id="same-weight"
+                      className="same-checkbox"
+                      checked={isSameWeightChecked}
+                      onChange={(e) => setIsSameWeightChecked(e.target.checked)}
+                    />
+                  </th>
+                  <th>
+                    <label htmlFor="same-reps" className="same-label"></label>
+                    <input
+                      type="checkbox"
+                      name="same-reps"
+                      id="same-reps"
+                      className="same-checkbox"
+                      checked={isSameRepsChecked}
+                      onChange={(e) => setIsSameRepsChecked(e.target.checked)}
+                    />
+                  </th>
+                  <th>
+                    <label htmlFor="same-rest" className="same-label"></label>
+                    <input
+                      type="checkbox"
+                      name="same-rest"
+                      id="same-rest"
+                      className="same-checkbox"
+                      checked={isSameRestChecked}
+                      onChange={(e) => setIsSameRestChecked(e.target.checked)}
+                    />
+                  </th>
                 </tr>
               </thead>
               <tbody>
