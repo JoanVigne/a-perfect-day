@@ -5,8 +5,8 @@ interface Props {
   timerValue: string | number;
   keyToRestart: number;
   shouldStartTimer: boolean;
+  onInputChange: (value: string) => void;
 }
-
 const Timer: React.FC<Props> = ({
   timerValue,
   keyToRestart,
@@ -14,7 +14,7 @@ const Timer: React.FC<Props> = ({
 }) => {
   const [seconds, setSeconds] = useState<number | null>(null);
   const [isActive, setIsActive] = useState(false);
-  const [inputValue, setInputValue] = useState("1.3");
+  const [inputValue, setInputValue] = useState("1");
   const minutes = seconds
     ? Math.floor(seconds / 60)
         .toString()

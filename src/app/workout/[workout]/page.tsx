@@ -17,24 +17,11 @@ const Page = () => {
   const [finished, setFinished] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [finalTime, setFinalTime] = useState("");
-
-  const [keyToRestart, setKeyToRestart] = useState(0);
-  const [shouldStartTimer, setShouldStartTimer] = useState(false);
-  const [timerValue, setTimerValue] = useState<string | number>("");
-  const handleStartTimer = (value: string | number, placeholder: string) => {
-    setChronoTimer(false);
-    console.log("value", value, "placeholder", placeholder);
-    if (value) {
-      setTimerValue(value);
-      setShouldStartTimer(true);
-    } else if (placeholder) {
-      setTimerValue(placeholder);
-      setShouldStartTimer(true);
-    } else {
-      return;
-    }
-  };
-
+  const [restartKey, setRestartKey] = useState(0);
+  const [timerState, setTimerState] = useState({
+    value: "",
+    shouldStart: false,
+  });
   useEffect(() => {
     const pathslug = window.location.pathname.split("/").pop();
     setSlug(pathslug || null);
@@ -49,6 +36,32 @@ const Page = () => {
       setThisWorkout(workout);
     }
   }, [slug]);
+
+  const handleInputChange = (value: string) => {
+    setTimerState({ value, shouldStart: false });
+  };
+
+  const handleStartTimer = (value: string | number, placeholder: string) => {
+    if (value) {
+      setTimerState({ value: value.toString(), shouldStart: true });
+      setRestartKey((prevKey) => prevKey + 1);
+    } else if (placeholder) {
+      setTimerState({ value: placeholder, shouldStart: true });
+      setRestartKey((prevKey) => prevKey + 1);
+    } else {
+      return;
+    }
+  };
+
+  const handleChronoClick = () => {
+    setChronoTimer(true);
+    setTimerState({ value: timerState.value, shouldStart: false });
+  };
+
+  const handleTimerClick = () => {
+    setChronoTimer(false);
+    setTimerState({ value: timerState.value, shouldStart: false });
+  };
 
   const handleFinished = (callback: () => void) => {
     setFinished(true);
@@ -71,18 +84,14 @@ const Page = () => {
               <button
                 type="button"
                 className={chornoTimer ? "active" : ""}
-                onClick={() => {
-                  setChronoTimer(true);
-                }}
+                onClick={handleChronoClick}
               >
                 Chrono
               </button>
               <button
                 type="button"
                 className={!chornoTimer ? "active" : ""}
-                onClick={() => {
-                  setChronoTimer(false);
-                }}
+                onClick={handleTimerClick}
               >
                 Timer
               </button>
@@ -92,9 +101,10 @@ const Page = () => {
               <TimeChronometer />
             ) : (
               <Timer
-                timerValue={timerValue}
-                keyToRestart={keyToRestart}
-                shouldStartTimer={shouldStartTimer}
+                timerValue={timerState.value}
+                shouldStartTimer={timerState.shouldStart}
+                onInputChange={handleInputChange}
+                keyToRestart={restartKey}
               />
             )}
           </div>
