@@ -37,7 +37,7 @@ interface Workout {
     };
   };
 }
-const page = () => {
+const Page = () => {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const { user } = useAuthContext() as { user: UserData };
   useEffect(() => {
@@ -228,4 +228,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

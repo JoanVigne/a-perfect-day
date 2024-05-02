@@ -17,6 +17,24 @@ const Page = () => {
   const [finished, setFinished] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [finalTime, setFinalTime] = useState("");
+
+  const [keyToRestart, setKeyToRestart] = useState(0);
+  const [shouldStartTimer, setShouldStartTimer] = useState(false);
+  const [timerValue, setTimerValue] = useState<string | number>("");
+  const handleStartTimer = (value: string | number, placeholder: string) => {
+    setChronoTimer(false);
+    console.log("value", value, "placeholder", placeholder);
+    if (value) {
+      setTimerValue(value);
+      setShouldStartTimer(true);
+    } else if (placeholder) {
+      setTimerValue(placeholder);
+      setShouldStartTimer(true);
+    } else {
+      return;
+    }
+  };
+
   useEffect(() => {
     const pathslug = window.location.pathname.split("/").pop();
     setSlug(pathslug || null);
@@ -70,7 +88,15 @@ const Page = () => {
               </button>
             </div>
 
-            {chornoTimer ? <TimeChronometer /> : <Timer />}
+            {chornoTimer ? (
+              <TimeChronometer />
+            ) : (
+              <Timer
+                timerValue={timerValue}
+                keyToRestart={keyToRestart}
+                shouldStartTimer={shouldStartTimer}
+              />
+            )}
           </div>
         )}
       </header>
@@ -106,6 +132,7 @@ const Page = () => {
                 setIsTimerActive={setIsTimerActive}
                 finalTime={finalTime}
                 setFinalTime={setFinalTime}
+                onStartTimer={handleStartTimer}
               />
             </>
           )}

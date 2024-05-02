@@ -17,6 +17,7 @@ interface Props {
   setIsTimerActive: React.Dispatch<React.SetStateAction<boolean>>;
   finalTime: string;
   setFinalTime: React.Dispatch<React.SetStateAction<string>>;
+  onStartTimer: (value: string | number, placeholder: string) => void;
 }
 
 interface UserData {
@@ -32,6 +33,7 @@ const FormTraining: React.FC<Props> = ({
   setIsTimerActive,
   finalTime,
   setFinalTime,
+  onStartTimer,
 }) => {
   const [formData, setFormData] = useState<any>({});
   const { user } = useAuthContext() as { user: UserData };
@@ -49,33 +51,12 @@ const FormTraining: React.FC<Props> = ({
         [exerciseId]: event.target.value,
       }));
     };
-  // handleInputChange function
 
-  /*   const handleInputChange =
-    (exerciseId: string, seriesIndex: number, field: string) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const key = `${exerciseId}-${field}${seriesIndex}`;
-      let value = e.target.value;
-      // Replace "," with "."
-      value = value.replace(/,/g, ".");
-
-      setInputValues((prevInputValues: any) => ({
-        ...prevInputValues,
-        [key]: value,
-      }));
-
-      setFormData((prevFormData: any) => {
-        const newFormData = { ...prevFormData };
-        if (!newFormData[exerciseId]) {
-          newFormData[exerciseId] = {
-            exoOrder: Object.keys(prevFormData).length,
-          };
-        }
-        newFormData[exerciseId][`${field}${seriesIndex}`] = value;
-        return newFormData;
-      });
-    }; */
-
+  /*   const startTimer = (value: string | number, placeholder: string) => {
+    console.log("start timer");
+    console.log("value ", value);
+    console.log("placeholder ", placeholder);
+  }; */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     perfSubmit(formData, finalTime);
@@ -355,6 +336,7 @@ const FormTraining: React.FC<Props> = ({
                               "weight"
                             )
                           }
+                          onStartTimer={onStartTimer}
                         />
                         {unilateral && (
                           <InputFormTraining
@@ -391,6 +373,7 @@ const FormTraining: React.FC<Props> = ({
                                 "weight-unilateral"
                               )
                             }
+                            onStartTimer={onStartTimer}
                           />
                         )}
                       </td>
@@ -424,6 +407,7 @@ const FormTraining: React.FC<Props> = ({
                               "reps"
                             )
                           }
+                          onStartTimer={onStartTimer}
                         />
                         {unilateral && (
                           <InputFormTraining
@@ -460,6 +444,7 @@ const FormTraining: React.FC<Props> = ({
                                 "reps-unilateral"
                               )
                             }
+                            onStartTimer={onStartTimer}
                           />
                         )}
                       </td>
@@ -489,6 +474,7 @@ const FormTraining: React.FC<Props> = ({
                           onClick={() =>
                             validatePlaceholder(exercise.id, seriesIndex, "int")
                           }
+                          onStartTimer={onStartTimer}
                         />
                       </td>
                     </tr>

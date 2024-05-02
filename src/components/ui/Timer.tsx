@@ -1,12 +1,20 @@
 import Icon from "@/components/ui/Icon";
 import React, { useState, useEffect } from "react";
 
-const Timer = () => {
+interface Props {
+  timerValue: string | number;
+  keyToRestart: number;
+  shouldStartTimer: boolean;
+}
+
+const Timer: React.FC<Props> = ({
+  timerValue,
+  keyToRestart,
+  shouldStartTimer,
+}) => {
   const [seconds, setSeconds] = useState<number | null>(null);
   const [isActive, setIsActive] = useState(false);
   const [inputValue, setInputValue] = useState("1.3");
-  const [lastInputValue, setLastInputValue] = useState("");
-  const [isResetting, setIsResetting] = useState(false);
   const minutes = seconds
     ? Math.floor(seconds / 60)
         .toString()
@@ -15,6 +23,17 @@ const Timer = () => {
   const remainingSeconds = seconds
     ? (seconds % 60).toString().padStart(2, "0")
     : "00";
+  useEffect(() => {
+    if (timerValue) {
+      setInputValue(timerValue.toString());
+    }
+  }, [timerValue, keyToRestart]);
+
+  useEffect(() => {
+    if (shouldStartTimer) {
+      handleStart();
+    }
+  }, [shouldStartTimer]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -25,16 +44,14 @@ const Timer = () => {
           prevSeconds !== null ? prevSeconds - 1 : null
         );
       }, 1000);
-    } else if (!isResetting && seconds === 0) {
-      const audio = new Audio("/ring.mp3");
-      audio.play();
-      handleReset();
+    } else if (!isActive && seconds !== 0 && interval) {
+      clearInterval(interval);
     }
 
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive, seconds, isResetting]);
+  }, [isActive, seconds]);
 
   const convertToDecimalTime = (time: string) => {
     if (time === null || time === undefined) return null;
@@ -53,38 +70,17 @@ const Timer = () => {
   };
 
   const handleStart = () => {
-    if (isActive) {
-      setIsActive(false);
-    } else {
-      let timeValue = lastInputValue;
-      if (inputValue) {
-        setLastInputValue(inputValue);
-        timeValue = inputValue;
-      }
-
-      if (!timeValue || isNaN(parseFloat(timeValue))) {
-        alert("Please enter a valid number.");
-        return;
-      }
-      const timeInMinutes: number | null = convertToDecimalTime(timeValue);
-      if (timeInMinutes === null) {
-        return;
-      }
-      const timeInSeconds = Math.round(timeInMinutes * 60);
-      setSeconds(timeInSeconds);
-      setIsActive(true);
-    }
+    setIsActive(true);
+    const timeInSeconds = Math.round(parseFloat(inputValue) * 60);
+    setSeconds(timeInSeconds);
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const handleReset = () => {
-    setIsResetting(true);
-    setSeconds(null);
     setIsActive(false);
-    setInputValue(lastInputValue || "1.3");
-    setIsResetting(false);
+    setSeconds(null);
   };
   function increment() {
     setInputValue((prevValue) => {

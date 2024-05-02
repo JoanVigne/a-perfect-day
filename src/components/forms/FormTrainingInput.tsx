@@ -11,6 +11,7 @@ interface Props {
   placeholder: string;
   lastPerf: any;
   onClick: () => void;
+  onStartTimer: (value: string | number, placeholder: string) => void;
 }
 
 const InputFormTraining: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const InputFormTraining: React.FC<Props> = ({
   placeholder,
   lastPerf,
   onClick,
+  onStartTimer,
 }) => {
   const [comparisonResult, setComparisonResult] = useState<string | null>(null);
 
@@ -85,11 +87,7 @@ const InputFormTraining: React.FC<Props> = ({
         {name.includes("interval") && (
           <Icon
             nameImg="play"
-            onClick={() =>
-              console.log(
-                "start le timer and put the previous timer if no value or placeholder!"
-              )
-            }
+            onClick={() => onStartTimer(value, placeholder)}
           />
         )}
       </div>
