@@ -17,7 +17,7 @@ const Page = () => {
   const [finished, setFinished] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [finalTime, setFinalTime] = useState("");
-  const [restartKey, setRestartKey] = useState(0);
+
   const [timerState, setTimerState] = useState({
     value: "",
     shouldStart: false,
@@ -43,11 +43,9 @@ const Page = () => {
 
   const handleStartTimer = (value: string | number, placeholder: string) => {
     if (value) {
-      setTimerState({ value: value.toString(), shouldStart: true });
-      setRestartKey((prevKey) => prevKey + 1);
+      setTimerState({ value: value.toString(), shouldStart: false });
     } else if (placeholder) {
-      setTimerState({ value: placeholder, shouldStart: true });
-      setRestartKey((prevKey) => prevKey + 1);
+      setTimerState({ value: placeholder, shouldStart: false });
     } else {
       return;
     }
@@ -102,9 +100,7 @@ const Page = () => {
             ) : (
               <Timer
                 timerValue={timerState.value}
-                shouldStartTimer={timerState.shouldStart}
                 onInputChange={handleInputChange}
-                keyToRestart={restartKey}
               />
             )}
           </div>

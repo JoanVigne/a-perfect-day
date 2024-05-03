@@ -91,12 +91,15 @@ header.workout-header {
   input {
   border-top: 1px var(--color-white) solid;
 }
-
+.container-exo td input[type="number"]::placeholder {
+  color: grey;
+  font-style: oblique;
+}
 .container-exo td input[type="number"] {
   max-width: 33px;
   height: 25px;
   background-color: var(--color-black);
-  color: var(--color-white);
+  color: white;
   border: none;
   text-align: center;
 }
@@ -138,8 +141,7 @@ header.workout-header {
   justify-content: space-between;
   align-items: center;
 }
-.plus-one,
-.equal {
+.plus-one {
   padding: 0 5px;
   border: 1px solid var(--color-active-link);
   border-radius: 10px;

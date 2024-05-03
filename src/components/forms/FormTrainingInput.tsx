@@ -36,6 +36,8 @@ const InputFormTraining: React.FC<Props> = ({
         setComparisonResult("validation");
       } else if (value > lastPerf) {
         setComparisonResult("fire");
+      } else {
+        setComparisonResult("validation-white");
       }
     } else if (value !== "") {
       setComparisonResult("validation");
@@ -54,10 +56,15 @@ const InputFormTraining: React.FC<Props> = ({
         return <Icon nameImg="fire" onClick={onClick} />;
       case "null":
         return <Icon nameImg="null" onClick={onClick} />;
+      case "validation-white":
+        return <Icon nameImg="validation-white" onClick={onClick} />;
+      case "equal":
+        return <Icon nameImg="equal" onClick={onClick} />;
       default:
-        return null;
+        return <Icon nameImg="null" onClick={onClick} />;
     }
   };
+
   return (
     <div className="input-validation">
       <input
@@ -74,7 +81,11 @@ const InputFormTraining: React.FC<Props> = ({
         {/* weight and reps : */}
         {!name.includes("interval") && (
           <>
-            {icon(comparisonResult)}
+            {comparisonResult
+              ? icon(comparisonResult)
+              : lastPerf && !value
+              ? icon("equal")
+              : ""}
             <div
               className="plus-one"
               onClick={() => console.log("add one to placeholder or 1")}
@@ -86,8 +97,11 @@ const InputFormTraining: React.FC<Props> = ({
         {/* REST: */}
         {name.includes("interval") && (
           <Icon
-            nameImg="play"
-            onClick={() => onStartTimer(value, placeholder)}
+            nameImg={"play"}
+            onClick={() => {
+              onStartTimer(value, placeholder);
+              onClick();
+            }}
           />
         )}
       </div>

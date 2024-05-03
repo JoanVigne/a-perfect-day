@@ -3,15 +3,9 @@ import React, { useState, useEffect } from "react";
 
 interface Props {
   timerValue: string | number;
-  keyToRestart: number;
-  shouldStartTimer: boolean;
   onInputChange: (value: string) => void;
 }
-const Timer: React.FC<Props> = ({
-  timerValue,
-  keyToRestart,
-  shouldStartTimer,
-}) => {
+const Timer: React.FC<Props> = ({ timerValue }) => {
   const [seconds, setSeconds] = useState<number | null>(null);
   const [isActive, setIsActive] = useState(false);
   const [inputValue, setInputValue] = useState("1");
@@ -27,13 +21,7 @@ const Timer: React.FC<Props> = ({
     if (timerValue) {
       setInputValue(timerValue.toString());
     }
-  }, [timerValue, keyToRestart]);
-
-  useEffect(() => {
-    if (shouldStartTimer) {
-      handleStart();
-    }
-  }, [shouldStartTimer]);
+  }, [timerValue]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;

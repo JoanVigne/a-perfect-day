@@ -304,7 +304,7 @@ const FormTraining: React.FC<Props> = ({
                 {Array.from({ length: numberOfSeries }).map(
                   (_, seriesIndex) => (
                     <tr key={seriesIndex}>
-                      <td>{seriesIndex + 1}</td>
+                      <td></td>
                       <td className="container-input-unilateral">
                         <InputFormTraining
                           type="number"
