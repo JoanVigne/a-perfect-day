@@ -12,6 +12,7 @@ interface Props {
   lastPerf: any;
   onClick: () => void;
   onStartTimer: (value: string | number, placeholder: string) => void;
+  onIncrement: () => void;
 }
 
 const InputFormTraining: React.FC<Props> = ({
@@ -25,6 +26,7 @@ const InputFormTraining: React.FC<Props> = ({
   lastPerf,
   onClick,
   onStartTimer,
+  onIncrement,
 }) => {
   const [comparisonResult, setComparisonResult] = useState<string | null>(null);
 
@@ -86,10 +88,7 @@ const InputFormTraining: React.FC<Props> = ({
               : lastPerf && !value
               ? icon("equal")
               : ""}
-            <div
-              className="plus-one"
-              onClick={() => console.log("add one to placeholder or 1")}
-            >
+            <div className="plus-one" onClick={onIncrement}>
               +
             </div>
           </>

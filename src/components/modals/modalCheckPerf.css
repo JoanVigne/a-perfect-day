@@ -1,7 +1,7 @@
 .modal-perf-exo {
   background-color: var(--color-black);
   color: var(--color-white);
-  margin: 5px;
+  margin: 120px 5px;
 }
 .container-perf-exo {
   display: grid;

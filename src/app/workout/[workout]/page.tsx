@@ -9,6 +9,7 @@ import TimeTotal from "@/components/ui/TimeTotal";
 import TimeChronometer from "@/components/ui/TimeChronometer";
 import Timer from "@/components/ui/Timer";
 import "@/components/header.css";
+import FormTrain from "@/components/forms/workout-training/FormTrain";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
@@ -130,7 +131,15 @@ const Page = () => {
             <>
               <h1>{thisWorkout.name}</h1>
               <h2>{thisWorkout.description}</h2>
-              <FormTraining
+              <FormTrain
+                exo={thisWorkout.exercices}
+                thisWorkout={thisWorkout}
+                setFinished={handleFinished}
+                setIsTimerActive={setIsTimerActive}
+                finalTime={finalTime}
+                onStartTimer={handleStartTimer}
+              />
+              {/* <FormTraining
                 exo={thisWorkout.exercices}
                 thisWorkout={thisWorkout}
                 setFinished={handleFinished}
@@ -139,7 +148,7 @@ const Page = () => {
                 finalTime={finalTime}
                 setFinalTime={setFinalTime}
                 onStartTimer={handleStartTimer}
-              />
+              /> */}
             </>
           )}
         </>

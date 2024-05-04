@@ -1,49 +1,37 @@
-import React, { useEffect, useState } from "react";
+import Icon from "@/components/ui/Icon";
 import { useAuthContext } from "@/context/AuthContext";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import { sendToWorkout } from "@/firebase/db/workout";
-import ModalConfirmSend from "../modals/ModalConfirmSend";
-import Button from "../ui/Button";
+import React, { useEffect, useState } from "react";
+import ModalCheckPerf from "@/components/modals/ModalCheckPerf";
 import "./formTraining.css";
-import InputFormTraining from "./FormTrainingInput";
-import Icon from "../ui/Icon";
-import ModalCheckPerf from "../modals/ModalCheckPerf";
-
+import InputNumbers from "./InputNumbers";
 interface Props {
   exo: any[];
   thisWorkout: any;
   setFinished: (callback: () => void) => void;
-  isTimerActive: boolean;
   setIsTimerActive: React.Dispatch<React.SetStateAction<boolean>>;
   finalTime: string;
-  setFinalTime: React.Dispatch<React.SetStateAction<string>>;
   onStartTimer: (value: string | number, placeholder: string) => void;
 }
-
 interface UserData {
   email: string;
   uid: string;
 }
 
-const FormTraining: React.FC<Props> = ({
+const FormTrain: React.FC<Props> = ({
   exo,
   thisWorkout,
   setFinished,
-  isTimerActive,
   setIsTimerActive,
   finalTime,
-  setFinalTime,
   onStartTimer,
 }) => {
-  const [formData, setFormData] = useState<any>({});
   const { user } = useAuthContext() as { user: UserData };
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().substring(0, 10)
   );
-  const [noteExo, setNoteExo] = useState<{ [key: string]: string }>({});
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalVisible2, setIsModalVisible2] = useState(false);
   const [inputValues, setInputValues] = useState<Record<string, number>>({});
+  const [noteExo, setNoteExo] = useState<{ [key: string]: string }>({});
   const handleNoteChange =
     (exerciseId: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setNoteExo((prevNoteExo) => ({
@@ -51,31 +39,8 @@ const FormTraining: React.FC<Props> = ({
         [exerciseId]: event.target.value,
       }));
     };
+  const [confirmation, setConfirmation] = useState(false); // modal confirm submit
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("passe par handleSubmit");
-    console.log(e);
-    perfSubmit(formData, finalTime);
-  };
-
-  async function perfSubmit(data: any, finalTime: string) {
-    console.log("passe par perfSubmit");
-    return;
-    const perfData = { [selectedDate]: { ...data, noteExo } };
-    const duration = { [selectedDate]: finalTime };
-    const updatedWorkout = {
-      ...thisWorkout,
-      perf: { ...thisWorkout.perf, ...perfData },
-      duration: { ...thisWorkout.duration, ...duration },
-    };
-    setFinished(() => {
-      const dataWorkouts = getItemFromLocalStorage("workouts");
-      if (!dataWorkouts) return console.log("no workouts in LS");
-      dataWorkouts[updatedWorkout.id] = updatedWorkout;
-      sendToWorkout(updatedWorkout, user.uid);
-    });
-  }
   // placeholder with last perf :
   const previousworkouts = getItemFromLocalStorage("workouts");
   const [lastPerf, setLastPerf] = useState<any>({});
@@ -101,14 +66,25 @@ const FormTraining: React.FC<Props> = ({
     findLastPerf();
   }, [thisWorkout]);
 
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    for (let i = 0; i < form.elements.length; i++) {
+      const element = form.elements[i] as HTMLInputElement;
+      if (element.type !== "checkbox" && element.value) {
+        console.log(`${element.name}: ${element.value}`);
+      }
+    }
+    console.log("SUBMIT");
+  };
   return (
-    <form onSubmit={handleSubmit} className="form-training">
+    <form onSubmit={submit}>
       <input
         type="date"
         value={selectedDate}
         onChange={(e) => setSelectedDate(e.target.value)}
       />
-
+      {/* DEBUT EXOS  */}
       {exo.map((exercise) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         const [isSameWeightChecked, setIsSameWeightChecked] = useState(true);
@@ -137,18 +113,6 @@ const FormTraining: React.FC<Props> = ({
               ...prevInputValues,
               [key]: value,
             }));
-
-            setFormData((prevFormData: any) => {
-              const newFormData = { ...prevFormData };
-              if (!newFormData[exerciseId]) {
-                newFormData[exerciseId] = {
-                  exoOrder: Object.keys(prevFormData).length,
-                };
-              }
-              newFormData[exerciseId][`${field}${seriesIndex}`] = value;
-              return newFormData;
-            });
-
             if (seriesIndex === 0) {
               if (
                 (field === "weight" && isSameWeightChecked) ||
@@ -191,20 +155,8 @@ const FormTraining: React.FC<Props> = ({
               ...prevInputValues,
               [key]: newValue,
             }));
-
-            setFormData((prevFormData: any) => {
-              const newFormData = { ...prevFormData };
-              if (!newFormData[exerciseId]) {
-                newFormData[exerciseId] = {
-                  exoOrder: Object.keys(prevFormData).length,
-                };
-              }
-              newFormData[exerciseId][`${field}${seriesIndex}`] = newValue;
-              return newFormData;
-            });
           }
         };
-
         return (
           <div key={exercise.id} className="container-exo">
             <ModalCheckPerf
@@ -321,18 +273,12 @@ const FormTraining: React.FC<Props> = ({
                         ...prevInputValues,
                         [key]: newValue,
                       }));
-
-                      // Update formData directly
-                      setFormData((prevFormData: any) => ({
-                        ...prevFormData,
-                        [key]: newValue,
-                      }));
                     };
                     return (
                       <tr key={seriesIndex}>
                         <td></td>
                         <td className="container-input-unilateral">
-                          <InputFormTraining
+                          <InputNumbers
                             type="number"
                             step="0.01"
                             name={`weight${seriesIndex}`}
@@ -372,7 +318,7 @@ const FormTraining: React.FC<Props> = ({
                             }
                           />
                           {unilateral && (
-                            <InputFormTraining
+                            <InputNumbers
                               type="number"
                               step="0.01"
                               name={`weight${seriesIndex}-unilateral`}
@@ -418,7 +364,7 @@ const FormTraining: React.FC<Props> = ({
                           )}
                         </td>
                         <td className="container-input-unilateral">
-                          <InputFormTraining
+                          <InputNumbers
                             type="number"
                             step="0.01"
                             name={`reps${seriesIndex}`}
@@ -454,7 +400,7 @@ const FormTraining: React.FC<Props> = ({
                             }
                           />
                           {unilateral && (
-                            <InputFormTraining
+                            <InputNumbers
                               type="number"
                               step="0.01"
                               name={`reps${seriesIndex}-unilateral`}
@@ -500,7 +446,7 @@ const FormTraining: React.FC<Props> = ({
                           )}
                         </td>
                         <td className="container-input-unilateral">
-                          <InputFormTraining
+                          <InputNumbers
                             type="number"
                             step="0.01"
                             name={`interval${seriesIndex}`}
@@ -570,55 +516,18 @@ const FormTraining: React.FC<Props> = ({
           </div>
         );
       })}
-
-      <div className="buttons-in-line">
-        <Button
-          className="finish"
-          type="button"
-          value="Finish without saving"
-          onClick={(e: any) => {
-            e.preventDefault();
-            setIsTimerActive(false);
-            setIsModalVisible2(true);
-          }}
-        />
-        <ModalConfirmSend
-          isVisible={isModalVisible2}
-          onConfirm={() => {
-            setIsModalVisible2(false);
-            window.location.href = "/workout";
-            /*  perfSubmit(formData, finalTime); */
-          }}
-          onCancel={() => {
-            setIsModalVisible2(false);
-            setIsTimerActive(true);
-          }}
-          message="Are you sure you want to finish without saving your performances?"
-        />
-        <Button
-          className="finish"
-          type="submit"
-          value="Finish and save"
-          onClick={(e: any) => {
-            setIsTimerActive(false);
-            setIsModalVisible(true);
-          }}
-        />
-        <ModalConfirmSend
-          isVisible={isModalVisible}
-          onConfirm={() => {
-            setIsModalVisible(false);
-            perfSubmit(formData, finalTime);
-          }}
-          onCancel={() => {
-            setIsModalVisible(false);
-            setIsTimerActive(true);
-          }}
-          message="Are you sure you want to finish your workout now and save the performances?"
-        />
-      </div>
+      {/* END EXOS  */}
+      <button type="button" onClick={() => setConfirmation(true)}>
+        Finish workout
+      </button>
+      {confirmation && (
+        <div className="confirmation">
+          <button type="submit">I'm sure</button>
+          <button type="button">Cancel</button>
+        </div>
+      )}
     </form>
   );
 };
 
-export default FormTraining;
+export default FormTrain;

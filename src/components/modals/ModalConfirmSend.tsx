@@ -23,7 +23,9 @@ const ModalConfirmSend: React.FC<Props> = ({
       ariaHideApp={false}
     >
       <p>{message}</p>
-      <button onClick={onConfirm}>Yes</button>
+      <button type="submit" onClick={onConfirm}>
+        Yes
+      </button>
       <button onClick={onCancel}>No</button>
     </ReactModal>
   );
