@@ -134,7 +134,7 @@ const FormTrain: React.FC<Props> = ({
     });
   }
   return (
-    <form onSubmit={submit}>
+    <form onSubmit={submit} className="form-training">
       <input
         type="date"
         value={selectedDate}
@@ -276,7 +276,9 @@ const FormTrain: React.FC<Props> = ({
                     </div>
                   </th>
                   <th>
-                    <label htmlFor="same-weight" className="same-label"></label>
+                    <label htmlFor="same-weight" className="same-label">
+                      All ?
+                    </label>
                     <input
                       type="checkbox"
                       name="same-weight"
@@ -287,7 +289,9 @@ const FormTrain: React.FC<Props> = ({
                     />
                   </th>
                   <th>
-                    <label htmlFor="same-reps" className="same-label"></label>
+                    <label htmlFor="same-reps" className="same-label">
+                      All ?
+                    </label>
                     <input
                       type="checkbox"
                       name="same-reps"
@@ -298,7 +302,9 @@ const FormTrain: React.FC<Props> = ({
                     />
                   </th>
                   <th>
-                    <label htmlFor="same-rest" className="same-label"></label>
+                    <label htmlFor="same-rest" className="same-label">
+                      All ?
+                    </label>
                     <input
                       type="checkbox"
                       name="same-rest"

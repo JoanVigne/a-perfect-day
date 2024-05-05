@@ -70,15 +70,13 @@ header.workout-header {
   padding: 4px 1px;
   text-align: center;
 }
+
 .container-exo th .same-checkbox {
   all: revert;
   filter: invert(100%) hue-rotate(18deg) brightness(3.7);
   accent-color: var(--color-black);
 }
-.container-exo th .same-label {
-  padding: 0;
-  margin: 0;
-}
+
 .container-exo .container-input-unilateral .input-validation {
   display: flex;
   align-items: center;
