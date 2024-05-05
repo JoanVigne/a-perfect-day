@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import ModalCheckPerf from "@/components/modals/ModalCheckPerf";
 import "./formTraining.css";
 import InputNumbers from "./InputNumbers";
+import { sendToWorkout } from "@/firebase/db/workout";
 interface Props {
   exo: any[];
   thisWorkout: any;
@@ -46,18 +47,30 @@ const FormTrain: React.FC<Props> = ({
   const [lastPerf, setLastPerf] = useState<any>({});
   function findLastPerf() {
     Object.values(previousworkouts).forEach((workout: any) => {
-      if (workout.id === thisWorkout.id) {
-        if (workout.perf) {
-          const dates = Object.keys(workout.perf).map((dateStr) =>
-            new Date(dateStr).getTime()
-          );
-          const maxDate = new Date(Math.max.apply(null, dates));
-          const maxDateStr = maxDate.toISOString().substring(0, 10);
-          const lastPerf = workout.perf[maxDateStr];
-          setLastPerf(lastPerf);
-          if (lastPerf.noteExo) {
-            setNoteExo(lastPerf.noteExo);
+      if (workout.id === thisWorkout.id && workout.perf) {
+        const dates = Object.keys(workout.perf).map((dateStr) =>
+          new Date(dateStr).getTime()
+        );
+        const maxDate = new Date(Math.max.apply(null, dates));
+        const maxDateStr = maxDate.toISOString().substring(0, 10);
+        const lastPerf = workout.perf[maxDateStr];
+
+        // Adjust the structure of lastPerf to match the new data structure
+        let adjustedLastPerf: { [key: string]: any } = {};
+        for (const key in lastPerf) {
+          if (key.startsWith("exoPerso")) {
+            let newKey = key;
+            adjustedLastPerf[newKey] = {
+              ...lastPerf[key],
+              exoOrder: lastPerf[key].exoOrder.toString(), // Convert exoOrder to a string
+            };
           }
+        }
+        adjustedLastPerf.noteExo = lastPerf.noteExo;
+
+        setLastPerf(adjustedLastPerf);
+        if (adjustedLastPerf.noteExo) {
+          setNoteExo(adjustedLastPerf.noteExo);
         }
       }
     });
@@ -69,14 +82,57 @@ const FormTrain: React.FC<Props> = ({
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
+    let data: { [key: string]: any } = {};
+    let exoId = "";
+    let exoOrder = "";
+
     for (let i = 0; i < form.elements.length; i++) {
       const element = form.elements[i] as HTMLInputElement;
-      if (element.type !== "checkbox" && element.value) {
-        console.log(`${element.name}: ${element.value}`);
+      if (element.name === "exoId") {
+        exoId = element.value;
+      } else if (element.name === "exoOrder") {
+        exoOrder = element.value;
+      } else if (element.type !== "checkbox" && element.value) {
+        const [property, index] = element.name.split("-");
+        if (!data[exoId]) {
+          data[exoId] = { exoOrder: exoOrder };
+        }
+        if (exoId) {
+          data[exoId][property] = element.value;
+        }
       }
     }
-    console.log("SUBMIT");
+    // Remove empty objects
+    for (const key in data) {
+      if (!Object.values(data[key]).some((x) => x !== null && x !== "")) {
+        delete data[key];
+      }
+    }
+    // Check if there's at least one exercise for the selected date
+    if (Object.keys(data).length > 0) {
+      perfSubmit(data, finalTime);
+    } else {
+      console.log("No exercises for the selected date");
+    }
   };
+
+  async function perfSubmit(data: any, finalTime: string) {
+    const perfData = { [selectedDate]: { ...data, noteExo } };
+    const duration = { [selectedDate]: finalTime };
+    const updatedWorkout = {
+      ...thisWorkout,
+      perf: { ...thisWorkout.perf, ...perfData },
+      duration: { ...thisWorkout.duration, ...duration },
+    };
+
+    console.log("Updated workout: ", updatedWorkout);
+    setFinished(() => {
+      const dataWorkouts = getItemFromLocalStorage("workouts");
+      if (!dataWorkouts) return console.log("no workouts in LS");
+      dataWorkouts[updatedWorkout.id] = updatedWorkout;
+      sendToWorkout(updatedWorkout, user.uid);
+    });
+  }
   return (
     <form onSubmit={submit}>
       <input
@@ -85,7 +141,7 @@ const FormTrain: React.FC<Props> = ({
         onChange={(e) => setSelectedDate(e.target.value)}
       />
       {/* DEBUT EXOS  */}
-      {exo.map((exercise) => {
+      {exo.map((exercise, index) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
         const [isSameWeightChecked, setIsSameWeightChecked] = useState(true);
         const [isSameRepsChecked, setIsSameRepsChecked] = useState(true);
@@ -100,7 +156,8 @@ const FormTrain: React.FC<Props> = ({
 
           setNumberOfSeries(numberOfSeriesInLastPerf);
         }, [lastPerf, exercise.id]);
-
+        const [placeholdersWhenAllSame, setPlaceholdersWhenAllSame] =
+          useState<any>({});
         const handleInputChange =
           (exerciseId: string, seriesIndex: number, field: string) =>
           (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,19 +170,18 @@ const FormTrain: React.FC<Props> = ({
               ...prevInputValues,
               [key]: value,
             }));
-            if (seriesIndex === 0) {
-              if (
-                (field === "weight" && isSameWeightChecked) ||
-                (field === "reps" && isSameRepsChecked) ||
-                (field === "int" && isSameRestChecked)
-              ) {
-                for (let i = 1; i < numberOfSeries; i++) {
-                  const otherKey = `${exerciseId}-${field}${i}`;
-                  setInputValues((prevInputValues: any) => ({
-                    ...prevInputValues,
-                    [otherKey]: value,
-                  }));
-                }
+
+            if (
+              (field === "weight" && isSameWeightChecked) ||
+              (field === "reps" && isSameRepsChecked) ||
+              (field === "interval" && isSameRestChecked)
+            ) {
+              for (let i = seriesIndex + 1; i < numberOfSeries; i++) {
+                const otherKey = `${exerciseId}-${field}${i}`;
+                setPlaceholdersWhenAllSame((prevPlaceholders: any) => ({
+                  ...prevPlaceholders,
+                  [otherKey]: value || lastPerf[exerciseId][`${field}${i}`],
+                }));
               }
             }
           };
@@ -175,6 +231,8 @@ const FormTrain: React.FC<Props> = ({
                 previous perf
               </button>
               {exercise.name}
+              <input type="hidden" name="exoId" value={exercise.id} />
+              <input type="hidden" name="exoOrder" value={index} />
               <button
                 className="unilateral-button"
                 type="button"
@@ -192,6 +250,7 @@ const FormTrain: React.FC<Props> = ({
                   <th>Reps</th>
                   <th>Rest (ex:1.3)</th>
                 </tr>
+                {/* same-thing row */}
                 <tr>
                   <th>
                     {" "}
@@ -294,12 +353,20 @@ const FormTrain: React.FC<Props> = ({
                               ] || ""
                             }
                             placeholder={
-                              lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`weight${seriesIndex}`]
-                            }
-                            lastPerf={
-                              lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`weight${seriesIndex}`]
+                              placeholdersWhenAllSame[
+                                `${exercise.id}-weight${seriesIndex}`
+                              ] ||
+                              (isSameWeightChecked &&
+                                seriesIndex > 0 &&
+                                inputValues[
+                                  `${exercise.id}-weight${seriesIndex - 1}`
+                                ]) ||
+                              (lastPerf &&
+                                lastPerf[exercise.id] &&
+                                lastPerf[exercise.id][
+                                  `weight${seriesIndex}`
+                                ]) ||
+                              ""
                             }
                             onClick={() =>
                               validatePlaceholder(
@@ -334,12 +401,6 @@ const FormTrain: React.FC<Props> = ({
                                 ] || ""
                               }
                               placeholder={
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][
-                                  `weight-unilateral${seriesIndex}`
-                                ]
-                              }
-                              lastPerf={
                                 lastPerf[exercise.id] &&
                                 lastPerf[exercise.id][
                                   `weight-unilateral${seriesIndex}`
@@ -383,10 +444,6 @@ const FormTrain: React.FC<Props> = ({
                               lastPerf[exercise.id] &&
                               lastPerf[exercise.id][`reps${seriesIndex}`]
                             }
-                            lastPerf={
-                              lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`reps${seriesIndex}`]
-                            }
                             onClick={() =>
                               validatePlaceholder(
                                 exercise.id,
@@ -421,12 +478,6 @@ const FormTrain: React.FC<Props> = ({
                                   `reps-unilateral${seriesIndex}`
                                 ]
                               }
-                              lastPerf={
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][
-                                  `reps-unilateral${seriesIndex}`
-                                ]
-                              }
                               onClick={() =>
                                 validatePlaceholder(
                                   exercise.id,
@@ -454,30 +505,31 @@ const FormTrain: React.FC<Props> = ({
                             onChange={handleInputChange(
                               exercise.id,
                               seriesIndex,
-                              "int"
+                              "interval"
                             )}
                             value={
-                              inputValues[`${exercise.id}-int${seriesIndex}`] ||
-                              ""
+                              inputValues[
+                                `${exercise.id}-interval${seriesIndex}`
+                              ] || ""
                             }
                             placeholder={
                               lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`int${seriesIndex}`]
-                            }
-                            lastPerf={
-                              lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`int${seriesIndex}`]
+                              lastPerf[exercise.id][`interval${seriesIndex}`]
                             }
                             onClick={() =>
                               validatePlaceholder(
                                 exercise.id,
                                 seriesIndex,
-                                "int"
+                                "interval"
                               )
                             }
                             onStartTimer={onStartTimer}
                             onIncrement={() =>
-                              handleIncrement(exercise.id, seriesIndex, "int")
+                              handleIncrement(
+                                exercise.id,
+                                seriesIndex,
+                                "interval"
+                              )
                             }
                           />
                         </td>
@@ -499,7 +551,9 @@ const FormTrain: React.FC<Props> = ({
                 }}
               />
               <input
+                type="text"
                 className="note-exo"
+                name="noteExo"
                 placeholder={`Note about ${exercise.name}?`}
                 value={
                   lastPerf[exercise.id] &&
