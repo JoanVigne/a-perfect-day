@@ -401,10 +401,22 @@ const FormTrain: React.FC<Props> = ({
                                 ] || ""
                               }
                               placeholder={
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][
-                                  `weight-unilateral${seriesIndex}`
-                                ]
+                                placeholdersWhenAllSame[
+                                  `${exercise.id}-weight-unilateral${seriesIndex}`
+                                ] ||
+                                (isSameWeightChecked &&
+                                  seriesIndex > 0 &&
+                                  inputValues[
+                                    `${exercise.id}-weight-unilateral${
+                                      seriesIndex - 1
+                                    }`
+                                  ]) ||
+                                (lastPerf &&
+                                  lastPerf[exercise.id] &&
+                                  lastPerf[exercise.id][
+                                    `weight-unilateral${seriesIndex}`
+                                  ]) ||
+                                ""
                               }
                               onClick={() =>
                                 validatePlaceholder(
@@ -441,8 +453,18 @@ const FormTrain: React.FC<Props> = ({
                               ] || ""
                             }
                             placeholder={
-                              lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`reps${seriesIndex}`]
+                              placeholdersWhenAllSame[
+                                `${exercise.id}-reps${seriesIndex}`
+                              ] ||
+                              (isSameWeightChecked &&
+                                seriesIndex > 0 &&
+                                inputValues[
+                                  `${exercise.id}-reps${seriesIndex - 1}`
+                                ]) ||
+                              (lastPerf &&
+                                lastPerf[exercise.id] &&
+                                lastPerf[exercise.id][`reps${seriesIndex}`]) ||
+                              ""
                             }
                             onClick={() =>
                               validatePlaceholder(
@@ -473,10 +495,22 @@ const FormTrain: React.FC<Props> = ({
                                 ] || ""
                               }
                               placeholder={
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][
-                                  `reps-unilateral${seriesIndex}`
-                                ]
+                                placeholdersWhenAllSame[
+                                  `${exercise.id}-reps-unilateral${seriesIndex}`
+                                ] ||
+                                (isSameWeightChecked &&
+                                  seriesIndex > 0 &&
+                                  inputValues[
+                                    `${exercise.id}-reps-unilateral${
+                                      seriesIndex - 1
+                                    }`
+                                  ]) ||
+                                (lastPerf &&
+                                  lastPerf[exercise.id] &&
+                                  lastPerf[exercise.id][
+                                    `reps-unilateral${seriesIndex}`
+                                  ]) ||
+                                ""
                               }
                               onClick={() =>
                                 validatePlaceholder(
@@ -513,8 +547,20 @@ const FormTrain: React.FC<Props> = ({
                               ] || ""
                             }
                             placeholder={
-                              lastPerf[exercise.id] &&
-                              lastPerf[exercise.id][`interval${seriesIndex}`]
+                              placeholdersWhenAllSame[
+                                `${exercise.id}-interval${seriesIndex}`
+                              ] ||
+                              (isSameWeightChecked &&
+                                seriesIndex > 0 &&
+                                inputValues[
+                                  `${exercise.id}-interval${seriesIndex - 1}`
+                                ]) ||
+                              (lastPerf &&
+                                lastPerf[exercise.id] &&
+                                lastPerf[exercise.id][
+                                  `interval${seriesIndex}`
+                                ]) ||
+                              ""
                             }
                             onClick={() =>
                               validatePlaceholder(
