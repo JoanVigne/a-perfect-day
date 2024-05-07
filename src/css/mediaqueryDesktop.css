@@ -1,0 +1,30 @@
+@media only screen and (min-width: 768px) {
+  html {
+    margin: auto;
+  }
+  input,
+  .icon,
+  .plus-one,
+  button {
+    cursor: pointer;
+  }
+  input[type="number"] {
+    max-width: 80px;
+  }
+  body .HeaderTraining .time input,
+  .same-checkbox {
+    max-width: 80px;
+  }
+  body .container-exo td input[type="number"] {
+    max-width: 80px;
+  }
+  .cont-form.active {
+    overflow: auto;
+  }
+  .task-stat-card h3 {
+    overflow: auto;
+  }
+  .task-stat-card {
+    max-width: 180px;
+  }
+}

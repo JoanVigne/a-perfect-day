@@ -40,7 +40,7 @@ header {
 .HeaderTraining .row-two .buttons .icon {
   margin: 3px;
 }
-.HeaderTraining .row-two .buttons button.active {
+.HeaderTraining .row-two .buttons button.active-button {
   border: 2px var(--color-active-link) solid;
 }
 .HeaderTraining .row-two .buttonsPlusAndMinus {

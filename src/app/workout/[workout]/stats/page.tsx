@@ -107,14 +107,15 @@ const Page = () => {
             modalOpen={modalOpen}
             setModalOpen={setModalOpen}
             workoutToModify={workout}
+            duringTraining={false}
           />
           <h2>{workout.description}</h2>
           <h3>Exos :</h3>
-          <ul>
+          <ul className="list-exos">
             {workout.exercices &&
               workout.exercices.map((exo, index) => (
-                <li key={index} style={{ display: "inline-flex" }}>
-                  {exo.name}
+                <li key={index}>
+                  <span className="index">{index + 1}</span> {exo.name}
                   {index !== workout.exercices.length - 1 && (
                     <span>,&nbsp;</span>
                   )}

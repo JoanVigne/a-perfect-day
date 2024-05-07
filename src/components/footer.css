@@ -23,7 +23,7 @@ footer ul li a {
   height: 100%;
 }
 
-footer .active {
+footer .active-link {
   color: var(--color-active-link);
   text-decoration: underline;
 }

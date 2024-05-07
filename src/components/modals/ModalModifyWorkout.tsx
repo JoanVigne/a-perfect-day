@@ -13,6 +13,7 @@ interface Props {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
   workoutToModify: any;
+  duringTraining: boolean;
 }
 interface Exercice {
   name: string;
@@ -27,21 +28,26 @@ const ModalModifyWorkout: React.FC<Props> = ({
   modalOpen,
   setModalOpen,
   workoutToModify,
+  duringTraining,
 }) => {
   const { user } = useAuthContext() as { user: UserData };
   const [exercicesChosen, setExercicesChosen] = useState<Exercice[]>([]);
   const [exoFromDb, setExoFromDb] = useState({});
   const [name, setName] = useState(workoutToModify.name);
   const [description, setDescription] = useState(workoutToModify.description);
-
+  const [messageCantModify, setMessageCantModify] = useState(false);
   async function fetchExoFromDb() {
     const data = await fetchDataFromDBToLocalStorage("exercices");
     setExoFromDb(data);
   }
 
   useEffect(() => {
+    console.log(workoutToModify);
     setExercicesChosen(workoutToModify.exercices);
   }, []);
+  useEffect(() => {
+    console.log("workouttomodify:", workoutToModify);
+  }, [workoutToModify, modalOpen]);
   const [exoPerso, setExoPerso] = useState<Exercice[]>([]);
   function addPersoExo() {
     const input = document.getElementById("persoExercice") as HTMLInputElement;
@@ -82,9 +88,6 @@ const ModalModifyWorkout: React.FC<Props> = ({
       console.error("Form not found");
       return;
     }
-    const formData = new FormData(form);
-    const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
     const updatedWorkout = {
       ...workoutToModify,
       name: name,
@@ -107,20 +110,28 @@ const ModalModifyWorkout: React.FC<Props> = ({
       ariaHideApp={false}
     >
       <button onClick={() => setModalOpen(false)}>Close</button>
-      <form action="">
+      <form onSubmit={submitModification}>
         <label htmlFor="name">Name</label>
         <input
           type="text"
           value={name}
           name="name"
           onChange={(e) => setName(e.target.value)}
+          readOnly={duringTraining}
+          onClick={
+            duringTraining
+              ? () => setMessageCantModify(true)
+              : () => setMessageCantModify(false)
+          }
         />
+        {messageCantModify ? <p>Can't modify this now</p> : ""}
         <label htmlFor="description">Description</label>
         <input
           type="text"
           value={description}
           name="description"
           onChange={(e) => setDescription(e.target.value)}
+          readOnly={duringTraining}
         />
         <h3>Add more exercices ?</h3>
         <ContainerExoList

@@ -1,11 +1,14 @@
 .modify-workout-modal {
   background-color: var(--color-black);
   width: 95%;
-  height: 95%;
-  margin: 5px auto 100px auto;
+  height: 75%;
+  margin: 125px auto 100px auto;
   overflow-y: scroll;
 }
-
+.modify-workout-modal input:read-only {
+  border: 1px solid var(--color-red); /* dark gray */
+  opacity: 1; /* Firefox */
+}
 .modify-workout-modal .container-perso-exo {
   display: flex;
   align-items: center;

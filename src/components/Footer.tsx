@@ -18,14 +18,14 @@ const Footer = () => {
       <nav>
         <ul>
           <li>
-            <Link href="/" className={pathname == "/" ? "active" : ""}>
+            <Link href="/" className={pathname == "/" ? "active-link" : ""}>
               Routine
             </Link>
           </li>
           <li>
             <Link
               href="/improve"
-              className={pathname == "/improve" ? "active" : ""}
+              className={pathname == "/improve" ? "active-link" : ""}
             >
               Improve
             </Link>
@@ -33,7 +33,7 @@ const Footer = () => {
           <li>
             <Link
               href="/workout"
-              className={pathname == "/workout" ? "active" : ""}
+              className={pathname == "/workout" ? "active-link" : ""}
             >
               Workout
             </Link>
@@ -41,7 +41,7 @@ const Footer = () => {
           {/*  <li>
             <Link
               href="/historic"
-              className={pathname == "/historic" ? "active" : ""}
+              className={pathname == "/historic" ? "active-link" : ""}
             >
               Historic
             </Link>

@@ -10,6 +10,8 @@ import TimeChronometer from "@/components/ui/TimeChronometer";
 import Timer from "@/components/ui/Timer";
 import "@/components/header.css";
 import FormTrain from "@/components/forms/workout-training/FormTrain";
+import Icon from "@/components/ui/Icon";
+import ModalModifyWorkout from "@/components/modals/ModalModifyWorkout";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
@@ -18,7 +20,7 @@ const Page = () => {
   const [finished, setFinished] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [finalTime, setFinalTime] = useState("");
-
+  const [modalModify, setModalModify] = useState(false);
   const [timerState, setTimerState] = useState({
     value: "",
     shouldStart: false,
@@ -82,14 +84,14 @@ const Page = () => {
             <div className="buttons">
               <button
                 type="button"
-                className={chornoTimer ? "active" : ""}
+                className={chornoTimer ? "active-button" : ""}
                 onClick={handleChronoClick}
               >
                 Chrono
               </button>
               <button
                 type="button"
-                className={!chornoTimer ? "active" : ""}
+                className={!chornoTimer ? "active-button" : ""}
                 onClick={handleTimerClick}
               >
                 Timer
@@ -129,7 +131,16 @@ const Page = () => {
             </div>
           ) : (
             <>
-              <h1>{thisWorkout.name}</h1>
+              <h1>
+                <ModalModifyWorkout
+                  modalOpen={modalModify}
+                  setModalOpen={setModalModify}
+                  workoutToModify={thisWorkout}
+                  duringTraining={true}
+                />
+                <Icon nameImg="modify" onClick={() => setModalModify(true)} />
+                {thisWorkout.name}
+              </h1>
               <h2>{thisWorkout.description}</h2>
               <FormTrain
                 exo={thisWorkout.exercices}

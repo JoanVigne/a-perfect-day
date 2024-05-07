@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "@/app/globals.css";
+import "@/css/globals.css";
 import "@/css/lists.css";
 import "@/css/form.css";
 import "@/css/animation.css";
@@ -8,6 +8,7 @@ import "@/css/modal.css";
 import "@/css/stats.css";
 import "@/css/calendar.css";
 import "@/css/improve.css";
+import "@/css/mediaqueryDesktop.css";
 import { AuthContextProvider } from "@/context/AuthContext";
 import Head from "next/head";
 

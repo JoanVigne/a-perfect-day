@@ -1,3 +1,18 @@
+.list-exos {
+  border: 1px var(--color-white) solid;
+  padding: 2px;
+}
+.list-exos li {
+  display: inline-flex;
+  align-items: center;
+  font-size: 20px;
+}
+.list-exos li .index {
+  border: 1px var(--color-active-link) solid;
+  padding: 1px 3px;
+  margin: 1px 6px 1px 1px;
+}
+
 .container-date-perf {
   border: 1px var(--color-green) solid;
 }
