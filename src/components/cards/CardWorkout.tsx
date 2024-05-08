@@ -23,8 +23,13 @@ const CardWorkout: React.FC<Props> = ({ workout, index }) => {
     if (workout.perf) {
       const dates = Object.keys(workout.perf);
       const lastDate = dates.sort()[dates.length - 1];
+
       if (lastDate) {
-        setLastTime(lastDate);
+        const formattedDate = new Date(lastDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+        setLastTime(formattedDate);
       }
     }
   }, []);
@@ -49,7 +54,7 @@ const CardWorkout: React.FC<Props> = ({ workout, index }) => {
       <div className="perf">
         <Link href={`/workout/${workout.id}`}>Train now</Link>
 
-        <h4>{workout.perf ? <>Last time : {lastTime}</> : <>no data yet</>}</h4>
+        <h4>{workout.perf ? <>Last: {lastTime}</> : <>no data yet</>}</h4>
       </div>
     </div>
   );

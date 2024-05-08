@@ -48,7 +48,6 @@ const Page = () => {
       if (!workoutls) return;
       const workout = workoutls[pathslug];
       setWorkout(workout);
-      console.log("workout", workout);
     }
   }, []);
   const [modalOpen, setModalOpen] = useState(false);
@@ -57,7 +56,6 @@ const Page = () => {
   const [showPerf, setShowPerf] = useState<{ [date: string]: boolean }>({});
 
   async function removeWorkout(workout: Workout) {
-    console.log("remove workout", workout);
     const ls = getItemFromLocalStorage("workouts");
     if (workout && workout.id !== undefined) {
       const workoutUpdated = { ...ls };
@@ -67,7 +65,6 @@ const Page = () => {
           delete workoutUpdated[taskKey];
         }
       });
-      console.log("workoutUpdated", workoutUpdated);
       const mess = await removeFromWorkouts(workoutUpdated, user.uid);
       console.log(mess);
       window.location.href = "/workout";
@@ -110,114 +107,116 @@ const Page = () => {
             duringTraining={false}
           />
           <h2>{workout.description}</h2>
-          <h3>Exos :</h3>
+          <h3>Exercices :</h3>
           <ul className="list-exos">
             {workout.exercices &&
               workout.exercices.map((exo, index) => (
                 <li key={index}>
                   <span className="index">{index + 1}</span> {exo.name}
-                  {index !== workout.exercices.length - 1 && (
-                    <span>,&nbsp;</span>
-                  )}
                 </li>
               ))}
           </ul>
           <div className="">
             <h3>Performances:</h3>
-            <h4>by date :</h4>
+            <h4>Most reccent :</h4>
             {workout.perf ? (
               Object.entries(workout.perf)
                 .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
-                .map(([date, perfData], index) => (
-                  <div key={index} className="container-date-perf">
-                    <h4
-                      style={{
-                        marginLeft: "20px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <IconOpen
-                        show={showPerf[date] || false}
-                        setShow={(show: boolean) =>
-                          setShowPerf((prev) => ({ ...prev, [date]: show }))
-                        }
-                      />{" "}
-                      {date}{" "}
-                    </h4>
-                    <div className="container-perf">
-                      {showPerf[date] &&
-                        Object.entries(perfData)
-                          .filter(([key]) => key !== "noteExo")
-                          .sort((a, b) => a[1].exoOrder - b[1].exoOrder)
-                          .map(([exerciseId, exerciseData], index) => {
-                            const exercise =
-                              workout.exercices[exerciseData.exoOrder];
-                            if (!exercise) {
-                              return null;
-                            }
-                            return (
-                              <div key={index} className="container-exo">
-                                <h4>{exercise.name}</h4>
-                                <table>
-                                  <thead>
-                                    <tr>
-                                      <th></th>
-                                      <th>Wei.</th>
-                                      <th>Reps</th>
-                                      <th>Rest</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {Object.keys(exerciseData)
-                                      .filter((key) => key.startsWith("weight"))
-                                      .map((key, i) => (
-                                        <tr key={i}>
-                                          <td>{i + 1}-</td>
-                                          <td>
-                                            {exerciseData[`weight${i}`]}
-                                            {exerciseData[
-                                              `weight-unilateral${i}`
-                                            ] && (
-                                              <>
-                                                -
-                                                {
-                                                  exerciseData[
-                                                    `weight-unilateral${i}`
-                                                  ]
-                                                }
-                                              </>
-                                            )}
-                                          </td>
-                                          <td>
-                                            {exerciseData[`reps${i}`]}
-                                            {exerciseData[
-                                              `reps-unilateral${i}`
-                                            ] && (
-                                              <>
-                                                -
-                                                {
-                                                  exerciseData[
-                                                    `reps-unilateral${i}`
-                                                  ]
-                                                }
-                                              </>
-                                            )}
-                                          </td>
-                                          <td>{exerciseData[`int${i}`]}</td>
-                                        </tr>
-                                      ))}
-                                  </tbody>
-                                </table>
-                                {perfData.noteExo && (
-                                  <p>Note : {perfData.noteExo[exerciseId]}</p>
-                                )}
-                              </div>
-                            );
-                          })}
+                .map(([date, perfData], index) => {
+                  const formattedDate = new Date(date).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                    }
+                  );
+                  return (
+                    <div key={index} className="container-date-perf">
+                      <h4>
+                        <IconOpen
+                          show={showPerf[date] || false}
+                          setShow={(show: boolean) =>
+                            setShowPerf((prev) => ({ ...prev, [date]: show }))
+                          }
+                        />{" "}
+                        {formattedDate}{" "}
+                      </h4>
+                      <div className="container-perf">
+                        {showPerf[date] &&
+                          Object.entries(perfData)
+                            .filter(([key]) => key !== "noteExo")
+                            .sort((a, b) => a[1].exoOrder - b[1].exoOrder)
+                            .map(([exerciseId, exerciseData], index) => {
+                              const exercise =
+                                workout.exercices[exerciseData.exoOrder];
+                              if (!exercise) {
+                                return null;
+                              }
+                              return (
+                                <div key={index} className="container-exo">
+                                  <h4>{exercise.name}</h4>
+                                  <table>
+                                    <thead>
+                                      <tr>
+                                        <th></th>
+                                        <th>Wei.</th>
+                                        <th>Reps</th>
+                                        <th>Rest</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {Object.keys(exerciseData)
+                                        .filter((key) =>
+                                          key.startsWith("weight")
+                                        )
+                                        .map((key, i) => (
+                                          <tr key={i}>
+                                            <td>{i + 1}-</td>
+                                            <td>
+                                              {exerciseData[`weight${i}`]}
+                                              {exerciseData[
+                                                `weight-unilateral${i}`
+                                              ] && (
+                                                <>
+                                                  -
+                                                  {
+                                                    exerciseData[
+                                                      `weight-unilateral${i}`
+                                                    ]
+                                                  }
+                                                </>
+                                              )}
+                                            </td>
+                                            <td>
+                                              {exerciseData[`reps${i}`]}
+                                              {exerciseData[
+                                                `reps-unilateral${i}`
+                                              ] && (
+                                                <>
+                                                  -
+                                                  {
+                                                    exerciseData[
+                                                      `reps-unilateral${i}`
+                                                    ]
+                                                  }
+                                                </>
+                                              )}
+                                            </td>
+                                            <td>{exerciseData[`int${i}`]}</td>
+                                          </tr>
+                                        ))}
+                                    </tbody>
+                                  </table>
+                                  {perfData.noteExo && (
+                                    <p>Note : {perfData.noteExo[exerciseId]}</p>
+                                  )}
+                                </div>
+                              );
+                            })}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
             ) : (
               <>
                 <h4>No performances yet, go train ? </h4>
