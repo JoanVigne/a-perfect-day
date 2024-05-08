@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import FormTraining from "../../../components/forms/FormTraining";
 
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import Link from "next/link";
@@ -96,7 +95,7 @@ const Page = () => {
             {chornoTimer ? (
               <TimeChronometer />
             ) : (
-              <Timer key={timerKey} timerValue={timerValue} />
+              <Timer timerKey={timerKey} timerValue={timerValue} />
             )}
           </div>
         )}
@@ -142,16 +141,6 @@ const Page = () => {
                 finalTime={finalTime}
                 onStartTimer={handleStartTimer}
               />
-              {/* <FormTraining
-                exo={thisWorkout.exercices}
-                thisWorkout={thisWorkout}
-                setFinished={handleFinished}
-                isTimerActive={isTimerActive}
-                setIsTimerActive={setIsTimerActive}
-                finalTime={finalTime}
-                setFinalTime={setFinalTime}
-                onStartTimer={handleStartTimer}
-              /> */}
             </>
           )}
         </>

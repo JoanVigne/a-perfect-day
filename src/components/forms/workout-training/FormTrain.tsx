@@ -1,7 +1,7 @@
 import Icon from "@/components/ui/Icon";
 import { useAuthContext } from "@/context/AuthContext";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalCheckPerf from "@/components/modals/ModalCheckPerf";
 import "./formTraining.css";
 import InputNumbers from "./InputNumbers";
@@ -43,7 +43,7 @@ const FormTrain: React.FC<Props> = ({
       }));
     };
   const [confirmation, setConfirmation] = useState(false); // modal confirm submit
-
+  const [confirmQuit, setConfirmQuit] = useState(false);
   // placeholder with last perf :
   const previousworkouts = getItemFromLocalStorage("workouts");
   const [lastPerf, setLastPerf] = useState<any>({});
@@ -93,7 +93,7 @@ const FormTrain: React.FC<Props> = ({
       } else if (element.name === "exoOrder") {
         exoOrder = element.value;
       } else if (element.type !== "checkbox" && element.value) {
-        const [property, index] = element.name.split("-");
+        const [property] = element.name.split("-");
         if (!data[exoId]) {
           data[exoId] = { exoOrder: exoOrder };
         }
@@ -132,7 +132,6 @@ const FormTrain: React.FC<Props> = ({
     };
 
     console.log("Updated workout: ", updatedWorkout);
-    return;
     setFinished(() => {
       const dataWorkouts = getItemFromLocalStorage("workouts");
       if (!dataWorkouts) return console.log("no workouts in LS");
@@ -158,7 +157,6 @@ const FormTrain: React.FC<Props> = ({
                   key.startsWith("reps")
                 ).length
               : 3;
-
           setNumberOfSeries(numberOfSeriesInLastPerf);
         }, [lastPerf, exercise.id]);
 
@@ -231,7 +229,6 @@ const FormTrain: React.FC<Props> = ({
                 uni lateral?
               </button>
             </h3>
-            {exercise.equipmentt && <h3>equipment: {exercise.equipment}</h3>}
             <table>
               <thead>
                 <tr>
@@ -242,7 +239,6 @@ const FormTrain: React.FC<Props> = ({
                 </tr>
                 <tr>
                   <th>
-                    {" "}
                     <div className="buttonsPlusMinusSeries">
                       <button
                         type="button"
@@ -273,7 +269,6 @@ const FormTrain: React.FC<Props> = ({
                 {Array.from({ length: numberOfSeries }).map(
                   (_, seriesIndex) => {
                     const handleIncrement = (
-                      exerciseId: string,
                       seriesIndex: number,
                       field: string
                     ) => {
@@ -328,11 +323,7 @@ const FormTrain: React.FC<Props> = ({
                             }
                             onStartTimer={onStartTimer}
                             onIncrement={() =>
-                              handleIncrement(
-                                exercise.id,
-                                seriesIndex,
-                                "weight"
-                              )
+                              handleIncrement(seriesIndex, "weight")
                             }
                           />
                           {unilateral && (
@@ -369,7 +360,6 @@ const FormTrain: React.FC<Props> = ({
                               onStartTimer={onStartTimer}
                               onIncrement={() =>
                                 handleIncrement(
-                                  exercise.id,
                                   seriesIndex,
                                   "weight-unilateral"
                                 )
@@ -408,7 +398,7 @@ const FormTrain: React.FC<Props> = ({
                             }
                             onStartTimer={onStartTimer}
                             onIncrement={() =>
-                              handleIncrement(exercise.id, seriesIndex, "reps")
+                              handleIncrement(seriesIndex, "reps")
                             }
                           />
                           {unilateral && (
@@ -444,11 +434,7 @@ const FormTrain: React.FC<Props> = ({
                               }
                               onStartTimer={onStartTimer}
                               onIncrement={() =>
-                                handleIncrement(
-                                  exercise.id,
-                                  seriesIndex,
-                                  "reps-unilateral"
-                                )
+                                handleIncrement(seriesIndex, "reps-unilateral")
                               }
                             />
                           )}
@@ -486,11 +472,7 @@ const FormTrain: React.FC<Props> = ({
                             }
                             onStartTimer={onStartTimer}
                             onIncrement={() =>
-                              handleIncrement(
-                                exercise.id,
-                                seriesIndex,
-                                "interval"
-                              )
+                              handleIncrement(seriesIndex, "interval")
                             }
                           />
                         </td>
@@ -504,7 +486,6 @@ const FormTrain: React.FC<Props> = ({
               <Icon
                 nameImg="clean"
                 onClick={() => {
-                  setNumberOfSeries(3);
                   setNoteExo((prevNoteExo) => ({
                     ...prevNoteExo,
                     [exercise.id]: "",
@@ -532,10 +513,28 @@ const FormTrain: React.FC<Props> = ({
         );
       })}
       {/* END EXOS  */}
-      <button type="button" onClick={() => setConfirmation(true)}>
-        Finish workout
-      </button>
-
+      <div className="container-finish">
+        <button
+          className="finish"
+          type="button"
+          onClick={() => setConfirmQuit(true)}
+        >
+          Quit
+        </button>
+        <ModalConfirmSend
+          isVisible={confirmQuit}
+          onConfirm={() => (window.location.href = "/workout")}
+          onCancel={() => setConfirmQuit(false)}
+          message={"Are you sure you want to quit without saving?"}
+        />
+        <button
+          className="finish"
+          type="button"
+          onClick={() => setConfirmation(true)}
+        >
+          Finish and save
+        </button>
+      </div>
       <ReactModal
         className="confirmModal"
         isOpen={confirmation}

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import Icon from "./Icon";
 
 interface Props {
-  key: number;
+  timerKey: number;
   timerValue: number | null;
 }
 
-const Timer: React.FC<Props> = ({ key, timerValue }) => {
+const Timer: React.FC<Props> = ({ timerKey, timerValue }) => {
   const [seconds, setSeconds] = useState<number | null>(
     timerValue ? Number(timerValue) : null
   );
@@ -29,7 +29,6 @@ const Timer: React.FC<Props> = ({ key, timerValue }) => {
     : "00";
 
   useEffect(() => {
-    console.log("DANS LE USE EFFECT");
     if (timerValue) {
       const minutes = Math.floor(timerValue);
       const seconds = Math.round((timerValue - minutes) * 100);
@@ -37,7 +36,7 @@ const Timer: React.FC<Props> = ({ key, timerValue }) => {
       setIsActive(true);
       setInputValue("");
     }
-  }, [key]);
+  }, [timerKey]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
