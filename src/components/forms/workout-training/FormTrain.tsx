@@ -1,11 +1,13 @@
 import Icon from "@/components/ui/Icon";
 import { useAuthContext } from "@/context/AuthContext";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import ModalCheckPerf from "@/components/modals/ModalCheckPerf";
 import "./formTraining.css";
 import InputNumbers from "./InputNumbers";
 import { sendToWorkout } from "@/firebase/db/workout";
+import ModalConfirmSend from "@/components/modals/ModalConfirmSend";
+import ReactModal from "react-modal";
 interface Props {
   exo: any[];
   thisWorkout: any;
@@ -76,9 +78,10 @@ const FormTrain: React.FC<Props> = ({
     findLastPerf();
   }, [thisWorkout]);
 
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("SUBMITED ?");
+    const form = event.currentTarget;
     let data: { [key: string]: any } = {};
     let exoId = "";
     let exoOrder = "";
@@ -116,7 +119,6 @@ const FormTrain: React.FC<Props> = ({
   async function perfSubmit(data: any, finalTime: string) {
     const fireIcons = document.getElementsByClassName("icon fire");
     const fireIconCount = fireIcons.length;
-    /*     setNumberOfFire(fireIconCount); */
     const perfData = { [selectedDate]: { ...data, noteExo } };
     const duration = { [selectedDate]: finalTime };
     const updatedWorkout = {
@@ -130,6 +132,7 @@ const FormTrain: React.FC<Props> = ({
     };
 
     console.log("Updated workout: ", updatedWorkout);
+    return;
     setFinished(() => {
       const dataWorkouts = getItemFromLocalStorage("workouts");
       if (!dataWorkouts) return console.log("no workouts in LS");
@@ -532,12 +535,21 @@ const FormTrain: React.FC<Props> = ({
       <button type="button" onClick={() => setConfirmation(true)}>
         Finish workout
       </button>
-      {confirmation && (
-        <div className="confirmation">
-          <button type="submit">I'm sure</button>
-          <button type="button">Cancel</button>
-        </div>
-      )}
+
+      <ReactModal
+        className="confirmModal"
+        isOpen={confirmation}
+        shouldCloseOnOverlayClick={true}
+        ariaHideApp={false}
+      >
+        <p>Do you wanna finish your workout and record what you achieved?</p>
+        <form onSubmit={submit}>
+          <button type="submit">Yes</button>
+          <button type="button" onClick={() => setConfirmation(false)}>
+            No
+          </button>
+        </form>
+      </ReactModal>
     </form>
   );
 };

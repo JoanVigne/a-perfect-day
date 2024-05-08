@@ -42,12 +42,9 @@ const ModalModifyWorkout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    console.log(workoutToModify);
     setExercicesChosen(workoutToModify.exercices);
   }, []);
-  useEffect(() => {
-    console.log("workouttomodify:", workoutToModify);
-  }, [workoutToModify, modalOpen]);
+
   const [exoPerso, setExoPerso] = useState<Exercice[]>([]);
   function addPersoExo() {
     const input = document.getElementById("persoExercice") as HTMLInputElement;
