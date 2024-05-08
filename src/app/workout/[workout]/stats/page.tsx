@@ -153,6 +153,9 @@ const Page = () => {
                           .map(([exerciseId, exerciseData], index) => {
                             const exercise =
                               workout.exercices[exerciseData.exoOrder];
+                            if (!exercise) {
+                              return null;
+                            }
                             return (
                               <div key={index} className="container-exo">
                                 <h4>{exercise.name}</h4>
@@ -166,42 +169,44 @@ const Page = () => {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {[...Array(3)].map((_, i) => (
-                                      <tr key={i}>
-                                        <td>{i + 1}-</td>
-                                        <td>
-                                          {exerciseData[`weight${i}`]}
-                                          {exerciseData[
-                                            `weight-unilateral${i}`
-                                          ] && (
-                                            <>
-                                              -
-                                              {
-                                                exerciseData[
-                                                  `weight-unilateral${i}`
-                                                ]
-                                              }
-                                            </>
-                                          )}
-                                        </td>
-                                        <td>
-                                          {exerciseData[`reps${i}`]}
-                                          {exerciseData[
-                                            `reps-unilateral${i}`
-                                          ] && (
-                                            <>
-                                              -
-                                              {
-                                                exerciseData[
-                                                  `reps-unilateral${i}`
-                                                ]
-                                              }
-                                            </>
-                                          )}
-                                        </td>
-                                        <td>{exerciseData[`int${i}`]}</td>
-                                      </tr>
-                                    ))}
+                                    {Object.keys(exerciseData)
+                                      .filter((key) => key.startsWith("weight"))
+                                      .map((key, i) => (
+                                        <tr key={i}>
+                                          <td>{i + 1}-</td>
+                                          <td>
+                                            {exerciseData[`weight${i}`]}
+                                            {exerciseData[
+                                              `weight-unilateral${i}`
+                                            ] && (
+                                              <>
+                                                -
+                                                {
+                                                  exerciseData[
+                                                    `weight-unilateral${i}`
+                                                  ]
+                                                }
+                                              </>
+                                            )}
+                                          </td>
+                                          <td>
+                                            {exerciseData[`reps${i}`]}
+                                            {exerciseData[
+                                              `reps-unilateral${i}`
+                                            ] && (
+                                              <>
+                                                -
+                                                {
+                                                  exerciseData[
+                                                    `reps-unilateral${i}`
+                                                  ]
+                                                }
+                                              </>
+                                            )}
+                                          </td>
+                                          <td>{exerciseData[`int${i}`]}</td>
+                                        </tr>
+                                      ))}
                                   </tbody>
                                 </table>
                                 {perfData.noteExo && (

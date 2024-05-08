@@ -54,8 +54,6 @@ const FormTrain: React.FC<Props> = ({
         const maxDate = new Date(Math.max.apply(null, dates));
         const maxDateStr = maxDate.toISOString().substring(0, 10);
         const lastPerf = workout.perf[maxDateStr];
-
-        // Adjust the structure of lastPerf to match the new data structure
         let adjustedLastPerf: { [key: string]: any } = {};
         for (const key in lastPerf) {
           if (key.startsWith("exoPerso")) {
@@ -67,7 +65,6 @@ const FormTrain: React.FC<Props> = ({
           }
         }
         adjustedLastPerf.noteExo = lastPerf.noteExo;
-
         setLastPerf(adjustedLastPerf);
         if (adjustedLastPerf.noteExo) {
           setNoteExo(adjustedLastPerf.noteExo);
@@ -117,11 +114,18 @@ const FormTrain: React.FC<Props> = ({
   };
 
   async function perfSubmit(data: any, finalTime: string) {
+    const fireIcons = document.getElementsByClassName("icon fire");
+    const fireIconCount = fireIcons.length;
+    /*     setNumberOfFire(fireIconCount); */
     const perfData = { [selectedDate]: { ...data, noteExo } };
     const duration = { [selectedDate]: finalTime };
     const updatedWorkout = {
       ...thisWorkout,
       perf: { ...thisWorkout.perf, ...perfData },
+      numbImprovement: {
+        ...thisWorkout.numbImprovement,
+        ...{ [selectedDate]: fireIconCount },
+      },
       duration: { ...thisWorkout.duration, ...duration },
     };
 
@@ -274,12 +278,12 @@ const FormTrain: React.FC<Props> = ({
                       const placeholder =
                         lastPerf[exercise.id] &&
                         lastPerf[exercise.id][`${field}${seriesIndex}`];
-                      const newValue = inputValues[key]
-                        ? inputValues[key] + 1
-                        : placeholder
-                        ? parseInt(placeholder) + 1
-                        : 1;
-
+                      const currentValue =
+                        Number(inputValues[key]) || Number(placeholder) || 0;
+                      const newValue = currentValue + 1;
+                      console.log(
+                        `key: ${key}, currentValue: ${currentValue}, newValue: ${newValue}`
+                      );
                       setInputValues((prevInputValues: any) => ({
                         ...prevInputValues,
                         [key]: newValue,
@@ -373,7 +377,7 @@ const FormTrain: React.FC<Props> = ({
                         <td className="container-input-unilateral">
                           <InputNumbers
                             type="number"
-                            step="0.01"
+                            step="0.5"
                             name={`reps${seriesIndex}`}
                             id={`reps${seriesIndex}`}
                             onChange={handleInputChange(

@@ -77,23 +77,25 @@ const ModalCheckPerf: React.FC<Props> = ({
                 </tr>
               </thead>
               <tbody>
-                {[...Array(3)].map((_, i) => (
-                  <tr key={i}>
-                    <td>
-                      {data[`weight${i}`]}
-                      {data[`weight-unilateral${i}`] && (
-                        <>-{data[`weight-unilateral${i}`]}</>
-                      )}
-                    </td>
-                    <td>
-                      {data[`reps${i}`]}
-                      {data[`reps-unilateral${i}`] && (
-                        <>-{data[`reps-unilateral${i}`]}</>
-                      )}
-                    </td>
-                    <td>{data[`int${i}`]}</td>
-                  </tr>
-                ))}
+                {Object.keys(data)
+                  .filter((key) => key.startsWith("weight"))
+                  .map((key, i) => (
+                    <tr key={i}>
+                      <td>
+                        {data[`weight${i}`]}
+                        {data[`weight-unilateral${i}`] && (
+                          <>-{data[`weight-unilateral${i}`]}</>
+                        )}
+                      </td>
+                      <td>
+                        {data[`reps${i}`]}
+                        {data[`reps-unilateral${i}`] && (
+                          <>-{data[`reps-unilateral${i}`]}</>
+                        )}
+                      </td>
+                      <td>{data[`int${i}`]}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
