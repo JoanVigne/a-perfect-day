@@ -53,20 +53,20 @@ const InputNumbers: React.FC<Props> = ({
   };
   return (
     <div className="input-validation">
-      <input
-        type={type}
-        step={step}
-        name={name}
-        id={id}
-        onChange={onChange}
-        value={value}
-        placeholder={placeholder}
-      />
       <div className="icons">
         {/* weight and reps : */}
         {!name.includes("interval") && (
           <>
             {icon(comparisonResult || (placeholder && !value ? "equal" : ""))}
+            <input
+              type={type}
+              step={step}
+              name={name}
+              id={id}
+              onChange={onChange}
+              value={value}
+              placeholder={placeholder}
+            />
             <div className="plus-one" onClick={onIncrement}>
               +
             </div>
@@ -74,13 +74,24 @@ const InputNumbers: React.FC<Props> = ({
         )}
         {/* REST: */}
         {name.includes("interval") && (
-          <Icon
-            nameImg={"play"}
-            onClick={() => {
-              onStartTimer(value, placeholder);
-              onClick();
-            }}
-          />
+          <>
+            <input
+              type={type}
+              step={step}
+              name={name}
+              id={id}
+              onChange={onChange}
+              value={value}
+              placeholder={placeholder}
+            />
+            <Icon
+              nameImg={"play"}
+              onClick={() => {
+                onStartTimer(value, placeholder);
+                onClick();
+              }}
+            />
+          </>
         )}
       </div>
     </div>

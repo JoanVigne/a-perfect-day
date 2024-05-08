@@ -143,9 +143,7 @@ const FormTrain: React.FC<Props> = ({
       {/* DEBUT EXOS  */}
       {exo.map((exercise, index) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
-        const [isSameWeightChecked, setIsSameWeightChecked] = useState(true);
-        const [isSameRepsChecked, setIsSameRepsChecked] = useState(true);
-        const [isSameRestChecked, setIsSameRestChecked] = useState(true);
+
         useEffect(() => {
           const numberOfSeriesInLastPerf =
             lastPerf && lastPerf[exercise.id]
@@ -156,8 +154,7 @@ const FormTrain: React.FC<Props> = ({
 
           setNumberOfSeries(numberOfSeriesInLastPerf);
         }, [lastPerf, exercise.id]);
-        const [placeholdersWhenAllSame, setPlaceholdersWhenAllSame] =
-          useState<any>({});
+
         const handleInputChange =
           (exerciseId: string, seriesIndex: number, field: string) =>
           (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,20 +167,6 @@ const FormTrain: React.FC<Props> = ({
               ...prevInputValues,
               [key]: value,
             }));
-
-            if (
-              (field === "weight" && isSameWeightChecked) ||
-              (field === "reps" && isSameRepsChecked) ||
-              (field === "interval" && isSameRestChecked)
-            ) {
-              for (let i = seriesIndex + 1; i < numberOfSeries; i++) {
-                const otherKey = `${exerciseId}-${field}${i}`;
-                setPlaceholdersWhenAllSame((prevPlaceholders: any) => ({
-                  ...prevPlaceholders,
-                  [otherKey]: value || lastPerf[exerciseId][`${field}${i}`],
-                }));
-              }
-            }
           };
         const [unilateral, setUnilateral] = useState<boolean>(false);
         const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
@@ -250,7 +233,6 @@ const FormTrain: React.FC<Props> = ({
                   <th>Reps</th>
                   <th>Rest (ex:1.3)</th>
                 </tr>
-                {/* same-thing row */}
                 <tr>
                   <th>
                     {" "}
@@ -275,45 +257,9 @@ const FormTrain: React.FC<Props> = ({
                       </button>
                     </div>
                   </th>
-                  <th>
-                    <label htmlFor="same-weight" className="same-label">
-                      All ?
-                    </label>
-                    <input
-                      type="checkbox"
-                      name="same-weight"
-                      id="same-weight"
-                      className="same-checkbox"
-                      checked={isSameWeightChecked}
-                      onChange={(e) => setIsSameWeightChecked(e.target.checked)}
-                    />
-                  </th>
-                  <th>
-                    <label htmlFor="same-reps" className="same-label">
-                      All ?
-                    </label>
-                    <input
-                      type="checkbox"
-                      name="same-reps"
-                      id="same-reps"
-                      className="same-checkbox"
-                      checked={isSameRepsChecked}
-                      onChange={(e) => setIsSameRepsChecked(e.target.checked)}
-                    />
-                  </th>
-                  <th>
-                    <label htmlFor="same-rest" className="same-label">
-                      All ?
-                    </label>
-                    <input
-                      type="checkbox"
-                      name="same-rest"
-                      id="same-rest"
-                      className="same-checkbox"
-                      checked={isSameRestChecked}
-                      onChange={(e) => setIsSameRestChecked(e.target.checked)}
-                    />
-                  </th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -359,14 +305,6 @@ const FormTrain: React.FC<Props> = ({
                               ] || ""
                             }
                             placeholder={
-                              placeholdersWhenAllSame[
-                                `${exercise.id}-weight${seriesIndex}`
-                              ] ||
-                              (isSameWeightChecked &&
-                                seriesIndex > 0 &&
-                                inputValues[
-                                  `${exercise.id}-weight${seriesIndex - 1}`
-                                ]) ||
                               (lastPerf &&
                                 lastPerf[exercise.id] &&
                                 lastPerf[exercise.id][
@@ -407,16 +345,6 @@ const FormTrain: React.FC<Props> = ({
                                 ] || ""
                               }
                               placeholder={
-                                placeholdersWhenAllSame[
-                                  `${exercise.id}-weight-unilateral${seriesIndex}`
-                                ] ||
-                                (isSameWeightChecked &&
-                                  seriesIndex > 0 &&
-                                  inputValues[
-                                    `${exercise.id}-weight-unilateral${
-                                      seriesIndex - 1
-                                    }`
-                                  ]) ||
                                 (lastPerf &&
                                   lastPerf[exercise.id] &&
                                   lastPerf[exercise.id][
@@ -459,14 +387,6 @@ const FormTrain: React.FC<Props> = ({
                               ] || ""
                             }
                             placeholder={
-                              placeholdersWhenAllSame[
-                                `${exercise.id}-reps${seriesIndex}`
-                              ] ||
-                              (isSameWeightChecked &&
-                                seriesIndex > 0 &&
-                                inputValues[
-                                  `${exercise.id}-reps${seriesIndex - 1}`
-                                ]) ||
                               (lastPerf &&
                                 lastPerf[exercise.id] &&
                                 lastPerf[exercise.id][`reps${seriesIndex}`]) ||
@@ -501,16 +421,6 @@ const FormTrain: React.FC<Props> = ({
                                 ] || ""
                               }
                               placeholder={
-                                placeholdersWhenAllSame[
-                                  `${exercise.id}-reps-unilateral${seriesIndex}`
-                                ] ||
-                                (isSameWeightChecked &&
-                                  seriesIndex > 0 &&
-                                  inputValues[
-                                    `${exercise.id}-reps-unilateral${
-                                      seriesIndex - 1
-                                    }`
-                                  ]) ||
                                 (lastPerf &&
                                   lastPerf[exercise.id] &&
                                   lastPerf[exercise.id][
@@ -553,14 +463,6 @@ const FormTrain: React.FC<Props> = ({
                               ] || ""
                             }
                             placeholder={
-                              placeholdersWhenAllSame[
-                                `${exercise.id}-interval${seriesIndex}`
-                              ] ||
-                              (isSameWeightChecked &&
-                                seriesIndex > 0 &&
-                                inputValues[
-                                  `${exercise.id}-interval${seriesIndex - 1}`
-                                ]) ||
                               (lastPerf &&
                                 lastPerf[exercise.id] &&
                                 lastPerf[exercise.id][

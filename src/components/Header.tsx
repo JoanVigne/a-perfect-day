@@ -40,7 +40,7 @@ const Header = () => {
 
   useEffect(() => {
     const date = new Date();
-    const month = date.getMonth() + 1;
+    const month = date.getMonth();
     const monthName = months[month];
     const day = date.getDate();
     setDateToday(` ${monthName} ${day} `);
