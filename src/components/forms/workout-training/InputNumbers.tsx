@@ -9,7 +9,7 @@ interface Props {
   value: string | number;
   placeholder: string;
   onClick: () => void;
-  onStartTimer: (value: string | number, placeholder: string) => void;
+  onStartTimer: (value: number, placeholder: string) => void;
   onIncrement: () => void;
 }
 const InputNumbers: React.FC<Props> = ({
@@ -87,7 +87,7 @@ const InputNumbers: React.FC<Props> = ({
             <Icon
               nameImg={"play"}
               onClick={() => {
-                onStartTimer(value, placeholder);
+                onStartTimer(Number(value), placeholder);
                 onClick();
               }}
             />

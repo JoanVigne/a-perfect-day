@@ -2,6 +2,7 @@
   width: 25px;
   height: 25px;
   transition: all 1s;
+  cursor: pointer;
 }
 .add {
   width: 25px;
@@ -22,7 +23,7 @@
   transform: translateX(-10%) rotate(-0deg);
 }
 
-.icon.null {  
+.icon.null {
   width: 15px;
   height: 15px;
   margin: 4px;

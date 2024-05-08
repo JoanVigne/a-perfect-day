@@ -21,10 +21,9 @@ const Page = () => {
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [finalTime, setFinalTime] = useState("");
   const [modalModify, setModalModify] = useState(false);
-  const [timerState, setTimerState] = useState({
-    value: "",
-    shouldStart: false,
-  });
+
+  const [timerKey, setTimerKey] = useState(0);
+  const [timerValue, setTimerValue] = useState<number | null>(null);
   useEffect(() => {
     const pathslug = window.location.pathname.split("/").pop();
     setSlug(pathslug || null);
@@ -40,28 +39,24 @@ const Page = () => {
     }
   }, [slug]);
 
-  const handleInputChange = (value: string) => {
-    setTimerState({ value, shouldStart: false });
-  };
-
-  const handleStartTimer = (value: string | number, placeholder: string) => {
+  const handleStartTimer = (value: number, placeholder: string) => {
+    let newTimerValue = 0;
     if (value) {
-      setTimerState({ value: value.toString(), shouldStart: false });
+      newTimerValue = Number(value);
     } else if (placeholder) {
-      setTimerState({ value: placeholder, shouldStart: false });
-    } else {
-      return;
+      newTimerValue = Number(placeholder);
     }
+    // Wrap the timer value in an object
+    setTimerValue(newTimerValue);
+    setTimerKey((prevKey) => prevKey + 1);
   };
 
   const handleChronoClick = () => {
     setChronoTimer(true);
-    setTimerState({ value: timerState.value, shouldStart: false });
   };
 
   const handleTimerClick = () => {
     setChronoTimer(false);
-    setTimerState({ value: timerState.value, shouldStart: false });
   };
 
   const handleFinished = (callback: () => void) => {
@@ -72,11 +67,11 @@ const Page = () => {
   return (
     <div>
       <header className="HeaderTraining">
-        <TimeTotal
+        {/*  <TimeTotal
           isActive={isTimerActive}
           stopOnFinish={!isTimerActive}
           onTimeFinish={setFinalTime}
-        />
+        /> */}
         {finished ? (
           ""
         ) : (
@@ -101,10 +96,7 @@ const Page = () => {
             {chornoTimer ? (
               <TimeChronometer />
             ) : (
-              <Timer
-                timerValue={timerState.value}
-                onInputChange={handleInputChange}
-              />
+              <Timer key={timerKey} timerValue={timerValue} />
             )}
           </div>
         )}

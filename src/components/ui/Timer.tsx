@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import Icon from "./Icon";
 
 interface Props {
-  timerValue: number;
+  key: number;
+  timerValue: number | null;
 }
 
-const Timer: React.FC<Props> = ({ timerValue }) => {
-  const [seconds, setSeconds] = useState<number | null>(null);
+const Timer: React.FC<Props> = ({ key, timerValue }) => {
+  const [seconds, setSeconds] = useState<number | null>(
+    timerValue ? Number(timerValue) : null
+  );
   const [isActive, setIsActive] = useState(false);
   const [inputPlaceHolder, setInputPlaceHolder] = useState("1");
   const [inputValue, setInputValue] = useState("");
+  const audio = new Audio("/ring.mp3");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -25,32 +29,47 @@ const Timer: React.FC<Props> = ({ timerValue }) => {
     : "00";
 
   useEffect(() => {
+    console.log("DANS LE USE EFFECT");
     if (timerValue) {
       const minutes = Math.floor(timerValue);
       const seconds = Math.round((timerValue - minutes) * 100);
       setSeconds(minutes * 60 + seconds);
       setIsActive(true);
+      setInputValue("");
     }
-  }, [timerValue]);
+  }, [key]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
     if (isActive && seconds !== null && seconds > 0) {
       interval = setInterval(() => {
-        setSeconds((prevSeconds) =>
-          prevSeconds !== null ? prevSeconds - 1 : null
-        );
+        setSeconds((prevSeconds) => {
+          if (prevSeconds !== null && prevSeconds > 1) {
+            return prevSeconds - 1;
+          } else {
+            if (interval) clearInterval(interval);
+            // Play the audio
+            audio.play();
+            return null;
+          }
+        });
       }, 1000);
-    } else if (!isActive && seconds !== null) {
-      clearInterval(interval!);
+    } else if (!isActive && seconds !== 0 && interval) {
+      clearInterval(interval);
     }
 
-    return () => clearInterval(interval!);
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [isActive, seconds]);
+
   const handleReset = () => {
     setIsActive(false);
     setSeconds(null);
+    setInputValue("");
   };
   const handleStart = () => {
     setIsActive(true);
@@ -58,14 +77,12 @@ const Timer: React.FC<Props> = ({ timerValue }) => {
       const minutes = Math.floor(parseFloat(inputValue));
       const seconds = Math.round((parseFloat(inputValue) - minutes) * 100);
       setSeconds(minutes * 60 + seconds);
-      console.log("minutes :", minutes, "seconds :", seconds);
     } else {
       const minutes = Math.floor(parseFloat(inputPlaceHolder));
       const seconds = Math.round(
         (parseFloat(inputPlaceHolder) - minutes) * 100
       );
       setSeconds(minutes * 60 + seconds);
-      console.log("minutes :", minutes, "seconds :", seconds);
     }
   };
   function increment() {

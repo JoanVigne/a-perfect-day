@@ -12,7 +12,7 @@ interface Props {
   setFinished: (callback: () => void) => void;
   setIsTimerActive: React.Dispatch<React.SetStateAction<boolean>>;
   finalTime: string;
-  onStartTimer: (value: string | number, placeholder: string) => void;
+  onStartTimer: (value: number, placeholder: string) => void;
 }
 interface UserData {
   email: string;
