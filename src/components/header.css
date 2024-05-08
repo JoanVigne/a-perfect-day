@@ -71,8 +71,9 @@ header {
 }
 
 .HeaderTraining .time input {
-  max-width: 45px;
-  height: 26px;
+  max-width: 75px;
+  height: 32px;
+  font-size: 30px;
   text-align: center;
   background-color: var(--color-dark-grey);
 }
