@@ -25,7 +25,6 @@ const InputNumbers: React.FC<Props> = ({
   onIncrement,
 }) => {
   const [comparisonResult, setComparisonResult] = useState<string | null>(null);
-
   useEffect(() => {
     let result = "null";
     if (placeholder) {

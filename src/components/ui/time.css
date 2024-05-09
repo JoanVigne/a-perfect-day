@@ -30,6 +30,7 @@
     transform: scale(1);
   }
   50% {
+    color: var(--color-active-link);
     transform: scale(1.2);
   }
   100% {
@@ -39,4 +40,23 @@
 
 .pulse {
   animation: pulse 1s ease-in-out;
+}
+
+@keyframes pulse-red {
+  0% {
+    transform: scale(1);
+    color: var(--color-white);
+  }
+  50% {
+    transform: scale(1.1);
+    color: var(--color-red);
+  }
+  100% {
+    transform: scale(1);
+    color: var(--color-white);
+  }
+}
+
+.final-seconds {
+  animation: pulse-red 1s infinite;
 }

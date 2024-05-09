@@ -92,14 +92,19 @@ header.workout-header {
 .container-exo td input[type="number"]::placeholder {
   color: grey;
   font-style: oblique;
+  transition: color 0.3s ease-in-out;
 }
 .container-exo td input[type="number"] {
   max-width: 33px;
   height: 25px;
   background-color: var(--color-black);
-  color: white;
+  color: var(--color-white);
   border: none;
   text-align: center;
+  transition: border 0.5s ease-in-out;
+}
+.container-exo td input[type="number"]:hover {
+  border: 1px var(--color-white) solid;
 }
 .form-training .container-cleannote-note {
   display: flex;
@@ -108,13 +113,20 @@ header.workout-header {
 }
 .form-training .note-exo {
   height: 35px;
-  width: 100%;
+  width: 50%;
   margin: 0;
   border: none;
-  box-sizing: border-box; /* Add this line */
+  box-sizing: border-box;
   padding: 0 10px;
   background-color: var(--color-black);
   font-size: 15px;
+  transition: width 0.5s ease-in;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.form-training .note-exo:hover {
+  width: 100%;
 }
 .form-training .buttons-in-line .finish {
   margin: auto;
@@ -149,7 +161,7 @@ header.workout-header {
 
 .container-finish {
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
 }
 .finish {
   background-color: var(--color-dark-green);
