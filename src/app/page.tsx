@@ -17,6 +17,8 @@ import Header from "@/components/Header";
 import TemporaryMessage from "../components/ui/TemporaryMessage";
 import Link from "next/link";
 import { getItemFromLocalStorage } from "../utils/localstorage";
+import Icon from "@/components/ui/Icon";
+import ModalHelp from "@/components/modals/ModalHelp";
 
 interface UserData {
   email: string;
@@ -44,7 +46,7 @@ export default function Home() {
 
   const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
   const [messagelist, setMessagelist] = useState<string | null>(null);
-
+  const [openHelpModal, setOpenHelpModal] = useState(false);
   useEffect(() => {
     async function checkFBInit() {
       try {
@@ -170,7 +172,6 @@ export default function Home() {
     localStorage.setItem("todayList", JSON.stringify(updatedList));
   };
   function resetListToFalseAndZero(data: any) {
-    console.log("today list reseted");
     const todayDate = new Date().toISOString();
     let copyData = JSON.parse(JSON.stringify(data));
     if (!copyData) {
@@ -200,7 +201,21 @@ export default function Home() {
       <Header />
       <main>
         <div className="container">
-          <h1>Today</h1>
+          <h1>
+            Today{" "}
+            <Icon
+              nameImg="question"
+              onClick={() => {
+                setOpenHelpModal(!openHelpModal);
+              }}
+            />
+            <ModalHelp
+              isVisible={openHelpModal}
+              close={() => setOpenHelpModal(false)}
+              messagehelp="This is your daily routine. You can create and add tasks to it and check them or fill them off as you complete them."
+            />
+          </h1>
+
           <Today
             list={todayList}
             handleRemoveTaskFromTodayList={handleRemoveTaskFromTodayList}

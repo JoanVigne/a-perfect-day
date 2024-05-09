@@ -10,6 +10,8 @@ import CardChallenge from "@/components/cards/CardChallenge";
 import Load from "@/components/ui/Load";
 import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
+import Icon from "@/components/ui/Icon";
+import ModalHelp from "@/components/modals/ModalHelp";
 
 interface UserData {
   email: string;
@@ -25,6 +27,7 @@ const page = () => {
   const [messageCustom, setMessageCustom] = useState<string | null>(null);
   const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
   const [loadingTasks, setLoadingTasks] = useState(true);
+  const [modalHelp, setModalHelp] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -79,7 +82,15 @@ const page = () => {
   return (
     <div>
       <Header />
-      <h1>IMPROVE</h1>
+      <h1>
+        IMPROVE{" "}
+        <Icon nameImg="question" onClick={() => setModalHelp(!modalHelp)} />
+      </h1>
+      <ModalHelp
+        isVisible={modalHelp}
+        close={() => setModalHelp(false)}
+        messagehelp="This is the improve page. You can create your own challenges and note your personnal record."
+      />
       <div className="container">
         <h2>My Challenges</h2>
         <ul>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Icon from "./Icon";
+import "./time.css";
 
 interface Props {
   timerKey: number;
@@ -14,7 +15,7 @@ const Timer: React.FC<Props> = ({ timerKey, timerValue }) => {
   const [inputPlaceHolder, setInputPlaceHolder] = useState("1");
   const [inputValue, setInputValue] = useState("");
   const audio = new Audio("/ring.mp3");
-
+  const [animate, setAnimate] = useState(false);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
@@ -30,11 +31,17 @@ const Timer: React.FC<Props> = ({ timerKey, timerValue }) => {
 
   useEffect(() => {
     if (timerValue) {
+      setAnimate(true);
+      const timer = setTimeout(() => {
+        setAnimate(false);
+      }, 1000);
+
       const minutes = Math.floor(timerValue);
       const seconds = Math.round((timerValue - minutes) * 100);
       setSeconds(minutes * 60 + seconds);
       setIsActive(true);
       setInputValue("");
+      return () => clearTimeout(timer);
     }
   }, [timerKey]);
 
@@ -115,7 +122,7 @@ const Timer: React.FC<Props> = ({ timerKey, timerValue }) => {
   }
   return (
     <div className="timer">
-      <div className="time">
+      <div className={`time ${animate ? "pulse" : ""}`}>
         {!isActive ? (
           <>
             <div className="buttonsPlusAndMinus">

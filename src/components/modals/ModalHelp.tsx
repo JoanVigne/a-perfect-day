@@ -1,5 +1,6 @@
 import React from "react";
 import ReactModal from "react-modal";
+import "./modals.css";
 
 interface Props {
   isVisible: boolean;
