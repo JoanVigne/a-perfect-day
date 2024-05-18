@@ -76,11 +76,11 @@ const FormTrain: React.FC<Props> = ({
   }
   useEffect(() => {
     findLastPerf();
+    console.log("lastPerf:", lastPerf);
   }, [thisWorkout]);
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("SUBMITED ?");
     const form = event.currentTarget;
     let data: { [key: string]: any } = {};
     let exoId = "";
@@ -93,7 +93,9 @@ const FormTrain: React.FC<Props> = ({
       } else if (element.name === "exoOrder") {
         exoOrder = element.value;
       } else if (element.type !== "checkbox" && element.value) {
-        const [property] = element.name.split("-");
+        //! modif !!
+        const property = element.name;
+
         if (!data[exoId]) {
           data[exoId] = { exoOrder: exoOrder };
         }
@@ -153,8 +155,8 @@ const FormTrain: React.FC<Props> = ({
         useEffect(() => {
           const numberOfSeriesInLastPerf =
             lastPerf && lastPerf[exercise.id]
-              ? Object.keys(lastPerf[exercise.id]).filter((key) =>
-                  key.startsWith("reps")
+              ? Object.keys(lastPerf[exercise.id]).filter(
+                  (key) => key.startsWith("reps") && !key.includes("unilateral")
                 ).length
               : 3;
           setNumberOfSeries(numberOfSeriesInLastPerf);
@@ -178,8 +180,9 @@ const FormTrain: React.FC<Props> = ({
         useEffect(() => {
           if (
             lastPerf[exercise.id] &&
-            lastPerf[exercise.id][`weight-unilateral0`]
+            lastPerf[exercise.id][`reps0-unilateral`]
           ) {
+            console.log("UNILATERAL JUST BECAME TRUE");
             setUnilateral(true);
           }
         }, [lastPerf, exercise.id]);
@@ -188,11 +191,26 @@ const FormTrain: React.FC<Props> = ({
           seriesIndex: number,
           field: string
         ) => {
-          const key = `${exerciseId}-${field}${seriesIndex}`;
+          const isUnilateral = field.includes("unilateral");
+          const adjustedField = isUnilateral
+            ? field.replace("-unilateral", "")
+            : field;
+          const key = `${exerciseId}-${adjustedField}${seriesIndex}${
+            isUnilateral ? "-unilateral" : ""
+          }`;
+          console.log("key", key);
           const newValue =
             lastPerf[exerciseId] &&
-            lastPerf[exerciseId][`${field}${seriesIndex}`]
-              ? lastPerf[exerciseId][`${field}${seriesIndex}`]
+            lastPerf[exerciseId][
+              `${adjustedField}${seriesIndex}${
+                isUnilateral ? "-unilateral" : ""
+              }`
+            ]
+              ? lastPerf[exerciseId][
+                  `${adjustedField}${seriesIndex}${
+                    isUnilateral ? "-unilateral" : ""
+                  }`
+                ]
               : "";
           if (!inputValues[key]) {
             setInputValues((prevInputValues: any) => ({
@@ -200,6 +218,7 @@ const FormTrain: React.FC<Props> = ({
               [key]: newValue,
             }));
           }
+          console.log("new value :", newValue);
         };
         return (
           <div key={exercise.id} className="container-exo">
@@ -272,10 +291,23 @@ const FormTrain: React.FC<Props> = ({
                       seriesIndex: number,
                       field: string
                     ) => {
-                      const key = `${exercise.id}-${field}${seriesIndex}`;
+                      const isUnilateral = field.includes("unilateral");
+                      const adjustedField = isUnilateral
+                        ? field.replace("-unilateral", "")
+                        : field;
+                      const key = `${
+                        exercise.id
+                      }-${adjustedField}${seriesIndex}${
+                        isUnilateral ? "-unilateral" : ""
+                      }`;
                       const placeholder =
                         lastPerf[exercise.id] &&
-                        lastPerf[exercise.id][`${field}${seriesIndex}`];
+                        lastPerf[exercise.id][
+                          `${adjustedField}${seriesIndex}${
+                            isUnilateral ? "-unilateral" : ""
+                          }`
+                        ];
+                      console.log("placeholder : ", placeholder);
                       const currentValue =
                         Number(inputValues[key]) || Number(placeholder) || 0;
                       const newValue = currentValue + 1;
@@ -336,14 +368,14 @@ const FormTrain: React.FC<Props> = ({
                               )}
                               value={
                                 inputValues[
-                                  `${exercise.id}-weight-unilateral${seriesIndex}`
+                                  `${exercise.id}-weight${seriesIndex}-unilateral`
                                 ] || ""
                               }
                               placeholder={
                                 (lastPerf &&
                                   lastPerf[exercise.id] &&
                                   lastPerf[exercise.id][
-                                    `weight-unilateral${seriesIndex}`
+                                    `weight${seriesIndex}-unilateral`
                                   ]) ||
                                 ""
                               }
@@ -411,14 +443,14 @@ const FormTrain: React.FC<Props> = ({
                               )}
                               value={
                                 inputValues[
-                                  `${exercise.id}-reps-unilateral${seriesIndex}`
+                                  `${exercise.id}-reps${seriesIndex}-unilateral`
                                 ] || ""
                               }
                               placeholder={
                                 (lastPerf &&
                                   lastPerf[exercise.id] &&
                                   lastPerf[exercise.id][
-                                    `reps-unilateral${seriesIndex}`
+                                    `reps${seriesIndex}-unilateral`
                                   ]) ||
                                 ""
                               }
@@ -426,12 +458,12 @@ const FormTrain: React.FC<Props> = ({
                                 validatePlaceholder(
                                   exercise.id,
                                   seriesIndex,
-                                  "reps-unilateral"
+                                  `reps-unilateral`
                                 )
                               }
                               onStartTimer={onStartTimer}
                               onIncrement={() =>
-                                handleIncrement(seriesIndex, "reps-unilateral")
+                                handleIncrement(seriesIndex, `reps-unilateral`)
                               }
                             />
                           )}
