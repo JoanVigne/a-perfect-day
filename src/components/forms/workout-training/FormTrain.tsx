@@ -279,9 +279,6 @@ const FormTrain: React.FC<Props> = ({
                       const currentValue =
                         Number(inputValues[key]) || Number(placeholder) || 0;
                       const newValue = currentValue + 1;
-                      console.log(
-                        `key: ${key}, currentValue: ${currentValue}, newValue: ${newValue}`
-                      );
                       setInputValues((prevInputValues: any) => ({
                         ...prevInputValues,
                         [key]: newValue,

@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import TimeTotal from "@/components/ui/TimeTotal";
 import TimeChronometer from "@/components/ui/TimeChronometer";
 import Timer from "@/components/ui/Timer";
 import "@/components/header.css";
 import FormTrain from "@/components/forms/workout-training/FormTrain";
 import Icon from "@/components/ui/Icon";
 import ModalModifyWorkout from "@/components/modals/ModalModifyWorkout";
+import nosleep from "nosleep.js";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
@@ -21,6 +21,16 @@ const Page = () => {
   const [finalTime, setFinalTime] = useState("");
   const [modalModify, setModalModify] = useState(false);
 
+  // to ensure screen doesn't sleep
+  const noSleep = new nosleep();
+  useEffect(() => {
+    if (!finished) {
+      noSleep.enable();
+    } else {
+      noSleep.disable();
+    }
+  }, [finished]);
+  //
   const [timerKey, setTimerKey] = useState(0);
   const [timerValue, setTimerValue] = useState<number | null>(null);
   useEffect(() => {
