@@ -175,9 +175,9 @@ const FormTrain: React.FC<Props> = ({
               [key]: value,
             }));
           };
-        const [unilateral, setUnilateral] = useState<boolean>(false);
+        /*  const [unilateral, setUnilateral] = useState<boolean>(false); */
         const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
-        useEffect(() => {
+        /* useEffect(() => {
           if (
             lastPerf[exercise.id] &&
             lastPerf[exercise.id][`reps0-unilateral`]
@@ -185,7 +185,7 @@ const FormTrain: React.FC<Props> = ({
             console.log("UNILATERAL JUST BECAME TRUE");
             setUnilateral(true);
           }
-        }, [lastPerf, exercise.id]);
+        }, [lastPerf, exercise.id]); */
         const validatePlaceholder = (
           exerciseId: string,
           seriesIndex: number,
@@ -240,13 +240,6 @@ const FormTrain: React.FC<Props> = ({
               {exercise.name}
               <input type="hidden" name="exoId" value={exercise.id} />
               <input type="hidden" name="exoOrder" value={index} />
-              <button
-                className="unilateral-button"
-                type="button"
-                onClick={() => setUnilateral(!unilateral)}
-              >
-                uni lateral?
-              </button>
             </h3>
             <table>
               <thead>
@@ -355,46 +348,6 @@ const FormTrain: React.FC<Props> = ({
                               handleIncrement(seriesIndex, "weight")
                             }
                           />
-                          {unilateral && (
-                            <InputNumbers
-                              type="number"
-                              step="0.01"
-                              name={`weight${seriesIndex}-unilateral`}
-                              id={`weight${seriesIndex}-unilateral`}
-                              onChange={handleInputChange(
-                                exercise.id,
-                                seriesIndex,
-                                "weight-unilateral"
-                              )}
-                              value={
-                                inputValues[
-                                  `${exercise.id}-weight${seriesIndex}-unilateral`
-                                ] || ""
-                              }
-                              placeholder={
-                                (lastPerf &&
-                                  lastPerf[exercise.id] &&
-                                  lastPerf[exercise.id][
-                                    `weight${seriesIndex}-unilateral`
-                                  ]) ||
-                                ""
-                              }
-                              onClick={() =>
-                                validatePlaceholder(
-                                  exercise.id,
-                                  seriesIndex,
-                                  "weight-unilateral"
-                                )
-                              }
-                              onStartTimer={onStartTimer}
-                              onIncrement={() =>
-                                handleIncrement(
-                                  seriesIndex,
-                                  "weight-unilateral"
-                                )
-                              }
-                            />
-                          )}
                         </td>
                         <td className="container-input-unilateral">
                           <InputNumbers
@@ -430,43 +383,6 @@ const FormTrain: React.FC<Props> = ({
                               handleIncrement(seriesIndex, "reps")
                             }
                           />
-                          {unilateral && (
-                            <InputNumbers
-                              type="number"
-                              step="0.01"
-                              name={`reps${seriesIndex}-unilateral`}
-                              id={`reps${seriesIndex}-unilateral`}
-                              onChange={handleInputChange(
-                                exercise.id,
-                                seriesIndex,
-                                "reps-unilateral"
-                              )}
-                              value={
-                                inputValues[
-                                  `${exercise.id}-reps${seriesIndex}-unilateral`
-                                ] || ""
-                              }
-                              placeholder={
-                                (lastPerf &&
-                                  lastPerf[exercise.id] &&
-                                  lastPerf[exercise.id][
-                                    `reps${seriesIndex}-unilateral`
-                                  ]) ||
-                                ""
-                              }
-                              onClick={() =>
-                                validatePlaceholder(
-                                  exercise.id,
-                                  seriesIndex,
-                                  `reps-unilateral`
-                                )
-                              }
-                              onStartTimer={onStartTimer}
-                              onIncrement={() =>
-                                handleIncrement(seriesIndex, `reps-unilateral`)
-                              }
-                            />
-                          )}
                         </td>
                         <td className="container-input-unilateral">
                           <InputNumbers
