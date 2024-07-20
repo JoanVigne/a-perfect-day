@@ -90,9 +90,13 @@ const FormTrain: React.FC<Props> = ({
       const element = form.elements[i] as HTMLInputElement;
       if (element.name === "exoId") {
         exoId = element.value;
-      } else if (element.name === "exoOrder") {
+        continue;
+      }
+      if (element.name === "exoOrder") {
         exoOrder = element.value;
-      } else if (element.type !== "checkbox" && element.value) {
+        continue;
+      }
+      if (element.type !== "checkbox" && element.value) {
         //! modif !!
         const property = element.name;
 

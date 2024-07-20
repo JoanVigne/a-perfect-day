@@ -25,11 +25,11 @@ header.workout-header {
 }
 .container-exo {
   background-color: var(--color-dark-grey);
-  margin: 15px 0;
+  margin: 35px 0;
   border-bottom: 1px var(--color-white) solid;
 }
 .container-exo h3 {
-  padding: 2px 0;
+  padding: 2px 5px;
   background-color: var(--color-black);
   justify-content: space-between;
 }
