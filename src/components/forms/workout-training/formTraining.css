@@ -113,8 +113,8 @@ header.workout-header {
   background-color: var(--color-black);
 }
 .form-training .note-exo {
-  height: 35px;
-  width: 50%;
+  /*   height: 35px; */
+  width: 60%;
   margin: 0;
   border: none;
   box-sizing: border-box;
@@ -127,6 +127,9 @@ header.workout-header {
   white-space: nowrap;
 }
 .form-training .note-exo:hover {
+  width: 100%;
+}
+.form-training .note-exo.active {
   width: 100%;
 }
 .form-training .buttons-in-line .finish {

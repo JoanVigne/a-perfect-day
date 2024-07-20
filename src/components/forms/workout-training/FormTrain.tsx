@@ -439,7 +439,7 @@ const FormTrain: React.FC<Props> = ({
               />
               <input
                 type="text"
-                className="note-exo"
+                className={`note-exo ${noteExo[exercise.id] && " active"}`}
                 name="noteExo"
                 placeholder={`Note about ${exercise.name}?`}
                 value={
