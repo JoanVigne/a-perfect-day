@@ -76,11 +76,6 @@ const Page = () => {
   return (
     <div>
       <header className="HeaderTraining">
-        {/*  <TimeTotal
-          isActive={isTimerActive}
-          stopOnFinish={!isTimerActive}
-          onTimeFinish={setFinalTime}
-        /> */}
         {finished ? (
           ""
         ) : (

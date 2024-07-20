@@ -230,6 +230,7 @@ const FormTrain: React.FC<Props> = ({
               workoutid={showModalCheckPerf && thisWorkout.id}
             />
             <h3>
+              {exercise.name}
               <button
                 type="button"
                 className="unilateral-button"
@@ -237,7 +238,6 @@ const FormTrain: React.FC<Props> = ({
               >
                 previous perf
               </button>
-              {exercise.name}
               <input type="hidden" name="exoId" value={exercise.id} />
               <input type="hidden" name="exoOrder" value={index} />
             </h3>

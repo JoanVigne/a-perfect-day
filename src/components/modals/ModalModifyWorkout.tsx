@@ -96,6 +96,7 @@ const ModalModifyWorkout: React.FC<Props> = ({
     setModalOpen(false);
     const mess = await sendToWorkout(updatedWorkout, user.uid);
     console.log("mess", mess);
+    //! DO I REALLY NEED THIS ?
     window.location.href = "/workout";
   }
   return (
@@ -108,6 +109,10 @@ const ModalModifyWorkout: React.FC<Props> = ({
     >
       <button onClick={() => setModalOpen(false)}>Close</button>
       <form onSubmit={submitModification}>
+        <p>
+          WARNING : If you modify something now, it is gonna restart your
+          workout...
+        </p>
         <label htmlFor="name">Name</label>
         <input
           type="text"
@@ -179,7 +184,7 @@ const ModalModifyWorkout: React.FC<Props> = ({
         <Button
           className="finish"
           type="button"
-          value="Save modification"
+          value="Save modif"
           onClick={(e: any) => {
             e.preventDefault();
             setIsModalVisible(true);

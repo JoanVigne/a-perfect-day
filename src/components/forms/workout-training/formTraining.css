@@ -31,6 +31,7 @@ header.workout-header {
 .container-exo h3 {
   padding: 2px 0;
   background-color: var(--color-black);
+  justify-content: space-between;
 }
 .container-exo .unilateral-button {
   background-color: var(--color-dark-green);
