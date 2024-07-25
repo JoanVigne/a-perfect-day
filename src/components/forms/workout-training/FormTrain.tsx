@@ -8,6 +8,8 @@ import InputNumbers from "./InputNumbers";
 import { sendToWorkout } from "@/firebase/db/workout";
 import ModalConfirmSend from "@/components/modals/ModalConfirmSend";
 import ReactModal from "react-modal";
+import IconOpen from "@/components/ui/IconOpen";
+
 interface Props {
   exo: any[];
   thisWorkout: any;
@@ -145,13 +147,24 @@ const FormTrain: React.FC<Props> = ({
       sendToWorkout(updatedWorkout, user.uid);
     });
   }
+  //! TEST TEST TEST TEST TEST
+  /*   const [backupSave, setBackupSave] = useState<any>({});
+  function formChanges(event) {
+    const { name, value } = event.target;
+    console.log("name", name);
+  } */
+  //! END TEST TEST TEST TEST TEST
   return (
-    <form onSubmit={submit} className="form-training">
+    <form
+      onSubmit={submit}
+      className="form-training" /* onChange={formChanges} */
+    >
       <input
         type="date"
         value={selectedDate}
         onChange={(e) => setSelectedDate(e.target.value)}
       />
+
       {/* DEBUT EXOS  */}
       {exo.map((exercise, index) => {
         const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
@@ -224,8 +237,16 @@ const FormTrain: React.FC<Props> = ({
           }
           console.log("new value :", newValue);
         };
+        const [exoOpen, setExoOpen] = useState(true);
+        function openExo() {
+          console.log("open exo");
+          setExoOpen(!exoOpen);
+        }
         return (
-          <div key={exercise.id} className="container-exo">
+          <div
+            key={exercise.id}
+            className={exoOpen ? "container-exo" : "container-exo closed"}
+          >
             <ModalCheckPerf
               isVisible={showModalCheckPerf}
               close={() => setShowModalCheckPerf(false)}
@@ -234,7 +255,10 @@ const FormTrain: React.FC<Props> = ({
               workoutid={showModalCheckPerf && thisWorkout.id}
             />
             <h3>
-              {exercise.name}
+              <div>
+                <IconOpen show={exoOpen} setShow={setExoOpen} />
+                {exercise.name}
+              </div>
               <button
                 type="button"
                 className="unilateral-button"
@@ -308,13 +332,22 @@ const FormTrain: React.FC<Props> = ({
                       const currentValue =
                         Number(inputValues[key]) || Number(placeholder) || 0;
                       const newValue = currentValue + 1;
-                      setInputValues((prevInputValues: any) => ({
+                      setInputValues((prevInputValues) => ({
                         ...prevInputValues,
                         [key]: newValue,
                       }));
                     };
+
+                    const isSeriesFulfilled =
+                      inputValues[`${exercise.id}-weight${seriesIndex}`] &&
+                      inputValues[`${exercise.id}-reps${seriesIndex}`] &&
+                      inputValues[`${exercise.id}-interval${seriesIndex}`];
+
                     return (
-                      <tr key={seriesIndex}>
+                      <tr
+                        key={seriesIndex}
+                        className={isSeriesFulfilled ? "fulfilled" : ""}
+                      >
                         <td></td>
                         <td className="container-input-unilateral">
                           <InputNumbers

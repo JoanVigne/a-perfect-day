@@ -105,51 +105,55 @@ const Page = () => {
           </div>
         )}
       </header>
-
-      {thisWorkout && (
-        <>
-          {finished ? (
-            <div
-              className="containerLinks"
-              style={{ display: "flex", flexDirection: "column" }}
-            >
-              <h2>
-                Performances of <strong>{thisWorkout.name} have been</strong>{" "}
-                saved !{" "}
-              </h2>
-              <Link href={`/workout/${thisWorkout.id}/stats`} className="link">
-                Check the statistic about this workout
-              </Link>
-              <Link href={`/workout`} className="link">
-                Back to the main page
-              </Link>
-              <Footer />
-            </div>
-          ) : (
-            <>
-              <h1>
-                <ModalModifyWorkout
-                  modalOpen={modalModify}
-                  setModalOpen={setModalModify}
-                  workoutToModify={thisWorkout}
-                  duringTraining={true}
+      <main>
+        {thisWorkout && (
+          <>
+            {finished ? (
+              <div
+                className="containerLinks"
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <h2>
+                  Performances of <strong>{thisWorkout.name} have been</strong>{" "}
+                  saved !{" "}
+                </h2>
+                <Link
+                  href={`/workout/${thisWorkout.id}/stats`}
+                  className="link"
+                >
+                  Check the statistic about this workout
+                </Link>
+                <Link href={`/workout`} className="link">
+                  Back to the main page
+                </Link>
+                <Footer />
+              </div>
+            ) : (
+              <>
+                <h1>
+                  <ModalModifyWorkout
+                    modalOpen={modalModify}
+                    setModalOpen={setModalModify}
+                    workoutToModify={thisWorkout}
+                    duringTraining={true}
+                  />
+                  <Icon nameImg="modify" onClick={() => setModalModify(true)} />
+                  {thisWorkout.name}
+                </h1>
+                <h2>{thisWorkout.description}</h2>
+                <FormTrain
+                  exo={thisWorkout.exercices}
+                  thisWorkout={thisWorkout}
+                  setFinished={handleFinished}
+                  setIsTimerActive={setIsTimerActive}
+                  finalTime={finalTime}
+                  onStartTimer={handleStartTimer}
                 />
-                <Icon nameImg="modify" onClick={() => setModalModify(true)} />
-                {thisWorkout.name}
-              </h1>
-              <h2>{thisWorkout.description}</h2>
-              <FormTrain
-                exo={thisWorkout.exercices}
-                thisWorkout={thisWorkout}
-                setFinished={handleFinished}
-                setIsTimerActive={setIsTimerActive}
-                finalTime={finalTime}
-                onStartTimer={handleStartTimer}
-              />
-            </>
-          )}
-        </>
-      )}
+              </>
+            )}
+          </>
+        )}
+      </main>
     </div>
   );
 };

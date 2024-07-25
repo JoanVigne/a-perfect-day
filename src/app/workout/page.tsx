@@ -45,6 +45,7 @@ export default function Page() {
 
     fetchWorkouts();
   }, [setWorkouts]);
+
   return (
     <>
       <Header />

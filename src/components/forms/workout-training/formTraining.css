@@ -27,12 +27,20 @@ header.workout-header {
   background-color: var(--color-dark-grey);
   margin: 35px 0;
   border-bottom: 1px var(--color-white) solid;
+  transition: all 1s ease-out;
+  max-height: 700px;
+}
+.container-exo.closed {
+  transition: all 1s ease-in;
+  max-height: 50px;
+  overflow: hidden;
 }
 .container-exo h3 {
-  padding: 2px 5px;
+  padding: 2px 5px 2px 14px;
   background-color: var(--color-black);
   justify-content: space-between;
 }
+
 .container-exo .unilateral-button {
   background-color: var(--color-dark-green);
   padding: 3px;
@@ -65,10 +73,14 @@ header.workout-header {
   min-width: 16px;
 }
 
+.container-exo tr {
+  background-color: var(--color-light-gray);
+}
+
 .container-exo th,
 .container-exo td {
   border: 1px solid var(--color-black);
-  padding: 4px 1px;
+  padding: 7px 1px;
   text-align: center;
 }
 
@@ -78,26 +90,27 @@ header.workout-header {
   accent-color: var(--color-black);
 }
 
-.container-exo .container-input-unilateral .input-validation {
+/* .container-exo .container-input-unilateral .input-validation {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-}
+} 
 .container-exo
   .container-input-unilateral
   .input-validation:nth-child(2)
   input {
   border-top: 1px var(--color-white) solid;
-}
+} */
 .container-exo td input[type="number"]::placeholder {
   color: grey;
   font-style: oblique;
   transition: color 0.3s ease-in-out;
 }
 .container-exo td input[type="number"] {
-  max-width: 33px;
-  height: 25px;
+  max-width: 38px;
+  height: 30px;
+  font-size: 20px;
   background-color: var(--color-black);
   color: var(--color-white);
   border: none;
@@ -107,6 +120,20 @@ header.workout-header {
 .container-exo td input[type="number"]:hover {
   border: 1px var(--color-white) solid;
 }
+/* FULFILLED */
+.container-exo tr.fulfilled * {
+  transition: all 1s ease-in-out;
+}
+.container-exo tr.fulfilled td {
+  padding: 2px 1px;
+}
+.container-exo tr.fulfilled td input[type="number"] {
+  max-width: 33px;
+  height: 25px;
+  font-size: 17px;
+}
+/* FULFILLED */
+/* */
 .form-training .container-cleannote-note {
   display: flex;
   align-items: center;
@@ -114,7 +141,7 @@ header.workout-header {
 }
 .form-training .note-exo {
   /*   height: 35px; */
-  width: 60%;
+  width: 100%;
   margin: 0;
   border: none;
   box-sizing: border-box;
@@ -122,16 +149,11 @@ header.workout-header {
   background-color: var(--color-black);
   font-size: 15px;
   transition: width 0.5s ease-in;
-  overflow: hidden;
+  /*   overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.form-training .note-exo:hover {
-  width: 100%;
-}
-.form-training .note-exo.active {
-  width: 100%;
-}
+
 .form-training .buttons-in-line .finish {
   margin: auto;
   display: block;
@@ -148,19 +170,6 @@ header.workout-header {
 
 .form-training .buttons-in-line .finish:last-child {
   border: 2px solid var(--color-active-link);
-}
-
-.icons {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.plus-one {
-  padding: 0 5px;
-  border: 1px solid var(--color-active-link);
-  border-radius: 10px;
-  min-width: 16px;
-  margin: 1px;
 }
 
 .container-finish {

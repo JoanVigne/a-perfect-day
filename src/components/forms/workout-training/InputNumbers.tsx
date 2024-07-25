@@ -1,5 +1,6 @@
 import Icon from "@/components/ui/Icon";
 import React, { useEffect, useState } from "react";
+import "./inputNumbers.css";
 interface Props {
   type: string;
   step: string;
@@ -66,9 +67,10 @@ const InputNumbers: React.FC<Props> = ({
               value={value}
               placeholder={placeholder}
             />
-            <div className="plus-one" onClick={onIncrement}>
+            <Icon nameImg={"plus-one"} onClick={onIncrement} />
+            {/*  <div className="plus-one" onClick={onIncrement}>
               +
-            </div>
+            </div> */}
           </>
         )}
         {/* REST: */}
