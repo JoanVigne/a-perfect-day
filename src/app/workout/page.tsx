@@ -18,6 +18,7 @@ interface WorkoutType {
   name: string;
   id: string;
   description: string;
+  duration: { [date: string]: any };
   creationDate: string;
   exercices: string[];
   perf: Array<any> | null;
@@ -42,10 +43,26 @@ export default function Page() {
         setWorkouts(localstorage);
       }
     };
+    workouts;
 
     fetchWorkouts();
   }, [setWorkouts]);
+  const getMostRecentDate = (duration: { [date: string]: any }) => {
+    const dates = Object.keys(duration);
+    return dates.length > 0
+      ? new Date(Math.max(...dates.map((date) => new Date(date).getTime())))
+      : null;
+  };
 
+  const sortedWorkouts = workouts
+    ? Object.values(workouts as Workouts).sort(
+        (a: WorkoutType, b: WorkoutType) => {
+          const dateA = getMostRecentDate(a.duration);
+          const dateB = getMostRecentDate(b.duration);
+          return dateB && dateA ? dateB.getTime() - dateA.getTime() : 0;
+        }
+      )
+    : [];
   return (
     <>
       <Header />
@@ -60,11 +77,13 @@ export default function Page() {
       <div className="container">
         {workouts && Object.values(workouts as Workouts).length > 0 ? (
           <>
-            {Object.values(workouts).map((workout: WorkoutType, index) => (
-              <div key={workout.id}>
-                <CardWorkout workout={workout as WorkoutType} index={index} />
-              </div>
-            ))}
+            {Object.values(sortedWorkouts).map(
+              (workout: WorkoutType, index) => (
+                <div key={workout.id}>
+                  <CardWorkout workout={workout as WorkoutType} index={index} />
+                </div>
+              )
+            )}
           </>
         ) : (
           <p>No workout</p>
