@@ -11,7 +11,6 @@ import ReactModal from "react-modal";
 import IconOpen from "@/components/ui/IconOpen";
 
 interface Props {
-  exo: any[];
   thisWorkout: any;
   setFinished: (callback: () => void) => void;
   setIsTimerActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,7 +23,6 @@ interface UserData {
 }
 
 const FormTrain: React.FC<Props> = ({
-  exo,
   thisWorkout,
   setFinished,
   setIsTimerActive,
@@ -35,6 +33,7 @@ const FormTrain: React.FC<Props> = ({
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().substring(0, 10)
   );
+  const [actualWorkout, setActualWorkout] = useState<any>(thisWorkout);
   const [inputValues, setInputValues] = useState<Record<string, number>>({});
   const [noteExo, setNoteExo] = useState<{ [key: string]: string }>({});
   const handleNoteChange =
@@ -51,7 +50,7 @@ const FormTrain: React.FC<Props> = ({
   const [lastPerf, setLastPerf] = useState<any>({});
   function findLastPerf() {
     Object.values(previousworkouts).forEach((workout: any) => {
-      if (workout.id === thisWorkout.id && workout.perf) {
+      if (workout.id === actualWorkout.id && workout.perf) {
         const dates = Object.keys(workout.perf).map((dateStr) =>
           new Date(dateStr).getTime()
         );
@@ -79,6 +78,7 @@ const FormTrain: React.FC<Props> = ({
   useEffect(() => {
     findLastPerf();
     console.log("lastPerf:", lastPerf);
+    setActualWorkout(thisWorkout);
   }, [thisWorkout]);
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -130,13 +130,13 @@ const FormTrain: React.FC<Props> = ({
     const perfData = { [selectedDate]: { ...data, noteExo } };
     const duration = { [selectedDate]: finalTime };
     const updatedWorkout = {
-      ...thisWorkout,
-      perf: { ...thisWorkout.perf, ...perfData },
+      ...actualWorkout,
+      perf: { ...actualWorkout.perf, ...perfData },
       numbImprovement: {
-        ...thisWorkout.numbImprovement,
+        ...actualWorkout.numbImprovement,
         ...{ [selectedDate]: fireIconCount },
       },
-      duration: { ...thisWorkout.duration, ...duration },
+      duration: { ...actualWorkout.duration, ...duration },
     };
 
     console.log("Updated workout: ", updatedWorkout);
@@ -147,13 +147,8 @@ const FormTrain: React.FC<Props> = ({
       sendToWorkout(updatedWorkout, user.uid);
     });
   }
-  //! TEST TEST TEST TEST TEST
-  /*   const [backupSave, setBackupSave] = useState<any>({});
-  function formChanges(event) {
-    const { name, value } = event.target;
-    console.log("name", name);
-  } */
-  //! END TEST TEST TEST TEST TEST
+  //!
+
   return (
     <form
       onSubmit={submit}
@@ -166,35 +161,38 @@ const FormTrain: React.FC<Props> = ({
       />
 
       {/* DEBUT EXOS  */}
-      {exo.map((exercise, index) => {
-        const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
+      {actualWorkout &&
+        actualWorkout.exercices.map((exercise: any, index: number) => {
+          const [numberOfSeries, setNumberOfSeries] = useState<number>(
+            3 || null
+          );
+          useEffect(() => {
+            const numberOfSeriesInLastPerf =
+              lastPerf && lastPerf[exercise.id]
+                ? Object.keys(lastPerf[exercise.id]).filter(
+                    (key) =>
+                      key.startsWith("reps") && !key.includes("unilateral")
+                  ).length
+                : 3;
+            setNumberOfSeries(numberOfSeriesInLastPerf);
+          }, [lastPerf, actualWorkout.exercices.id]);
 
-        useEffect(() => {
-          const numberOfSeriesInLastPerf =
-            lastPerf && lastPerf[exercise.id]
-              ? Object.keys(lastPerf[exercise.id]).filter(
-                  (key) => key.startsWith("reps") && !key.includes("unilateral")
-                ).length
-              : 3;
-          setNumberOfSeries(numberOfSeriesInLastPerf);
-        }, [lastPerf, exercise.id]);
+          const handleInputChange =
+            (exerciseId: string, seriesIndex: number, field: string) =>
+            (e: React.ChangeEvent<HTMLInputElement>) => {
+              const key = `${exerciseId}-${field}${seriesIndex}`;
+              let value = e.target.value;
+              // Replace "," with "."
+              value = value.replace(/,/g, ".");
 
-        const handleInputChange =
-          (exerciseId: string, seriesIndex: number, field: string) =>
-          (e: React.ChangeEvent<HTMLInputElement>) => {
-            const key = `${exerciseId}-${field}${seriesIndex}`;
-            let value = e.target.value;
-            // Replace "," with "."
-            value = value.replace(/,/g, ".");
-
-            setInputValues((prevInputValues: any) => ({
-              ...prevInputValues,
-              [key]: value,
-            }));
-          };
-        /*  const [unilateral, setUnilateral] = useState<boolean>(false); */
-        const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
-        /* useEffect(() => {
+              setInputValues((prevInputValues: any) => ({
+                ...prevInputValues,
+                [key]: value,
+              }));
+            };
+          /*  const [unilateral, setUnilateral] = useState<boolean>(false); */
+          const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
+          /* useEffect(() => {
           if (
             lastPerf[exercise.id] &&
             lastPerf[exercise.id][`reps0-unilateral`]
@@ -203,297 +201,299 @@ const FormTrain: React.FC<Props> = ({
             setUnilateral(true);
           }
         }, [lastPerf, exercise.id]); */
-        const validatePlaceholder = (
-          exerciseId: string,
-          seriesIndex: number,
-          field: string
-        ) => {
-          const isUnilateral = field.includes("unilateral");
-          const adjustedField = isUnilateral
-            ? field.replace("-unilateral", "")
-            : field;
-          const key = `${exerciseId}-${adjustedField}${seriesIndex}${
-            isUnilateral ? "-unilateral" : ""
-          }`;
-          console.log("key", key);
-          const newValue =
-            lastPerf[exerciseId] &&
-            lastPerf[exerciseId][
-              `${adjustedField}${seriesIndex}${
-                isUnilateral ? "-unilateral" : ""
-              }`
-            ]
-              ? lastPerf[exerciseId][
-                  `${adjustedField}${seriesIndex}${
-                    isUnilateral ? "-unilateral" : ""
-                  }`
-                ]
-              : "";
-          if (!inputValues[key]) {
-            setInputValues((prevInputValues: any) => ({
-              ...prevInputValues,
-              [key]: newValue,
-            }));
+          const validatePlaceholder = (
+            exerciseId: string,
+            seriesIndex: number,
+            field: string
+          ) => {
+            const isUnilateral = field.includes("unilateral");
+            const adjustedField = isUnilateral
+              ? field.replace("-unilateral", "")
+              : field;
+            const key = `${exerciseId}-${adjustedField}${seriesIndex}${
+              isUnilateral ? "-unilateral" : ""
+            }`;
+            console.log("key", key);
+            const newValue =
+              lastPerf[exerciseId] &&
+              lastPerf[exerciseId][
+                `${adjustedField}${seriesIndex}${
+                  isUnilateral ? "-unilateral" : ""
+                }`
+              ]
+                ? lastPerf[exerciseId][
+                    `${adjustedField}${seriesIndex}${
+                      isUnilateral ? "-unilateral" : ""
+                    }`
+                  ]
+                : "";
+            if (!inputValues[key]) {
+              setInputValues((prevInputValues: any) => ({
+                ...prevInputValues,
+                [key]: newValue,
+              }));
+            }
+            console.log("new value :", newValue);
+          };
+          const [exoOpen, setExoOpen] = useState(true);
+          function openExo() {
+            console.log("open exo");
+            setExoOpen(!exoOpen);
           }
-          console.log("new value :", newValue);
-        };
-        const [exoOpen, setExoOpen] = useState(true);
-        function openExo() {
-          console.log("open exo");
-          setExoOpen(!exoOpen);
-        }
-        return (
-          <div
-            key={exercise.id}
-            className={exoOpen ? "container-exo" : "container-exo closed"}
-          >
-            <ModalCheckPerf
-              isVisible={showModalCheckPerf}
-              close={() => setShowModalCheckPerf(false)}
-              perf={showModalCheckPerf && exercise?.name}
-              perfid={showModalCheckPerf && exercise?.id}
-              workoutid={showModalCheckPerf && thisWorkout.id}
-            />
-            <h3>
-              <div>
-                <IconOpen show={exoOpen} setShow={setExoOpen} />
-                {exercise.name}
-              </div>
-              <button
-                type="button"
-                className="unilateral-button"
-                onClick={() => setShowModalCheckPerf(true)}
-              >
-                previous perf
-              </button>
-              <input type="hidden" name="exoId" value={exercise.id} />
-              <input type="hidden" name="exoOrder" value={index} />
-            </h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Serie </th>
-                  <th>Weight</th>
-                  <th>Reps</th>
-                  <th>Rest (ex:1.3)</th>
-                </tr>
-                <tr>
-                  <th>
-                    <div className="buttonsPlusMinusSeries">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setNumberOfSeries((prevSeries) =>
-                            prevSeries > 0 ? prevSeries - 1 : 0
-                          )
-                        }
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setNumberOfSeries((prevSeries) => prevSeries + 1)
-                        }
-                      >
-                        +
-                      </button>
-                    </div>
-                  </th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from({ length: numberOfSeries }).map(
-                  (_, seriesIndex) => {
-                    const handleIncrement = (
-                      seriesIndex: number,
-                      field: string
-                    ) => {
-                      const isUnilateral = field.includes("unilateral");
-                      const adjustedField = isUnilateral
-                        ? field.replace("-unilateral", "")
-                        : field;
-                      const key = `${
-                        exercise.id
-                      }-${adjustedField}${seriesIndex}${
-                        isUnilateral ? "-unilateral" : ""
-                      }`;
-                      const placeholder =
-                        lastPerf[exercise.id] &&
-                        lastPerf[exercise.id][
-                          `${adjustedField}${seriesIndex}${
-                            isUnilateral ? "-unilateral" : ""
-                          }`
-                        ];
-                      console.log("placeholder : ", placeholder);
-                      const currentValue =
-                        Number(inputValues[key]) || Number(placeholder) || 0;
-                      const newValue = currentValue + 1;
-                      setInputValues((prevInputValues) => ({
-                        ...prevInputValues,
-                        [key]: newValue,
-                      }));
-                    };
+          return (
+            <div
+              key={exercise.id}
+              className={exoOpen ? "container-exo" : "container-exo closed"}
+            >
+              <ModalCheckPerf
+                isVisible={showModalCheckPerf}
+                close={() => setShowModalCheckPerf(false)}
+                perf={showModalCheckPerf && exercise?.name}
+                perfid={showModalCheckPerf && exercise?.id}
+                workoutid={showModalCheckPerf && actualWorkout.id}
+              />
+              <h3>
+                <div>
+                  <IconOpen show={exoOpen} setShow={setExoOpen} />
+                  {exercise.name}
+                </div>
+                <button
+                  type="button"
+                  className="unilateral-button"
+                  onClick={() => setShowModalCheckPerf(true)}
+                >
+                  previous perf
+                </button>
+                <input type="hidden" name="exoId" value={exercise.id} />
+                <input type="hidden" name="exoOrder" value={index} />
+              </h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Serie </th>
+                    <th>Weight</th>
+                    <th>Reps</th>
+                    <th>Rest (ex:1.3)</th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <div className="buttonsPlusMinusSeries">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setNumberOfSeries((prevSeries) =>
+                              prevSeries > 0 ? prevSeries - 1 : 0
+                            )
+                          }
+                        >
+                          -
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setNumberOfSeries((prevSeries) => prevSeries + 1)
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: numberOfSeries }).map(
+                    (_, seriesIndex) => {
+                      const handleIncrement = (
+                        seriesIndex: number,
+                        field: string
+                      ) => {
+                        const isUnilateral = field.includes("unilateral");
+                        const adjustedField = isUnilateral
+                          ? field.replace("-unilateral", "")
+                          : field;
+                        const key = `${
+                          exercise.id
+                        }-${adjustedField}${seriesIndex}${
+                          isUnilateral ? "-unilateral" : ""
+                        }`;
+                        const placeholder =
+                          lastPerf[exercise.id] &&
+                          lastPerf[exercise.id][
+                            `${adjustedField}${seriesIndex}${
+                              isUnilateral ? "-unilateral" : ""
+                            }`
+                          ];
+                        console.log("placeholder : ", placeholder);
+                        const currentValue =
+                          Number(inputValues[key]) || Number(placeholder) || 0;
+                        const newValue = currentValue + 1;
+                        setInputValues((prevInputValues) => ({
+                          ...prevInputValues,
+                          [key]: newValue,
+                        }));
+                      };
 
-                    const isSeriesFulfilled =
-                      inputValues[`${exercise.id}-weight${seriesIndex}`] &&
-                      inputValues[`${exercise.id}-reps${seriesIndex}`] &&
-                      inputValues[`${exercise.id}-interval${seriesIndex}`];
+                      const isSeriesFulfilled =
+                        inputValues[`${exercise.id}-weight${seriesIndex}`] &&
+                        inputValues[`${exercise.id}-reps${seriesIndex}`] &&
+                        inputValues[`${exercise.id}-interval${seriesIndex}`];
 
-                    return (
-                      <tr
-                        key={seriesIndex}
-                        className={isSeriesFulfilled ? "fulfilled" : ""}
-                      >
-                        <td></td>
-                        <td className="container-input-unilateral">
-                          <InputNumbers
-                            type="number"
-                            step="0.01"
-                            name={`weight${seriesIndex}`}
-                            id={`weight${seriesIndex}`}
-                            onChange={handleInputChange(
-                              exercise.id,
-                              seriesIndex,
-                              "weight"
-                            )}
-                            value={
-                              inputValues[
-                                `${exercise.id}-weight${seriesIndex}`
-                              ] || ""
-                            }
-                            placeholder={
-                              (lastPerf &&
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][
-                                  `weight${seriesIndex}`
-                                ]) ||
-                              ""
-                            }
-                            onClick={() =>
-                              validatePlaceholder(
+                      return (
+                        <tr
+                          key={seriesIndex}
+                          className={isSeriesFulfilled ? "fulfilled" : ""}
+                        >
+                          <td></td>
+                          <td className="container-input-unilateral">
+                            <InputNumbers
+                              type="number"
+                              step="0.01"
+                              name={`weight${seriesIndex}`}
+                              id={`weight${seriesIndex}`}
+                              onChange={handleInputChange(
                                 exercise.id,
                                 seriesIndex,
                                 "weight"
-                              )
-                            }
-                            onStartTimer={onStartTimer}
-                            onIncrement={() =>
-                              handleIncrement(seriesIndex, "weight")
-                            }
-                          />
-                        </td>
-                        <td className="container-input-unilateral">
-                          <InputNumbers
-                            type="number"
-                            step="0.5"
-                            name={`reps${seriesIndex}`}
-                            id={`reps${seriesIndex}`}
-                            onChange={handleInputChange(
-                              exercise.id,
-                              seriesIndex,
-                              "reps"
-                            )}
-                            value={
-                              inputValues[
-                                `${exercise.id}-reps${seriesIndex}`
-                              ] || ""
-                            }
-                            placeholder={
-                              (lastPerf &&
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][`reps${seriesIndex}`]) ||
-                              ""
-                            }
-                            onClick={() =>
-                              validatePlaceholder(
+                              )}
+                              value={
+                                inputValues[
+                                  `${exercise.id}-weight${seriesIndex}`
+                                ] || ""
+                              }
+                              placeholder={
+                                (lastPerf &&
+                                  lastPerf[exercise.id] &&
+                                  lastPerf[exercise.id][
+                                    `weight${seriesIndex}`
+                                  ]) ||
+                                ""
+                              }
+                              onClick={() =>
+                                validatePlaceholder(
+                                  exercise.id,
+                                  seriesIndex,
+                                  "weight"
+                                )
+                              }
+                              onStartTimer={onStartTimer}
+                              onIncrement={() =>
+                                handleIncrement(seriesIndex, "weight")
+                              }
+                            />
+                          </td>
+                          <td className="container-input-unilateral">
+                            <InputNumbers
+                              type="number"
+                              step="0.5"
+                              name={`reps${seriesIndex}`}
+                              id={`reps${seriesIndex}`}
+                              onChange={handleInputChange(
                                 exercise.id,
                                 seriesIndex,
                                 "reps"
-                              )
-                            }
-                            onStartTimer={onStartTimer}
-                            onIncrement={() =>
-                              handleIncrement(seriesIndex, "reps")
-                            }
-                          />
-                        </td>
-                        <td className="container-input-unilateral">
-                          <InputNumbers
-                            type="number"
-                            step="0.01"
-                            name={`interval${seriesIndex}`}
-                            id={`interval${seriesIndex}`}
-                            onChange={handleInputChange(
-                              exercise.id,
-                              seriesIndex,
-                              "interval"
-                            )}
-                            value={
-                              inputValues[
-                                `${exercise.id}-interval${seriesIndex}`
-                              ] || ""
-                            }
-                            placeholder={
-                              (lastPerf &&
-                                lastPerf[exercise.id] &&
-                                lastPerf[exercise.id][
-                                  `interval${seriesIndex}`
-                                ]) ||
-                              ""
-                            }
-                            onClick={() =>
-                              validatePlaceholder(
+                              )}
+                              value={
+                                inputValues[
+                                  `${exercise.id}-reps${seriesIndex}`
+                                ] || ""
+                              }
+                              placeholder={
+                                (lastPerf &&
+                                  lastPerf[exercise.id] &&
+                                  lastPerf[exercise.id][
+                                    `reps${seriesIndex}`
+                                  ]) ||
+                                ""
+                              }
+                              onClick={() =>
+                                validatePlaceholder(
+                                  exercise.id,
+                                  seriesIndex,
+                                  "reps"
+                                )
+                              }
+                              onStartTimer={onStartTimer}
+                              onIncrement={() =>
+                                handleIncrement(seriesIndex, "reps")
+                              }
+                            />
+                          </td>
+                          <td className="container-input-unilateral">
+                            <InputNumbers
+                              type="number"
+                              step="0.01"
+                              name={`interval${seriesIndex}`}
+                              id={`interval${seriesIndex}`}
+                              onChange={handleInputChange(
                                 exercise.id,
                                 seriesIndex,
                                 "interval"
-                              )
-                            }
-                            onStartTimer={onStartTimer}
-                            onIncrement={() =>
-                              handleIncrement(seriesIndex, "interval")
-                            }
-                          />
-                        </td>
-                      </tr>
-                    );
+                              )}
+                              value={
+                                inputValues[
+                                  `${exercise.id}-interval${seriesIndex}`
+                                ] || ""
+                              }
+                              placeholder={
+                                (lastPerf &&
+                                  lastPerf[exercise.id] &&
+                                  lastPerf[exercise.id][
+                                    `interval${seriesIndex}`
+                                  ]) ||
+                                ""
+                              }
+                              onClick={() =>
+                                validatePlaceholder(
+                                  exercise.id,
+                                  seriesIndex,
+                                  "interval"
+                                )
+                              }
+                              onStartTimer={onStartTimer}
+                              onIncrement={() =>
+                                handleIncrement(seriesIndex, "interval")
+                              }
+                            />
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+              <div className="container-cleannote-note">
+                <Icon
+                  nameImg="clean"
+                  onClick={() => {
+                    setNoteExo((prevNoteExo) => ({
+                      ...prevNoteExo,
+                      [exercise.id]: "",
+                    }));
+                  }}
+                />
+                <input
+                  type="text"
+                  className={`note-exo ${noteExo[exercise.id] && " active"}`}
+                  name="noteExo"
+                  placeholder={`Note about ${exercise.name}?`}
+                  value={
+                    lastPerf[exercise.id] &&
+                    lastPerf[exercise.id]["noteExo"] &&
+                    lastPerf[exercise.id]["noteExo"][`exoPerso${exercise.name}`]
+                      ? lastPerf[exercise.id]["noteExo"][
+                          `exoPerso${exercise.name}`
+                        ]
+                      : noteExo[exercise.id] || ""
                   }
-                )}
-              </tbody>
-            </table>
-            <div className="container-cleannote-note">
-              <Icon
-                nameImg="clean"
-                onClick={() => {
-                  setNoteExo((prevNoteExo) => ({
-                    ...prevNoteExo,
-                    [exercise.id]: "",
-                  }));
-                }}
-              />
-              <input
-                type="text"
-                className={`note-exo ${noteExo[exercise.id] && " active"}`}
-                name="noteExo"
-                placeholder={`Note about ${exercise.name}?`}
-                value={
-                  lastPerf[exercise.id] &&
-                  lastPerf[exercise.id]["noteExo"] &&
-                  lastPerf[exercise.id]["noteExo"][`exoPerso${exercise.name}`]
-                    ? lastPerf[exercise.id]["noteExo"][
-                        `exoPerso${exercise.name}`
-                      ]
-                    : noteExo[exercise.id] || ""
-                }
-                onChange={handleNoteChange(exercise.id)}
-              />
+                  onChange={handleNoteChange(exercise.id)}
+                />
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
       {/* END EXOS  */}
       <div className="container-finish">
         <button

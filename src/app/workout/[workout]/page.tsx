@@ -30,14 +30,12 @@ const Page = () => {
       noSleep.disable();
     }
   }, [finished]);
-  //
-  const [timerKey, setTimerKey] = useState(0);
-  const [timerValue, setTimerValue] = useState<number | null>(null);
+  // check the slug to get the workout
   useEffect(() => {
     const pathslug = window.location.pathname.split("/").pop();
     setSlug(pathslug || null);
-  }, []);
-
+  }, [modalModify]);
+  // get the workout from the localstorage
   useEffect(() => {
     if (slug) {
       const dataWorkouts = getItemFromLocalStorage("workouts");
@@ -46,7 +44,10 @@ const Page = () => {
       );
       setThisWorkout(workout);
     }
-  }, [slug]);
+  }, [slug, modalModify]);
+  //
+  const [timerKey, setTimerKey] = useState(0);
+  const [timerValue, setTimerValue] = useState<number | null>(null);
 
   const handleStartTimer = (value: number, placeholder: string) => {
     let newTimerValue = 0;
@@ -130,7 +131,7 @@ const Page = () => {
               </div>
             ) : (
               <>
-                <h1>
+                <h1 className="title-training">
                   <ModalModifyWorkout
                     modalOpen={modalModify}
                     setModalOpen={setModalModify}
@@ -142,7 +143,6 @@ const Page = () => {
                 </h1>
                 <h2>{thisWorkout.description}</h2>
                 <FormTrain
-                  exo={thisWorkout.exercices}
                   thisWorkout={thisWorkout}
                   setFinished={handleFinished}
                   setIsTimerActive={setIsTimerActive}

@@ -92,12 +92,17 @@ const ModalModifyWorkout: React.FC<Props> = ({
       exercices: exercicesChosen,
     };
     console.log("updated workout", updatedWorkout);
-    // send to db
+
+    // mettre a jour le local storage
+    const localstorage = JSON.parse(localStorage.getItem("workouts") || "{}");
+    localstorage[updatedWorkout.id] = updatedWorkout;
+    console.log("localstorage", localstorage);
+    localStorage.setItem("workouts", JSON.stringify(localstorage));
+
     setModalOpen(false);
-    const mess = await sendToWorkout(updatedWorkout, user.uid);
-    console.log("mess", mess);
     //! DO I REALLY NEED THIS ?
-    window.location.href = "/workout";
+    //! DO I REALLY NEED THIS ?
+    window.location.reload();
   }
   return (
     <ReactModal
