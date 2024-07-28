@@ -110,17 +110,19 @@ const FormWorkoutCreate = () => {
         <input type="text" name="name" id="name" required />
         <label htmlFor="description">Description</label>
         <input type="text" name="description" id="description" />
-        <fieldset>
-          <label htmlFor="exercices">Select exercices</label>
-          {exoFromDb && Object.values(exoFromDb).length <= 0 && (
+        <div>
+          {/*  <label htmlFor="exercices">Select exercices</label>
+            {exoFromDb && Object.values(exoFromDb).length <= 0 && (
             <button type="button" onClick={fetchExoFromDb}>
               See the database exercices
             </button>
-          )}
+          )} */}
           <div className="container-perso-exo">
-            <label htmlFor="persoExercice">Personalyze exercice</label>
-            <input type="text" name="persoExercice" id="persoExercice" />
-            <Icon nameImg="add" onClick={addPersoExo} />
+            <label htmlFor="persoExercice">Add an exercice</label>
+            <div className="input-and-icon">
+              <input type="text" name="persoExercice" id="persoExercice" />
+              <Icon nameImg="add" onClick={addPersoExo} />
+            </div>
           </div>
           <ul className="list-exo">
             {exoFromDb &&
@@ -145,7 +147,7 @@ const FormWorkoutCreate = () => {
                 }
               )}
           </ul>
-        </fieldset>
+        </div>
         <ModalDragDropExercices
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}

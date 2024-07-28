@@ -129,6 +129,9 @@ header.workout-header {
   border: 1px var(--color-white) solid;
 }
 /* FULFILLED */
+.container-exo tr.fulfilled {
+  background-color: var(--color-grey);
+}
 .container-exo tr.fulfilled * {
   transition: all 1s ease-in-out;
 }

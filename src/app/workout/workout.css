@@ -1,7 +1,11 @@
-.container-perso-exo {
+.input-and-icon {
   display: flex;
   align-items: center;
+  width: 100%;
 }
+/* .input-and-icon input {
+  width: auto;
+} */
 .list-exo {
   display: flex;
   flex-wrap: wrap;
