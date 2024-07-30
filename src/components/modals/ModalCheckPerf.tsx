@@ -2,6 +2,7 @@ import { getItemFromLocalStorage } from "@/utils/localstorage";
 import React, { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import "./modalCheckPerf.css";
+
 interface Props {
   isVisible: boolean;
   close: () => void;
@@ -27,12 +28,15 @@ const ModalCheckPerf: React.FC<Props> = ({
   workoutid,
 }) => {
   const [perfOfThisExo, setPerfOfThisExo] = useState<PerfData[]>([]);
-
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  // all perf modal =>
+  const [openAllPerfModal, setOpenAllPerfModal] = useState(true);
   useEffect(() => {
     const previousworkouts = getItemFromLocalStorage("workouts");
-
+    setWorkouts(previousworkouts);
+    console.log("workouts", workouts);
     const perfData: PerfData[] = [];
-    Object.values(previousworkouts).forEach((workout: any) => {
+    Object.values(workouts).forEach((workout: any) => {
       if (workoutid !== workout.id) {
         return;
       }
@@ -62,7 +66,10 @@ const ModalCheckPerf: React.FC<Props> = ({
       shouldCloseOnOverlayClick={true}
       ariaHideApp={false}
     >
-      <button onClick={close}>Close</button>
+      <div className="close-and-openmodal">
+        <button onClick={close}>Close</button>
+      </div>
+
       <h2>Performances for "{perf}"</h2>
       <div className="container-perf-exo">
         {perfOfThisExo.map(({ date, data }, index) => (

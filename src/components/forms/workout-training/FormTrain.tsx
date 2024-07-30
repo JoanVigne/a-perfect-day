@@ -278,24 +278,21 @@ const FormTrain: React.FC<Props> = ({
                   <tr>
                     <th>
                       <div className="buttonsPlusMinusSeries">
-                        <button
-                          type="button"
+                        <Icon
+                          nameImg="plus-one"
                           onClick={() =>
-                            setNumberOfSeries((prevSeries) =>
-                              prevSeries > 0 ? prevSeries - 1 : 0
-                            )
+                            setNumberOfSeries((prevSeries) => prevSeries + 1)
                           }
-                        >
-                          -
-                        </button>
-                        <button
+                        />
+                        {/*   <button
+                          className="buttonPlusAndMinus"
                           type="button"
                           onClick={() =>
                             setNumberOfSeries((prevSeries) => prevSeries + 1)
                           }
                         >
                           +
-                        </button>
+                        </button> */}
                       </div>
                     </th>
                     <th></th>
@@ -346,7 +343,21 @@ const FormTrain: React.FC<Props> = ({
                           key={seriesIndex}
                           className={isSeriesFulfilled ? "fulfilled" : ""}
                         >
-                          <td></td>
+                          {seriesIndex === 0 ? (
+                            <td className="buttonsPlusMinusSeries">
+                              <Icon
+                                nameImg="minus-one"
+                                onClick={() =>
+                                  setNumberOfSeries((prevSeries) =>
+                                    prevSeries > 0 ? prevSeries - 1 : 0
+                                  )
+                                }
+                              />
+                            </td>
+                          ) : (
+                            <td></td>
+                          )}
+
                           <td className="container-input-unilateral">
                             <InputNumbers
                               type="number"

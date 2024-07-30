@@ -73,12 +73,12 @@ header.workout-header {
 }
 .buttonsPlusMinusSeries {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  border: none;
 }
-.buttonsPlusMinusSeries button {
-  padding: 2px;
-  border: 1px solid var(--color-active-link);
-  min-width: 16px;
+.container-exo .buttonsPlusMinusSeries {
+  border: none;
 }
 
 .container-exo tr {

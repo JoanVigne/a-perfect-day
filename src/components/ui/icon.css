@@ -29,11 +29,17 @@
   margin: 4px;
 }
 .icon.equal {
-  margin: 2px 10px;
+  margin: 2px 6px;
   width: 22px;
   height: 22px;
 }
-.plus-one {
+.icon.sad {
+  width: 22px;
+  height: 22px;
+  margin: 0 3px;
+}
+.plus-one,
+.minus-one {
   background-color: white;
   border-radius: 25px;
   width: 22px;
