@@ -73,9 +73,7 @@ header.workout-header {
 }
 .buttonsPlusMinusSeries {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
+  justify-content: flex-start;
 }
 .container-exo .buttonsPlusMinusSeries {
   border: none;
@@ -148,16 +146,6 @@ header.workout-header {
 .form-training .container-cleannote-note {
   display: flex;
   align-items: center;
-  background-color: var(--color-black);
-}
-.form-training .note-exo {
-  width: 100%;
-  padding: 0 5px;
-  height: 25px;
-  font-size: 16px;
-  border: none;
-  border-radius: 4px;
-  resize: vertical;
   background-color: var(--color-black);
 }
 

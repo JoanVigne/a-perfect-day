@@ -9,6 +9,7 @@ import { sendToWorkout } from "@/firebase/db/workout";
 import ModalConfirmSend from "@/components/modals/ModalConfirmSend";
 import ReactModal from "react-modal";
 import IconOpen from "@/components/ui/IconOpen";
+import TextAreaNoteExo from "./TextAreaNoteExo";
 
 interface Props {
   thisWorkout: any;
@@ -45,24 +46,6 @@ const FormTrain: React.FC<Props> = ({
         [exerciseId]: value,
       }));
     };
-  const handleTextareaResize = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    const textarea = event.target;
-    textarea.style.height = "22px";
-    textarea.style.height = `${textarea.scrollHeight}px`; // Set new height based on content
-    console.log();
-  };
-
-  useEffect(() => {
-    // Initialize the height of all textareas on component mount
-    const textareas = document.querySelectorAll(".note-exo");
-    textareas.forEach((textarea) => {
-      const element = textarea as HTMLTextAreaElement;
-      element.style.height = "22px";
-      element.style.height = `${element.scrollHeight}px`;
-    });
-  }, []);
   const [confirmation, setConfirmation] = useState(false); // modal confirm submit
   const [confirmQuit, setConfirmQuit] = useState(false);
   // placeholder with last perf :
@@ -510,22 +493,12 @@ const FormTrain: React.FC<Props> = ({
                     }));
                   }}
                 />
-                <textarea
-                  className={`note-exo ${noteExo[exercise.id] && " active"}`}
-                  name="noteExo"
-                  placeholder={`Note about ${exercise.name}?`}
-                  value={
-                    lastPerf[exercise.id] &&
-                    lastPerf[exercise.id]["noteExo"] &&
-                    lastPerf[exercise.id]["noteExo"][`exoPerso${exercise.name}`]
-                      ? lastPerf[exercise.id]["noteExo"][
-                          `exoPerso${exercise.name}`
-                        ]
-                      : noteExo[exercise.id] || ""
-                  }
-                  onChange={handleNoteChange(exercise.id)}
-                  onInput={handleTextareaResize}
-                ></textarea>
+                <TextAreaNoteExo
+                  exercise={exercise}
+                  noteExo={noteExo}
+                  lastPerf={lastPerf}
+                  handleNoteChange={handleNoteChange}
+                />
               </div>
             </div>
           );
