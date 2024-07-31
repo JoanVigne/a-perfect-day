@@ -11,6 +11,7 @@ import FormTrain from "@/components/forms/workout-training/FormTrain";
 import Icon from "@/components/ui/Icon";
 import ModalModifyWorkout from "@/components/modals/ModalModifyWorkout";
 import nosleep from "nosleep.js";
+import { update } from "firebase/database";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
@@ -38,11 +39,7 @@ const Page = () => {
   // get the workout from the localstorage
   useEffect(() => {
     if (slug) {
-      const dataWorkouts = getItemFromLocalStorage("workouts");
-      const workout = Object.values(dataWorkouts).find(
-        (workout: any) => workout.id === slug
-      );
-      setThisWorkout(workout);
+      updateDataFromLocalStorage();
     }
   }, [slug, modalModify]);
   //
@@ -73,7 +70,13 @@ const Page = () => {
     setFinished(true);
     callback();
   };
-
+  function updateDataFromLocalStorage() {
+    const dataWorkouts = getItemFromLocalStorage("workouts");
+    const workout = Object.values(dataWorkouts).find(
+      (workout: any) => workout.id === slug
+    );
+    setThisWorkout(workout);
+  }
   return (
     <div>
       <header className="HeaderTraining">
@@ -137,6 +140,7 @@ const Page = () => {
                     setModalOpen={setModalModify}
                     workoutToModify={thisWorkout}
                     duringTraining={true}
+                    updateDataFromLocalStorage={updateDataFromLocalStorage}
                   />
                   <Icon nameImg="modify" onClick={() => setModalModify(true)} />
                   {thisWorkout.name}

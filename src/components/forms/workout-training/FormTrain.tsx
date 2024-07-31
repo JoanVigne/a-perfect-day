@@ -10,7 +10,6 @@ import ModalConfirmSend from "@/components/modals/ModalConfirmSend";
 import ReactModal from "react-modal";
 import IconOpen from "@/components/ui/IconOpen";
 import TextAreaNoteExo from "./TextAreaNoteExo";
-
 interface Props {
   thisWorkout: any;
   setFinished: (callback: () => void) => void;
@@ -22,7 +21,6 @@ interface UserData {
   email: string;
   uid: string;
 }
-
 const FormTrain: React.FC<Props> = ({
   thisWorkout,
   setFinished,
@@ -46,7 +44,7 @@ const FormTrain: React.FC<Props> = ({
         [exerciseId]: value,
       }));
     };
-  const [confirmation, setConfirmation] = useState(false); // modal confirm submit
+  const [confirmation, setConfirmation] = useState(false);
   const [confirmQuit, setConfirmQuit] = useState(false);
   // placeholder with last perf :
   const previousworkouts = getItemFromLocalStorage("workouts");
@@ -80,7 +78,6 @@ const FormTrain: React.FC<Props> = ({
   }
   useEffect(() => {
     findLastPerf();
-    console.log("lastPerf:", lastPerf);
     setActualWorkout(thisWorkout);
   }, [thisWorkout]);
 
@@ -150,13 +147,42 @@ const FormTrain: React.FC<Props> = ({
       sendToWorkout(updatedWorkout, user.uid);
     });
   }
-  //!
+  const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
 
+  useEffect(() => {
+    if (actualWorkout) {
+      actualWorkout.exercices.forEach((exercise: any) => {
+        const numberOfSeriesInLastPerf =
+          lastPerf && lastPerf[exercise.id]
+            ? Object.keys(lastPerf[exercise.id]).filter(
+                (key) => key.startsWith("reps") && !key.includes("unilateral")
+              ).length
+            : 3;
+        setNumberOfSeries(numberOfSeriesInLastPerf);
+      });
+    }
+  }, [lastPerf, actualWorkout]);
+  const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<any>(null);
+
+  const handleShowModal = (exercise: any) => {
+    setSelectedExercise(exercise);
+  };
+  useEffect(() => {
+    if (selectedExercise) {
+      setShowModalCheckPerf(true);
+    }
+  }, [selectedExercise]);
+
+  const [exoOpen, setExoOpen] = useState<{ [key: string]: boolean }>({});
+  const handleExoOpen = (exerciseId: string) => {
+    setExoOpen((prevState) => ({
+      ...prevState,
+      [exerciseId]: !prevState[exerciseId],
+    }));
+  };
   return (
-    <form
-      onSubmit={submit}
-      className="form-training" /* onChange={formChanges} */
-    >
+    <form onSubmit={submit} className="form-training">
       <input
         type="date"
         value={selectedDate}
@@ -166,7 +192,7 @@ const FormTrain: React.FC<Props> = ({
       {/* DEBUT EXOS  */}
       {actualWorkout &&
         actualWorkout.exercices.map((exercise: any, index: number) => {
-          const [numberOfSeries, setNumberOfSeries] = useState<number>(
+          /*  const [numberOfSeries, setNumberOfSeries] = useState<number>(
             3 || null
           );
           useEffect(() => {
@@ -179,7 +205,7 @@ const FormTrain: React.FC<Props> = ({
                 : 3;
             setNumberOfSeries(numberOfSeriesInLastPerf);
           }, [lastPerf, actualWorkout.exercices.id]);
-
+ */
           const handleInputChange =
             (exerciseId: string, seriesIndex: number, field: string) =>
             (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,17 +219,7 @@ const FormTrain: React.FC<Props> = ({
                 [key]: value,
               }));
             };
-          /*  const [unilateral, setUnilateral] = useState<boolean>(false); */
-          const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
-          /* useEffect(() => {
-          if (
-            lastPerf[exercise.id] &&
-            lastPerf[exercise.id][`reps0-unilateral`]
-          ) {
-            console.log("UNILATERAL JUST BECAME TRUE");
-            setUnilateral(true);
-          }
-        }, [lastPerf, exercise.id]); */
+          /*       const [showModalCheckPerf, setShowModalCheckPerf] = useState(false); */
           const validatePlaceholder = (
             exerciseId: string,
             seriesIndex: number,
@@ -238,32 +254,34 @@ const FormTrain: React.FC<Props> = ({
             }
             console.log("new value :", newValue);
           };
-          const [exoOpen, setExoOpen] = useState(true);
-          function openExo() {
-            console.log("open exo");
-            setExoOpen(!exoOpen);
-          }
+          const isOpen = exoOpen[exercise.id] ?? true;
           return (
             <div
               key={exercise.id}
-              className={exoOpen ? "container-exo" : "container-exo closed"}
+              className={isOpen ? "container-exo" : "container-exo closed"}
             >
-              <ModalCheckPerf
-                isVisible={showModalCheckPerf}
-                close={() => setShowModalCheckPerf(false)}
-                perf={showModalCheckPerf && exercise?.name}
-                perfid={showModalCheckPerf && exercise?.id}
-                workoutid={showModalCheckPerf && actualWorkout.id}
-              />
+              {showModalCheckPerf && selectedExercise && (
+                <ModalCheckPerf
+                  isVisible={showModalCheckPerf}
+                  close={() => setShowModalCheckPerf(false)}
+                  perf={selectedExercise.name}
+                  perfid={selectedExercise.id}
+                  workoutid={actualWorkout.id}
+                  allWorkouts={previousworkouts}
+                />
+              )}
               <h3>
                 <div>
-                  <IconOpen show={exoOpen} setShow={setExoOpen} />
+                  <IconOpen
+                    show={isOpen}
+                    setShow={() => handleExoOpen(exercise.id)}
+                  />
                   {exercise.name}
                 </div>
                 <button
                   type="button"
                   className="unilateral-button"
-                  onClick={() => setShowModalCheckPerf(true)}
+                  onClick={() => handleShowModal(exercise)}
                 >
                   previous perf
                 </button>
@@ -279,17 +297,6 @@ const FormTrain: React.FC<Props> = ({
                     <th>Rest (ex:1.3)</th>
                   </tr>
                   <tr>
-                    {/*                     <th>
-                      <div className="buttonsPlusMinusSeries">
-                        <Icon
-                          nameImg="plus-one"
-                          onClick={() =>
-                            setNumberOfSeries((prevSeries) => prevSeries + 1)
-                          }
-                        />
-                        
-                      </div>
-                    </th> */}
                     <th></th>
                     <th></th>
                     <th></th>

@@ -9,6 +9,7 @@ interface Props {
   perf: string;
   perfid: string;
   workoutid: string;
+  allWorkouts: any;
 }
 
 interface PerfData {
@@ -26,17 +27,16 @@ const ModalCheckPerf: React.FC<Props> = ({
   perf,
   perfid,
   workoutid,
+  allWorkouts,
 }) => {
   const [perfOfThisExo, setPerfOfThisExo] = useState<PerfData[]>([]);
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
-  // all perf modal =>
-  const [openAllPerfModal, setOpenAllPerfModal] = useState(true);
+
   useEffect(() => {
-    const previousworkouts = getItemFromLocalStorage("workouts");
-    setWorkouts(previousworkouts);
-    console.log("workouts", workouts);
+    console.log("allWorkouts", allWorkouts);
+    if (!allWorkouts) return;
+
     const perfData: PerfData[] = [];
-    Object.values(workouts).forEach((workout: any) => {
+    Object.values(allWorkouts).forEach((workout: any) => {
       if (workoutid !== workout.id) {
         return;
       }

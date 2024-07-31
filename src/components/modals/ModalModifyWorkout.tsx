@@ -7,30 +7,27 @@ import ContainerExoList from "../ContainerExoList";
 import "./modalModifyWorkout.css";
 import ModalConfirmSend from "./ModalConfirmSend";
 import Button from "../ui/Button";
-import { sendToWorkout } from "@/firebase/db/workout";
-import { useAuthContext } from "@/context/AuthContext";
+
 interface Props {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
   workoutToModify: any;
   duringTraining: boolean;
+  updateDataFromLocalStorage: () => void;
 }
 interface Exercice {
   name: string;
   id: string;
   description: string;
 }
-interface UserData {
-  email: string;
-  uid: string;
-}
+
 const ModalModifyWorkout: React.FC<Props> = ({
   modalOpen,
   setModalOpen,
   workoutToModify,
   duringTraining,
+  updateDataFromLocalStorage,
 }) => {
-  const { user } = useAuthContext() as { user: UserData };
   const [exercicesChosen, setExercicesChosen] = useState<Exercice[]>([]);
   const [exoFromDb, setExoFromDb] = useState({});
   const [name, setName] = useState(workoutToModify.name);
@@ -100,9 +97,7 @@ const ModalModifyWorkout: React.FC<Props> = ({
     localStorage.setItem("workouts", JSON.stringify(localstorage));
 
     setModalOpen(false);
-    //! DO I REALLY NEED THIS ?
-    //! DO I REALLY NEED THIS ?
-    window.location.reload();
+    updateDataFromLocalStorage();
   }
   return (
     <ReactModal
