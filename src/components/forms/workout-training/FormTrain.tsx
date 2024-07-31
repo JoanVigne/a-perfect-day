@@ -276,7 +276,7 @@ const FormTrain: React.FC<Props> = ({
                     <th>Rest (ex:1.3)</th>
                   </tr>
                   <tr>
-                    <th>
+                    {/*                     <th>
                       <div className="buttonsPlusMinusSeries">
                         <Icon
                           nameImg="plus-one"
@@ -284,17 +284,9 @@ const FormTrain: React.FC<Props> = ({
                             setNumberOfSeries((prevSeries) => prevSeries + 1)
                           }
                         />
-                        {/*   <button
-                          className="buttonPlusAndMinus"
-                          type="button"
-                          onClick={() =>
-                            setNumberOfSeries((prevSeries) => prevSeries + 1)
-                          }
-                        >
-                          +
-                        </button> */}
+                        
                       </div>
-                    </th>
+                    </th> */}
                     <th></th>
                     <th></th>
                     <th></th>
@@ -343,20 +335,33 @@ const FormTrain: React.FC<Props> = ({
                           key={seriesIndex}
                           className={isSeriesFulfilled ? "fulfilled" : ""}
                         >
-                          {seriesIndex === 0 ? (
+                          {seriesIndex === 0 && (
                             <td className="buttonsPlusMinusSeries">
                               <Icon
-                                nameImg="minus-one"
+                                nameImg="plus-one"
                                 onClick={() =>
-                                  setNumberOfSeries((prevSeries) =>
-                                    prevSeries > 0 ? prevSeries - 1 : 0
+                                  setNumberOfSeries(
+                                    (prevSeries) => prevSeries + 1
                                   )
                                 }
                               />
                             </td>
-                          ) : (
-                            <td></td>
                           )}
+                          {seriesIndex !== 0 &&
+                            seriesIndex !== numberOfSeries - 1 && <td></td>}
+                          {numberOfSeries > 1 &&
+                            seriesIndex === numberOfSeries - 1 && (
+                              <td className="buttonsPlusMinusSeries">
+                                <Icon
+                                  nameImg="minus-one"
+                                  onClick={() =>
+                                    setNumberOfSeries((prevSeries) =>
+                                      prevSeries > 0 ? prevSeries - 1 : 0
+                                    )
+                                  }
+                                />
+                              </td>
+                            )}
 
                           <td className="container-input-unilateral">
                             <InputNumbers
