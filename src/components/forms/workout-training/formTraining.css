@@ -25,7 +25,7 @@ header.workout-header {
 }
 .container-exo {
   background-color: var(--color-dark-grey);
-  margin: 35px 0;
+  margin: 65px 0;
   border-bottom: 1px var(--color-white) solid;
   transition: all 1s ease-out;
   max-height: 700px;
@@ -151,18 +151,14 @@ header.workout-header {
   background-color: var(--color-black);
 }
 .form-training .note-exo {
-  /*   height: 35px; */
   width: 100%;
-  margin: 0;
+  padding: 0 5px;
+  height: 25px;
+  font-size: 16px;
   border: none;
-  box-sizing: border-box;
-  padding: 0 10px;
+  border-radius: 4px;
+  resize: vertical;
   background-color: var(--color-black);
-  font-size: 15px;
-  transition: width 0.5s ease-in;
-  /*   overflow: hidden; */
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .form-training .buttons-in-line .finish {
