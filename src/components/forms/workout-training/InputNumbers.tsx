@@ -52,10 +52,11 @@ const InputNumbers: React.FC<Props> = ({
     return <Icon nameImg={iconName || "null"} onClick={onClick} />;
   };
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" || event.key === "Tab") {
+    if (event.key === "Enter" || event.key === "Next" || event.key === "Tab") {
       event.preventDefault();
       // Add your validation logic here
       console.log("Enter or Next key pressed, input validated");
+      event.currentTarget.blur();
     }
   };
   return (
