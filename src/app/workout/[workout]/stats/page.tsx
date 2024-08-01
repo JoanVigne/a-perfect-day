@@ -105,6 +105,7 @@ const Page = () => {
             setModalOpen={setModalOpen}
             workoutToModify={workout}
             duringTraining={false}
+            updateDataFromLocalStorage={() => {}}
           />
           <h2>{workout.description}</h2>
           <h3>Exercices :</h3>
