@@ -49,8 +49,6 @@ const InputNumbers: React.FC<Props> = ({
   }, [value, placeholder]);
 
   function cancelValue() {
-    console.log("fire");
-    // change the input value to null
     onChange({ target: { value: "", name } } as any);
   }
   const icon = (iconName: string | null) => {
