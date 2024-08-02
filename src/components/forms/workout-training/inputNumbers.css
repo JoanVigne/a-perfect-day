@@ -4,7 +4,12 @@
   justify-content: center;
   flex-wrap: wrap;
 }
-
+.container-exo
+  .container-input-unilateral
+  .input-validation
+  input::placeholder {
+  font-style: normal;
+}
 .container-exo
   .container-input-unilateral
   .input-validation:nth-child(2)
