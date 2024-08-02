@@ -48,8 +48,14 @@ const InputNumbers: React.FC<Props> = ({
     setComparisonResult(result);
   }, [value, placeholder]);
 
+  function cancelValue() {
+    console.log("fire");
+    // change the input value to null
+    onChange({ target: { value: "", name } } as any);
+  }
   const icon = (iconName: string | null) => {
-    return <Icon nameImg={iconName || "null"} onClick={onClick} />;
+    const handleClick = iconName === "equal" ? onClick : cancelValue;
+    return <Icon nameImg={iconName || "null"} onClick={handleClick} />;
   };
 
   return (
@@ -69,9 +75,6 @@ const InputNumbers: React.FC<Props> = ({
               placeholder={placeholder}
             />
             <Icon nameImg={"plus-one"} onClick={onIncrement} />
-            {/*  <div className="plus-one" onClick={onIncrement}>
-              +
-            </div> */}
           </>
         )}
         {/* REST: */}
