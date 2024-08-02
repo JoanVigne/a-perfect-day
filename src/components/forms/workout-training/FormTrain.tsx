@@ -147,10 +147,12 @@ const FormTrain: React.FC<Props> = ({
       sendToWorkout(updatedWorkout, user.uid);
     });
   }
-  const [numberOfSeries, setNumberOfSeries] = useState<number>(3);
-
+  const [numberOfSeries, setNumberOfSeries] = useState<{
+    [key: string]: number;
+  }>({});
   useEffect(() => {
     if (actualWorkout) {
+      const seriesCount: { [key: string]: number } = {};
       actualWorkout.exercices.forEach((exercise: any) => {
         const numberOfSeriesInLastPerf =
           lastPerf && lastPerf[exercise.id]
@@ -158,10 +160,15 @@ const FormTrain: React.FC<Props> = ({
                 (key) => key.startsWith("reps") && !key.includes("unilateral")
               ).length
             : 3;
-        setNumberOfSeries(numberOfSeriesInLastPerf);
+        seriesCount[exercise.id] =
+          numberOfSeriesInLastPerf === 0 ? 1 : numberOfSeriesInLastPerf;
       });
+
+      console.log("serie count : ", seriesCount);
+      setNumberOfSeries(seriesCount);
     }
   }, [lastPerf, actualWorkout]);
+
   const [showModalCheckPerf, setShowModalCheckPerf] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<any>(null);
 
@@ -192,20 +199,6 @@ const FormTrain: React.FC<Props> = ({
       {/* DEBUT EXOS  */}
       {actualWorkout &&
         actualWorkout.exercices.map((exercise: any, index: number) => {
-          /*  const [numberOfSeries, setNumberOfSeries] = useState<number>(
-            3 || null
-          );
-          useEffect(() => {
-            const numberOfSeriesInLastPerf =
-              lastPerf && lastPerf[exercise.id]
-                ? Object.keys(lastPerf[exercise.id]).filter(
-                    (key) =>
-                      key.startsWith("reps") && !key.includes("unilateral")
-                  ).length
-                : 3;
-            setNumberOfSeries(numberOfSeriesInLastPerf);
-          }, [lastPerf, actualWorkout.exercices.id]);
- */
           const handleInputChange =
             (exerciseId: string, seriesIndex: number, field: string) =>
             (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,7 +212,7 @@ const FormTrain: React.FC<Props> = ({
                 [key]: value,
               }));
             };
-          /*       const [showModalCheckPerf, setShowModalCheckPerf] = useState(false); */
+
           const validatePlaceholder = (
             exerciseId: string,
             seriesIndex: number,
@@ -303,7 +296,7 @@ const FormTrain: React.FC<Props> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.from({ length: numberOfSeries }).map(
+                  {Array.from({ length: numberOfSeries[exercise.id] ?? 3 }).map(
                     (_, seriesIndex) => {
                       const handleIncrement = (
                         seriesIndex: number,
@@ -350,24 +343,36 @@ const FormTrain: React.FC<Props> = ({
                               <Icon
                                 nameImg="plus-one"
                                 onClick={() =>
-                                  setNumberOfSeries(
-                                    (prevSeries) => prevSeries + 1
-                                  )
+                                  setNumberOfSeries((prevSeries) => ({
+                                    ...prevSeries,
+                                    [exercise.id]:
+                                      prevSeries[exercise.id] > 0
+                                        ? prevSeries[exercise.id] + 1
+                                        : 0,
+                                  }))
                                 }
                               />
                             </td>
                           )}
                           {seriesIndex !== 0 &&
-                            seriesIndex !== numberOfSeries - 1 && <td></td>}
-                          {numberOfSeries > 1 &&
-                            seriesIndex === numberOfSeries - 1 && (
+                            seriesIndex !==
+                              (numberOfSeries[exercise.id] ?? 3) - 1 && (
+                              <td></td>
+                            )}
+                          {(numberOfSeries[exercise.id] ?? 3) > 1 &&
+                            seriesIndex ===
+                              (numberOfSeries[exercise.id] ?? 3) - 1 && (
                               <td className="buttonsPlusMinusSeries">
                                 <Icon
                                   nameImg="minus-one"
                                   onClick={() =>
-                                    setNumberOfSeries((prevSeries) =>
-                                      prevSeries > 0 ? prevSeries - 1 : 0
-                                    )
+                                    setNumberOfSeries((prevSeries) => ({
+                                      ...prevSeries,
+                                      [exercise.id]:
+                                        prevSeries[exercise.id] > 0
+                                          ? prevSeries[exercise.id] - 1
+                                          : 0,
+                                    }))
                                   }
                                 />
                               </td>
