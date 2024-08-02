@@ -163,8 +163,6 @@ const FormTrain: React.FC<Props> = ({
         seriesCount[exercise.id] =
           numberOfSeriesInLastPerf === 0 ? 1 : numberOfSeriesInLastPerf;
       });
-
-      console.log("serie count : ", seriesCount);
       setNumberOfSeries(seriesCount);
     }
   }, [lastPerf, actualWorkout]);
