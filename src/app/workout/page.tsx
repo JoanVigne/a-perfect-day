@@ -49,17 +49,24 @@ export default function Page() {
   }, [setWorkouts]);
   const getMostRecentDate = (duration: { [date: string]: any }) => {
     const dates = Object.keys(duration);
-    return dates.length > 0
-      ? new Date(Math.max(...dates.map((date) => new Date(date).getTime())))
-      : null;
+    return dates.length > 0 ? dates.reduce((a, b) => (a > b ? a : b)) : null;
   };
 
   const sortedWorkouts = workouts
     ? Object.values(workouts as Workouts).sort(
         (a: WorkoutType, b: WorkoutType) => {
-          const dateA = getMostRecentDate(a.duration);
-          const dateB = getMostRecentDate(b.duration);
-          return dateB && dateA ? dateB.getTime() - dateA.getTime() : 0;
+          const dateA =
+            a.duration && Object.keys(a.duration).length > 0
+              ? getMostRecentDate(a.duration) ??
+                new Date().toISOString().split("T")[0]
+              : new Date().toISOString().split("T")[0];
+          const dateB =
+            b.duration && Object.keys(b.duration).length > 0
+              ? getMostRecentDate(b.duration) ??
+                new Date().toISOString().split("T")[0]
+              : new Date().toISOString().split("T")[0];
+
+          return dateB.localeCompare(dateA);
         }
       )
     : [];

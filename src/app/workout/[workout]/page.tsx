@@ -1,17 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import TimeChronometer from "@/components/ui/TimeChronometer";
 import Timer from "@/components/ui/Timer";
 import "@/components/header.css";
+import "@/app/workout/workout.css";
 import FormTrain from "@/components/forms/workout-training/FormTrain";
 import Icon from "@/components/ui/Icon";
 import ModalModifyWorkout from "@/components/modals/ModalModifyWorkout";
 import nosleep from "nosleep.js";
-import { update } from "firebase/database";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
@@ -113,23 +112,53 @@ const Page = () => {
         {thisWorkout && (
           <>
             {finished ? (
-              <div
-                className="containerLinks"
-                style={{ display: "flex", flexDirection: "column" }}
-              >
+              <div className="container-end-of-training">
                 <h2>
                   Performances of <strong>{thisWorkout.name} have been</strong>{" "}
                   saved !{" "}
                 </h2>
-                <Link
-                  href={`/workout/${thisWorkout.id}/stats`}
-                  className="link"
-                >
-                  Check the statistic about this workout
-                </Link>
-                <Link href={`/workout`} className="link">
-                  Back to the main page
-                </Link>
+                <h3>You did all those exercices : </h3>
+                <ul className="list-of-done-exercices">
+                  {thisWorkout.exercices.map((exercice: any, index: number) => {
+                    const isLast = index === thisWorkout.exercices.length - 1;
+                    const isSecondLast =
+                      index === thisWorkout.exercices.length - 2;
+                    return (
+                      <li key={exercice.id}>
+                        {exercice.name}
+                        {!isLast && (
+                          <span className="separator">
+                            {isSecondLast ? " and " : ","}
+                          </span>
+                        )}
+                        {isLast && "."}
+                      </li>
+                    );
+                  })}
+                </ul>
+                <h3>Well done !</h3>
+                <div className="container-gif">
+                  <iframe
+                    src="https://giphy.com/embed/pHb82xtBPfqEg"
+                    width="100%"
+                    height="100%"
+                    style={{ position: "absolute" }}
+                    frameBorder="0"
+                    className="giphy-embed"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <div className="container-links">
+                  <Link
+                    href={`/workout/${thisWorkout.id}/stats`}
+                    className="link"
+                  >
+                    Check the statistic about this workout
+                  </Link>
+                  <Link href={`/workout`} className="link">
+                    Back to the main page
+                  </Link>
+                </div>
                 <Footer />
               </div>
             ) : (
