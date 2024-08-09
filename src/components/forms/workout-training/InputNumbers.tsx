@@ -55,7 +55,18 @@ const InputNumbers: React.FC<Props> = ({
     const handleClick = iconName === "equal" ? onClick : cancelValue;
     return <Icon nameImg={iconName || "null"} onClick={handleClick} />;
   };
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    const inputElement = event.target;
+    const offset = 170;
+    const bodyRect = document.body.getBoundingClientRect().top;
+    const elemRect = inputElement.getBoundingClientRect().top;
+    const offsetPosition = elemRect - bodyRect - offset;
 
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+  };
   return (
     <div className="input-validation">
       <div className="icons">
@@ -71,6 +82,8 @@ const InputNumbers: React.FC<Props> = ({
               onChange={onChange}
               value={value}
               placeholder={placeholder}
+              onFocus={handleFocus}
+              style={{ position: "relative" }}
             />
             <Icon nameImg={"plus-one"} onClick={onIncrement} />
           </>
