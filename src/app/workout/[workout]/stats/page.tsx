@@ -175,35 +175,12 @@ const Page = () => {
                                             <td>{i + 1}-</td>
                                             <td>
                                               {exerciseData[`weight${i}`]}
-                                              {exerciseData[
-                                                `weight-unilateral${i}`
-                                              ] && (
-                                                <>
-                                                  -
-                                                  {
-                                                    exerciseData[
-                                                      `weight-unilateral${i}`
-                                                    ]
-                                                  }
-                                                </>
-                                              )}
                                             </td>
+                                            <td>{exerciseData[`reps${i}`]}</td>
                                             <td>
-                                              {exerciseData[`reps${i}`]}
-                                              {exerciseData[
-                                                `reps-unilateral${i}`
-                                              ] && (
-                                                <>
-                                                  -
-                                                  {
-                                                    exerciseData[
-                                                      `reps-unilateral${i}`
-                                                    ]
-                                                  }
-                                                </>
-                                              )}
+                                              {exerciseData[`int${i}`] ||
+                                                exerciseData[`interval${i}`]}
                                             </td>
-                                            <td>{exerciseData[`int${i}`]}</td>
                                           </tr>
                                         ))}
                                     </tbody>
