@@ -1,12 +1,12 @@
 "use client";
 import TemporaryMessage from "@/components/ui/TemporaryMessage";
 import { fetchDataFromDBToLocalStorage } from "@/firebase/db/db";
-import React, { useEffect, useState } from "react";
-import ModalDragDropExercices from "../modals/ModalDragDropExercices";
+import React, { useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { sendToWorkout } from "@/firebase/db/workout";
 import { useAuthContext } from "@/context/AuthContext";
 import Icon from "@/components/ui/Icon";
-
+import "./formWorkoutCreate.css";
 interface UserData {
   email: string;
   uid: string;
@@ -25,20 +25,11 @@ interface Workout {
 }
 const FormWorkoutCreate = () => {
   const { user } = useAuthContext() as { user: UserData };
-  const [exoFromDb, setExoFromDb] = useState({});
-
-  async function fetchExoFromDb() {
-    const data = await fetchDataFromDBToLocalStorage("exercices");
-    setExoFromDb(data);
-  }
 
   // form :
   const [messageForm, setMessageForm] = useState("");
-  const [workout, setWorkout] = useState({});
-
-  const [modalOpen, setModalOpen] = useState(false);
   const [exercicesChosen, setExercicesChosen] = useState<any[]>([]);
-  function submitRawWorkout(e: React.FormEvent<HTMLFormElement>) {
+  async function submitWorkout(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -48,33 +39,16 @@ const FormWorkoutCreate = () => {
       return;
     }
     const description = formData.get("description");
-    const exerciceIds = Array.from(formData.getAll("exercices")) as string[];
-    const exercicesFromDb = Object.values(exoFromDb).filter((exo: any) =>
-      exerciceIds.includes(exo.id)
-    );
-    const exoPersoSelected = exoPerso.filter((exo: any) =>
-      exerciceIds.includes(exo.id)
-    );
-    const exercices = [...exercicesFromDb, ...exoPersoSelected];
     const id = "workout" + Math.random().toString(36);
-    console.log(name, id, description, exercices);
     const rawWorkout = {
       name: name,
       id: id,
       description: description,
-      exercices: exercices,
+      exercices: exercicesChosen,
     };
-    console.log("rawWorkout", rawWorkout);
-    setWorkout(rawWorkout);
-    setExercicesChosen(exercices as never[]);
-    setModalOpen(true);
-  }
-  async function submitWorkout() {
-    let result = { ...(workout as Workout) };
-    result.exercices = exercicesChosen;
-    console.log("result", result);
-    // send to db
-    await sendToWorkout(result, user.uid);
+
+    /*     setModalOpen(true); */
+    await sendToWorkout(rawWorkout, user.uid);
     window.location.reload();
   }
   // drag and drop
@@ -105,18 +79,12 @@ const FormWorkoutCreate = () => {
   return (
     <div>
       <h2>Create a workout</h2>
-      <form action="" onSubmit={submitRawWorkout}>
+      <form action="" onSubmit={submitWorkout}>
         <label htmlFor="name">Name</label>
         <input type="text" name="name" id="name" required />
         <label htmlFor="description">Description</label>
         <input type="text" name="description" id="description" />
         <div>
-          {/*  <label htmlFor="exercices">Select exercices</label>
-            {exoFromDb && Object.values(exoFromDb).length <= 0 && (
-            <button type="button" onClick={fetchExoFromDb}>
-              See the database exercices
-            </button>
-          )} */}
           <div className="container-perso-exo">
             <label htmlFor="persoExercice">Add an exercice</label>
             <div className="input-and-icon">
@@ -124,37 +92,51 @@ const FormWorkoutCreate = () => {
               <Icon nameImg="add" onClick={addPersoExo} />
             </div>
           </div>
-          <ul className="list-exo">
-            {exoFromDb &&
-              [...Object.values(exoFromDb), ...exoPerso].map(
-                (exo: any, index: number) => {
-                  return (
-                    <li key={exo.name || index}>
-                      <input
-                        type="checkbox"
-                        name="exercices"
-                        id={exo.name || `tempExo${index}`}
-                        value={exo.id || `tempExo${index}`}
-                        defaultChecked={exercicesChosen.some(
-                          (chosenExo: any) => chosenExo.id === exo.id
-                        )}
-                      />
-                      <label htmlFor={exo.name || `tempExo${index}`}>
-                        {exo.name || exo}
-                      </label>
-                    </li>
-                  );
-                }
-              )}
-          </ul>
         </div>
-        <ModalDragDropExercices
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-          exercicesChosen={exercicesChosen}
-          handleOnDragEnd={handleOnDragEnd}
-          handleContinue={submitWorkout}
-        />
+        <h3>Modify their order here </h3>
+        <div className="drag-drop">
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable
+              mode="standard"
+              type="DEFAULT"
+              isDropDisabled={false}
+              isCombineEnabled={false}
+              ignoreContainerClipping={false}
+              droppableId="exercises"
+              direction="vertical"
+            >
+              {(provided) => (
+                <>
+                  <ul {...provided.droppableProps} ref={provided.innerRef}>
+                    {exercicesChosen.map((exo: any, index: number) => (
+                      <Draggable
+                        key={exo.id}
+                        draggableId={exo.id}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <li
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <span className="index">{index + 1}</span>
+                            <h3>{exo.name}</h3>
+                            <Icon
+                              nameImg="drag"
+                              onClick={() => console.log("oke")}
+                            />
+                          </li>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </ul>
+                </>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
         <TemporaryMessage message={messageForm} timeInMS={2000} type="" />
         <button type="submit">Continue</button>
       </form>

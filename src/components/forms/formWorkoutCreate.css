@@ -1,0 +1,27 @@
+.drag-drop {
+  background-color: var(--color-black);
+  width: 95%;
+  height: 85%;
+  margin: 25px auto 100px auto;
+  overflow-y: scroll;
+  border: 2px var(--color-dark-green) solid;
+}
+
+.drag-drop ul li {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px;
+  padding: 1px 5px;
+}
+.drag-drop ul li span {
+  margin-right: 10px;
+}
+.drag-drop ul li .icon {
+  margin-left: 15px;
+}
+.drag-drop .finish {
+  margin: 30px auto;
+  display: block;
+  background-color: var(--color-green);
+  color: var(--color-white);
+}
