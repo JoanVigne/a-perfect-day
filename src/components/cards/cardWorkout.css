@@ -18,14 +18,32 @@
   flex-direction: column;
   align-items: flex-start;
 }
+.workout-container .infos div {
+  display: flex;
+}
+.workout-container .infos div h3 {
+  text-align: inherit;
+}
+.workout-container .infos div img {
+  margin-right: 10px;
+}
 .workout-container a {
   margin: 5px;
-  padding: 5px;
-  background-color: var(--color-dark-green);
+  padding: 0 15px;
+  /*   background-color: var(--color-dark-green); */
+  border: 2px var(--color-dark-green) solid;
   border-radius: 3px;
+  background-color: rgba(125, 125, 125, 0.9);
+}
+.workout-container a img {
+  transition: transform 0.2s ease;
+}
+.workout-container a:active img {
+  transform: translateY(-10px);
 }
 .workout-container .perf {
   display: flex;
   align-items: flex-end;
   flex-direction: column;
+  min-width: 110px;
 }

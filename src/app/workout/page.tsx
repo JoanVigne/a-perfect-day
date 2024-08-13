@@ -74,7 +74,8 @@ export default function Page() {
     <>
       <Header />
       <h1>
-        Workout <Icon nameImg="question" onClick={() => setOpenHelp(true)} />
+        My workouts{" "}
+        <Icon nameImg="question" onClick={() => setOpenHelp(true)} />
         <ModalHelp
           isVisible={openHelp}
           close={() => setOpenHelp(false)}

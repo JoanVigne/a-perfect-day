@@ -28,19 +28,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <Head>
-        <title>{metadata.title as string}</title>
-        <meta name="description" content={metadata.description as string} />
-        <link rel="icon" href="/path/to/your/favicon.ico" />
-        <meta property="og:title" content={metadata.title as string} />
-        <meta
-          property="og:description"
-          content={metadata.description as string}
-        />
-        <meta property="og:image" content="/path/to/your/preview-image.jpg" />
-        <meta property="og:url" content="https://your-website.com" />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Head> */}
       <body className={inter.className}>
         <AuthContextProvider>{children}</AuthContextProvider>
       </body>

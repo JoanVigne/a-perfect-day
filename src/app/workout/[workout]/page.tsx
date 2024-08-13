@@ -12,6 +12,7 @@ import Icon from "@/components/ui/Icon";
 import ModalModifyWorkout from "@/components/modals/ModalModifyWorkout";
 import nosleep from "nosleep.js";
 import ContainerEndWorkout from "@/components/ContainerEndWorkout";
+import { set } from "firebase/database";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
@@ -21,16 +22,6 @@ const Page = () => {
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [finalTime, setFinalTime] = useState("");
   const [modalModify, setModalModify] = useState(false);
-
-  // to ensure screen doesn't sleep
-  const noSleep = new nosleep();
-  useEffect(() => {
-    if (!finished) {
-      noSleep.enable();
-    } else {
-      noSleep.disable();
-    }
-  }, [finished]);
   // check the slug to get the workout
   useEffect(() => {
     const pathslug = window.location.pathname.split("/").pop();
@@ -42,6 +33,51 @@ const Page = () => {
       updateDataFromLocalStorage();
     }
   }, [slug, modalModify]);
+  // to ensure screen doesn't sleep
+  const noSleep = new nosleep();
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && !finished) {
+        noSleep.enable();
+      } else {
+        noSleep.disable();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    handleVisibilityChange();
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      noSleep.disable();
+    };
+  }, [finished]);
+  // to know if we can leave the page or not
+  const [canLeave, setCanLeave] = useState(false);
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!finished && !canLeave) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
+    const handlePopState = () => {
+      if (!finished && !canLeave) {
+        window.history.pushState(null, "", window.location.href);
+      }
+    };
+    if (!finished && !canLeave) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      window.addEventListener("popstate", handlePopState);
+      window.history.pushState(null, "", window.location.href);
+    } else {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    }
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [canLeave]);
+
   //
   const [timerKey, setTimerKey] = useState(0);
   const [timerValue, setTimerValue] = useState<number | null>(null);
@@ -67,6 +103,7 @@ const Page = () => {
   };
 
   const handleFinished = (callback: () => void) => {
+    setCanLeave(true);
     setFinished(true);
     callback();
   };

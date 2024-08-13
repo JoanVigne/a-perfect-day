@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import "./cardWorkout.css";
 import Icon from "../ui/Icon";
 
+import Image from "next/image";
+
 interface Props {
   workout: WorkoutType;
   index: number;
@@ -36,23 +38,33 @@ const CardWorkout: React.FC<Props> = ({ workout, index }) => {
   return (
     <div className={`workout-container ${colorClass}`}>
       <div className="infos">
-        <h3
-          onClick={() => {
-            window.location.href = `/workout/${workout.id}/stats`;
-          }}
-        >
-          {workout.name}{" "}
+        <div>
           <Icon
-            nameImg="question"
+            nameImg="exclamation"
             onClick={() => {
               window.location.href = `/workout/${workout.id}/stats`;
             }}
           />
-        </h3>
+          <h3
+            onClick={() => {
+              window.location.href = `/workout/${workout.id}/stats`;
+            }}
+          >
+            {workout.name}
+          </h3>
+        </div>
         <p>{workout.description}</p>
       </div>
       <div className="perf">
-        <Link href={`/workout/${workout.id}`}>Train now</Link>
+        {/*         <Link href={`/workout/${workout.id}`}>Train now</Link> */}
+        <Link href={`/workout/${workout.id}`}>
+          <Image
+            src="/icon/dumbell4.png"
+            alt="Dumbell Icon"
+            width={50}
+            height={50}
+          />
+        </Link>
 
         <h4>{workout.perf ? <>Last: {lastTime}</> : <>no data yet</>}</h4>
       </div>
