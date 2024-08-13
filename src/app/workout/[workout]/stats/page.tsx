@@ -167,19 +167,18 @@ const Page = () => {
                                     </thead>
                                     <tbody>
                                       {Object.keys(exerciseData)
-                                        .filter((key) =>
-                                          key.startsWith("weight")
-                                        )
+                                        .filter((key) => key.startsWith("reps"))
                                         .map((key, i) => (
                                           <tr key={i}>
                                             <td>{i + 1}-</td>
                                             <td>
-                                              {exerciseData[`weight${i}`]}
+                                              {exerciseData[`weight${i}`] || ""}
                                             </td>
                                             <td>{exerciseData[`reps${i}`]}</td>
                                             <td>
                                               {exerciseData[`int${i}`] ||
-                                                exerciseData[`interval${i}`]}
+                                                exerciseData[`interval${i}`] ||
+                                                ""}
                                             </td>
                                           </tr>
                                         ))}
