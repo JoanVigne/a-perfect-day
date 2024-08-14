@@ -23,9 +23,12 @@ footer ul li a {
   align-items: center;
   height: 100%;
   cursor: pointer;
+  width: 100%;
+  justify-content: center;
+  transition: all 1.3s;
 }
 
 footer .active-link {
-  color: var(--color-active-link);
-  text-decoration: underline;
+  color: var(--color-black);
+  background-color: var(--color-light-grey);
 }
