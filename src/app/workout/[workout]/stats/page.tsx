@@ -127,8 +127,9 @@ const Page = () => {
                   const formattedDate = new Date(date).toLocaleDateString(
                     "en-US",
                     {
-                      month: "short",
-                      day: "numeric",
+                      weekday: "long",
+                      day: "2-digit",
+                      month: "2-digit",
                     }
                   );
                   return (
