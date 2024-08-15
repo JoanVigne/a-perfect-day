@@ -17,18 +17,47 @@ footer ul {
   align-items: center;
   height: 100%;
 }
-footer ul li,
+footer ul li {
+  height: 100%;
+  cursor: pointer;
+  width: 100%;
+  position: relative;
+}
+footer li.active-link {
+  color: var(--color-black);
+  background-color: var(--color-light-grey);
+}
+footer li.active-link::after {
+  content: "";
+  position: absolute;
+  left: 25%;
+  bottom: 0;
+  width: 50%;
+  height: 2px;
+  background-color: black;
+  opacity: 0.5;
+  animation: lineMove 1s forwards;
+}
+
+footer li.active-link a {
+  font-weight: bold;
+}
 footer ul li a {
   display: flex;
   align-items: center;
   height: 100%;
-  cursor: pointer;
-  width: 100%;
   justify-content: center;
-  transition: all 1.3s;
 }
 
-footer .active-link {
-  color: var(--color-black);
-  background-color: var(--color-light-grey);
+@keyframes lineMove {
+  0% {
+    bottom: 17px;
+    left: 46%;
+    width: 8%;
+  }
+  100% {
+    bottom: 17px;
+    left: 25%;
+    width: 50%;
+  }
 }
