@@ -89,7 +89,7 @@ const Page = () => {
         }
       />
       {workout ? (
-        <div>
+        <div className="container-stats-page">
           <h1>
             <Icon
               nameImg="red-bin"
@@ -107,8 +107,9 @@ const Page = () => {
             duringTraining={false}
             updateDataFromLocalStorage={() => {}}
           />
-          <h2>{workout.description}</h2>
-          <h3>Exercices :</h3>
+          <h2>Description :</h2>
+          <p>{workout.description}</p>
+          <h2>Exercices :</h2>
           <ul className="list-exos">
             {workout.exercices &&
               workout.exercices.map((exo, index) => (
@@ -118,8 +119,7 @@ const Page = () => {
               ))}
           </ul>
           <div className="">
-            <h3>Performances:</h3>
-            <h4>Most reccent :</h4>
+            <h2>Performances:</h2>
             {workout.perf ? (
               Object.entries(workout.perf)
                 .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
@@ -133,7 +133,7 @@ const Page = () => {
                   );
                   return (
                     <div key={index} className="container-date-perf">
-                      <h4>
+                      <h3>
                         <IconOpen
                           show={showPerf[date] || false}
                           setShow={(show: boolean) =>
@@ -141,7 +141,7 @@ const Page = () => {
                           }
                         />{" "}
                         {formattedDate}{" "}
-                      </h4>
+                      </h3>
                       <div className="container-perf">
                         {showPerf[date] &&
                           Object.entries(perfData)
@@ -159,8 +159,7 @@ const Page = () => {
                                   <table>
                                     <thead>
                                       <tr>
-                                        <th></th>
-                                        <th>Wei.</th>
+                                        <th>Wei</th>
                                         <th>Reps</th>
                                         <th>Rest</th>
                                       </tr>
@@ -170,7 +169,6 @@ const Page = () => {
                                         .filter((key) => key.startsWith("reps"))
                                         .map((key, i) => (
                                           <tr key={i}>
-                                            <td>{i + 1}-</td>
                                             <td>
                                               {exerciseData[`weight${i}`] || ""}
                                             </td>
@@ -184,9 +182,12 @@ const Page = () => {
                                         ))}
                                     </tbody>
                                   </table>
-                                  {perfData.noteExo && (
-                                    <p>Note : {perfData.noteExo[exerciseId]}</p>
-                                  )}
+                                  {perfData.noteExo &&
+                                    perfData.noteExo[exerciseId] && (
+                                      <p>
+                                        Note : {perfData.noteExo[exerciseId]}
+                                      </p>
+                                    )}
                                 </div>
                               );
                             })}
