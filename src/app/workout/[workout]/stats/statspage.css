@@ -17,6 +17,13 @@
 
 .container-date-perf {
   margin: 15px 0;
+  max-height: 27px;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+.container-date-perf.opened {
+  max-height: 800px;
+  transition: max-height 0.5s ease;
 }
 .container-date-perf h3 {
   margin-left: 25px;
@@ -27,6 +34,7 @@
   align-items: center;
   margin-left: 25px;
 }
+
 .container-perf h4 {
   margin: 5px;
 }

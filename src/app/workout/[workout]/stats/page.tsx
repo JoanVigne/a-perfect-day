@@ -132,7 +132,14 @@ const Page = () => {
                     }
                   );
                   return (
-                    <div key={index} className="container-date-perf">
+                    <div
+                      key={index}
+                      className={
+                        showPerf[date]
+                          ? "container-date-perf opened"
+                          : "container-date-perf"
+                      }
+                    >
                       <h3>
                         <IconOpen
                           show={showPerf[date] || false}
@@ -143,7 +150,8 @@ const Page = () => {
                         {formattedDate}{" "}
                       </h3>
                       <div className="container-perf">
-                        {showPerf[date] &&
+                        {
+                          /* showPerf[date] && */
                           Object.entries(perfData)
                             .filter(([key]) => key !== "noteExo")
                             .sort((a, b) => a[1].exoOrder - b[1].exoOrder)
@@ -190,7 +198,8 @@ const Page = () => {
                                     )}
                                 </div>
                               );
-                            })}
+                            })
+                        }
                       </div>
                     </div>
                   );
