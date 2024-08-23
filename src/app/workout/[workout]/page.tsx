@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import Link from "next/link";
-import Footer from "@/components/Footer";
 import TimeChronometer from "@/components/ui/TimeChronometer";
 import Timer from "@/components/ui/Timer";
 import "@/components/header.css";
@@ -12,14 +10,13 @@ import Icon from "@/components/ui/Icon";
 import ModalModifyWorkout from "@/components/modals/ModalModifyWorkout";
 import nosleep from "nosleep.js";
 import ContainerEndWorkout from "@/components/ContainerEndWorkout";
-import { set } from "firebase/database";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);
   const [thisWorkout, setThisWorkout] = useState<any>(null);
   const [chornoTimer, setChronoTimer] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [isTimerActive, setIsTimerActive] = useState(true);
+
   const [finalTime, setFinalTime] = useState("");
   const [modalModify, setModalModify] = useState(false);
   // check the slug to get the workout
@@ -153,7 +150,7 @@ const Page = () => {
               <ContainerEndWorkout propsWorkout={thisWorkout} />
             ) : (
               <>
-                <h1 className="title-training">
+                {/*  <h1 className="title-training">
                   <ModalModifyWorkout
                     modalOpen={modalModify}
                     setModalOpen={setModalModify}
@@ -163,12 +160,11 @@ const Page = () => {
                   />
                   <Icon nameImg="modify" onClick={() => setModalModify(true)} />
                   {thisWorkout.name}
-                </h1>
+                </h1> */}
                 <h2>{thisWorkout.description}</h2>
                 <FormTrain
                   thisWorkout={thisWorkout}
                   setFinished={handleFinished}
-                  setIsTimerActive={setIsTimerActive}
                   finalTime={finalTime}
                   onStartTimer={handleStartTimer}
                 />

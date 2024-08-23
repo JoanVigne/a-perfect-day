@@ -10,10 +10,10 @@ import ModalConfirmSend from "@/components/modals/ModalConfirmSend";
 import ReactModal from "react-modal";
 import IconOpen from "@/components/ui/IconOpen";
 import TextAreaNoteExo from "./TextAreaNoteExo";
+import ModalModifyRunningWorkout from "./ModalModifyRunningWorkout";
 interface Props {
   thisWorkout: any;
   setFinished: (callback: () => void) => void;
-  setIsTimerActive: React.Dispatch<React.SetStateAction<boolean>>;
   finalTime: string;
   onStartTimer: (value: number, placeholder: string) => void;
 }
@@ -24,7 +24,6 @@ interface UserData {
 const FormTrain: React.FC<Props> = ({
   thisWorkout,
   setFinished,
-  setIsTimerActive,
   finalTime,
   onStartTimer,
 }) => {
@@ -33,6 +32,7 @@ const FormTrain: React.FC<Props> = ({
     new Date().toISOString().substring(0, 10)
   );
   const [actualWorkout, setActualWorkout] = useState<any>(thisWorkout);
+
   const [inputValues, setInputValues] = useState<Record<string, number>>({});
   const [noteExo, setNoteExo] = useState<{ [key: string]: string }>({});
   const handleNoteChange =
@@ -48,6 +48,7 @@ const FormTrain: React.FC<Props> = ({
   const [confirmQuit, setConfirmQuit] = useState(false);
   // placeholder with last perf :
   const previousworkouts = getItemFromLocalStorage("workouts");
+
   const [lastPerf, setLastPerf] = useState<any>({});
   function findLastPerf() {
     Object.values(previousworkouts).forEach((workout: any) => {
@@ -78,7 +79,6 @@ const FormTrain: React.FC<Props> = ({
   }
   useEffect(() => {
     findLastPerf();
-    setActualWorkout(thisWorkout);
   }, [thisWorkout]);
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -186,8 +186,24 @@ const FormTrain: React.FC<Props> = ({
       [exerciseId]: !prevState[exerciseId],
     }));
   };
+  // maj du workout quand on modif le workout
+  const [modalOpen, setModalOpen] = useState(false);
+  useEffect(() => {
+    const dataWorkouts = getItemFromLocalStorage("workouts");
+    if (!dataWorkouts) return console.log("no workouts in LS");
+    setActualWorkout(dataWorkouts[thisWorkout.id]);
+  }, [modalOpen]);
   return (
     <form onSubmit={submit} className="form-training">
+      <h1 style={{ marginTop: "100px" }}>
+        <Icon nameImg="modify" onClick={() => setModalOpen(true)} />
+        {actualWorkout.name}
+      </h1>
+      <ModalModifyRunningWorkout
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        workoutToModify={actualWorkout}
+      />
       <input
         type="date"
         value={selectedDate}
@@ -223,7 +239,6 @@ const FormTrain: React.FC<Props> = ({
             const key = `${exerciseId}-${adjustedField}${seriesIndex}${
               isUnilateral ? "-unilateral" : ""
             }`;
-            console.log("key", key);
             const newValue =
               lastPerf[exerciseId] &&
               lastPerf[exerciseId][
@@ -243,7 +258,6 @@ const FormTrain: React.FC<Props> = ({
                 [key]: newValue,
               }));
             }
-            console.log("new value :", newValue);
           };
           const isOpen = exoOpen[exercise.id] ?? true;
           return (
@@ -271,7 +285,7 @@ const FormTrain: React.FC<Props> = ({
                 </div>
                 <button
                   type="button"
-                  className="unilateral-button"
+                  className="previous-perf"
                   onClick={() => handleShowModal(exercise)}
                 >
                   previous perf
@@ -316,7 +330,6 @@ const FormTrain: React.FC<Props> = ({
                               isUnilateral ? "-unilateral" : ""
                             }`
                           ];
-                        console.log("placeholder : ", placeholder);
                         const currentValue =
                           Number(inputValues[key]) || Number(placeholder) || 0;
                         const newValue = currentValue + 1;

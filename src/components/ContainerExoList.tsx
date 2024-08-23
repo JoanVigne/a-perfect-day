@@ -24,17 +24,17 @@ const ContainerExoList: React.FC<Props> = ({
 }) => {
   return (
     <div className="container-exo-list">
-      {Object.values(exoFromDb).length <= 0 && (
+      {/* {Object.values(exoFromDb).length <= 0 && (
         <button type="button" onClick={fetchExoFromDb}>
           See the database exercices
         </button>
-      )}
+      )} */}
       <div className="container-perso-exo">
-        <label htmlFor="persoExercice">Personalyze exercice</label>
+        {/*  <label htmlFor="persoExercice">Personalyze exercice</label> */}
         <input type="text" name="persoExercice" id="persoExercice" />
         <Icon nameImg="add" onClick={addPersoExo} />
       </div>
-      <ul className="list-exo">
+      {/*  <ul className="list-exo">
         {exoFromDb &&
           [...Object.values(exoFromDb), ...exoPerso].map(
             (exo: any, index: number) => {
@@ -57,7 +57,7 @@ const ContainerExoList: React.FC<Props> = ({
               );
             }
           )}
-      </ul>
+      </ul> */}
     </div>
   );
 };
