@@ -22,3 +22,8 @@
 .title-training {
   margin-top: 150px;
 }
+
+.container-titles {
+  display: flex;
+  justify-content: flex-end;
+}

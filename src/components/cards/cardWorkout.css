@@ -43,7 +43,6 @@
 }
 .workout-container .perf {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   flex-direction: column;
-  min-width: 110px;
 }

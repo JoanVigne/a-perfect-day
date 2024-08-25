@@ -66,7 +66,7 @@ const CardWorkout: React.FC<Props> = ({ workout, index }) => {
           />
         </Link>
 
-        <h4>{workout.perf ? <>Last: {lastTime}</> : <>no data yet</>}</h4>
+        <h4>{workout.perf ? <>{lastTime}</> : <>no date</>}</h4>
       </div>
     </div>
   );

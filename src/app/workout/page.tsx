@@ -83,6 +83,9 @@ export default function Page() {
         />
       </h1>
       <div className="container">
+        <div className="container-titles">
+          <h2>Last time</h2>
+        </div>
         {workouts && Object.values(workouts as Workouts).length > 0 ? (
           <>
             {Object.values(sortedWorkouts).map(
