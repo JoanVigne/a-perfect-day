@@ -1,6 +1,7 @@
 import Icon from "@/components/ui/Icon";
 import React, { useEffect, useState } from "react";
 import "./inputNumbers.css";
+import { handleFocus } from "./handleFocus";
 interface Props {
   type: string;
   step: string;
@@ -55,18 +56,7 @@ const InputNumbers: React.FC<Props> = ({
     const handleClick = iconName === "equal" ? onClick : cancelValue;
     return <Icon nameImg={iconName || "null"} onClick={handleClick} />;
   };
-  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    const inputElement = event.target;
-    const offset = 170;
-    const bodyRect = document.body.getBoundingClientRect().top;
-    const elemRect = inputElement.getBoundingClientRect().top;
-    const offsetPosition = elemRect - bodyRect - offset;
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
-  };
   return (
     <div className="input-validation">
       <div className="icons">

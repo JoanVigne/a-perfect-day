@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import "./textAreaNoteExo.css";
+import { handleFocus } from "./handleFocus";
 
 interface Exercise {
   id: string;
@@ -52,6 +53,7 @@ const TextAreaNoteExo: React.FC<TextAreaNoteExoProps> = ({
       }
       onChange={handleNoteChange(exercise.id)}
       onInput={handleTextareaResize}
+      onFocus={handleFocus}
     ></textarea>
   );
 };
