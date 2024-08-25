@@ -12,7 +12,6 @@ import CustomTasks from "@/components/CustomTasks";
 import { useRouter } from "next/navigation";
 import Loading from "./loading";
 import { firebaseApp } from "@/firebase/config";
-import Lists from "@/components/Lists";
 import Header from "@/components/Header";
 import TemporaryMessage from "../components/ui/TemporaryMessage";
 import Link from "next/link";

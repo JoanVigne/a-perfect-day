@@ -6,8 +6,6 @@ import Timer from "@/components/ui/Timer";
 import "@/components/header.css";
 import "@/app/workout/workout.css";
 import FormTrain from "@/components/forms/workout-training/FormTrain";
-import Icon from "@/components/ui/Icon";
-import ModalModifyWorkout from "@/components/modals/ModalModifyWorkout";
 import nosleep from "nosleep.js";
 import ContainerEndWorkout from "@/components/ContainerEndWorkout";
 
@@ -150,17 +148,6 @@ const Page = () => {
               <ContainerEndWorkout propsWorkout={thisWorkout} />
             ) : (
               <>
-                {/*  <h1 className="title-training">
-                  <ModalModifyWorkout
-                    modalOpen={modalModify}
-                    setModalOpen={setModalModify}
-                    workoutToModify={thisWorkout}
-                    duringTraining={true}
-                    updateDataFromLocalStorage={updateDataFromLocalStorage}
-                  />
-                  <Icon nameImg="modify" onClick={() => setModalModify(true)} />
-                  {thisWorkout.name}
-                </h1> */}
                 <h2>{thisWorkout.description}</h2>
                 <FormTrain
                   thisWorkout={thisWorkout}

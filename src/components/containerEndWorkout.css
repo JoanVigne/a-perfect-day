@@ -1,3 +1,6 @@
+.container-end-of-training {
+  margin-top: 90px;
+}
 .container-end-of-training h2 {
   margin: -60px auto 20px;
   color: var(--color-red);

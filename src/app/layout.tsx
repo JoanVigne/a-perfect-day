@@ -10,7 +10,6 @@ import "@/css/calendar.css";
 import "@/css/improve.css";
 import "@/css/mediaqueryDesktop.css";
 import { AuthContextProvider } from "@/context/AuthContext";
-import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
