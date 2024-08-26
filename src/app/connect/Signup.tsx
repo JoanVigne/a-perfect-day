@@ -7,10 +7,26 @@ function Signup() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
+  const [secretPassword, setSecretPassword] = useState<string>("");
   const router = useRouter();
 
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+  const validateSecretPassword = (secretPassword: string) => {
+    return secretPassword === process.env.SECRET_PASSWORD;
+  };
   const handleForm = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!validateEmail(email)) {
+      console.error("Invalid email address");
+      return;
+    }
+    if (!validateSecretPassword(secretPassword)) {
+      console.error("Invalid secret password");
+      return;
+    }
     const { result, error } = await signUp(email, password, nickname);
     if (error) {
       return console.log(error);
@@ -23,7 +39,7 @@ function Signup() {
       <form onSubmit={handleForm}>
         <h3>Sign up</h3>
         <label htmlFor="email">
-          <p>Email</p>
+          Email
           <input
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -34,7 +50,7 @@ function Signup() {
           />
         </label>
         <label htmlFor="password">
-          <p>Password</p>
+          Password
           <input
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -43,14 +59,25 @@ function Signup() {
             id="password"
           />
         </label>
+
         <label htmlFor="nickname">
-          <p>Nickname</p>
+          Nickname
           <input
             onChange={(e) => setNickname(e.target.value)}
             type="text"
             name="nickname"
             id="nickname"
             required
+          />
+        </label>
+        <label htmlFor="secretPassword">
+          Secret password [ask an other user]
+          <input
+            onChange={(e) => setSecretPassword(e.target.value)}
+            required
+            type="text"
+            name="secretPassword"
+            id="secretPassword"
           />
         </label>
         <button type="submit">Sign up</button>
