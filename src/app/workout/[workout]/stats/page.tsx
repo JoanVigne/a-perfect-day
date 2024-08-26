@@ -107,8 +107,11 @@ const Page = () => {
             duringTraining={false}
             updateDataFromLocalStorage={() => {}}
           />
+
           <h2>Description :</h2>
-          <p>{workout.description}</p>
+          <div className="description">
+            <h3>{workout.description}</h3>
+          </div>
           <h2>Exercices :</h2>
           <ul className="list-exos">
             {workout.exercices &&
@@ -118,7 +121,7 @@ const Page = () => {
                 </li>
               ))}
           </ul>
-          <div className="">
+          <div className="container-performances">
             <h2>Performances:</h2>
             {workout.perf ? (
               Object.entries(workout.perf)

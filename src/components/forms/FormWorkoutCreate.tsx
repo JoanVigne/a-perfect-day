@@ -77,9 +77,9 @@ const FormWorkoutCreate = () => {
     }
   }
   return (
-    <div>
+    <div className="container-create-workout">
       <h2>Create a workout</h2>
-      <form action="" onSubmit={submitWorkout}>
+      <form className="form-create-workout" action="" onSubmit={submitWorkout}>
         <label htmlFor="name">Name</label>
         <input type="text" name="name" id="name" required />
         <label htmlFor="description">Description</label>

@@ -1,8 +1,21 @@
+.container-create-workout {
+  margin-bottom: 30px;
+}
+.form-create-workout {
+  background-color: var(--color-light-grey-3);
+  margin: 0 15px;
+}
+
+.form-create-workout input {
+  background-color: var(--color-black);
+}
 .drag-drop {
   background-color: var(--color-black);
+  min-height: 100px;
   width: 95%;
   height: 85%;
-  margin: 25px auto 100px auto;
+  margin: 25px auto 10px auto;
+  padding-bottom: 20px;
   overflow-y: scroll;
   border: 2px var(--color-dark-green) solid;
 }
