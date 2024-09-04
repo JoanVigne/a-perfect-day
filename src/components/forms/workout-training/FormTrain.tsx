@@ -11,7 +11,7 @@ import ReactModal from "react-modal";
 import IconOpen from "@/components/ui/IconOpen";
 import TextAreaNoteExo from "./TextAreaNoteExo";
 import ModalModifyRunningWorkout from "./ModalModifyRunningWorkout";
-import { handleFocus } from "./handleFocus";
+
 interface Props {
   thisWorkout: any;
   setFinished: (callback: () => void) => void;
