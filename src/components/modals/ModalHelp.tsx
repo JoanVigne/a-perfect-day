@@ -10,12 +10,12 @@ interface Props {
 const ModalHelp: React.FC<Props> = ({ isVisible, close, messagehelp }) => {
   return (
     <ReactModal
-      className="confirmModal"
+      className="confirmModal help"
       isOpen={isVisible}
       shouldCloseOnOverlayClick={true}
       ariaHideApp={false}
     >
-      <h2>Some explanations</h2>
+      <h2>Help</h2>
       <p>{messagehelp}</p>
       <button onClick={close}>Okay</button>
     </ReactModal>

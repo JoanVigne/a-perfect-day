@@ -339,11 +339,27 @@ const FormTrain: React.FC<Props> = ({
                           [key]: newValue,
                         }));
                       };
+                      const weightFulfilled =
+                        !!inputValues[
+                          `${exercise.id}-weight${seriesIndex + 1}`
+                        ];
+                      const repsFulfilled =
+                        !!inputValues[`${exercise.id}-reps${seriesIndex + 1}`];
+                      const intervalFulfilled =
+                        !!inputValues[
+                          `${exercise.id}-interval${seriesIndex + 1}`
+                        ];
 
+                      const isNextSeriesFulfilled =
+                        seriesIndex + 1 < (numberOfSeries[exercise.id] ?? 3) &&
+                        ((weightFulfilled && repsFulfilled) ||
+                          (weightFulfilled && intervalFulfilled) ||
+                          (repsFulfilled && intervalFulfilled));
                       const isSeriesFulfilled =
-                        inputValues[`${exercise.id}-weight${seriesIndex}`] &&
-                        inputValues[`${exercise.id}-reps${seriesIndex}`] &&
-                        inputValues[`${exercise.id}-interval${seriesIndex}`];
+                        isNextSeriesFulfilled ||
+                        (inputValues[`${exercise.id}-weight${seriesIndex}`] &&
+                          inputValues[`${exercise.id}-reps${seriesIndex}`] &&
+                          inputValues[`${exercise.id}-interval${seriesIndex}`]);
 
                       return (
                         <tr

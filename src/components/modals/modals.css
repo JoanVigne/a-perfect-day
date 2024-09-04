@@ -22,7 +22,7 @@
 /* for confirm message : */
 .confirmModal {
   background-color: var(--color-black);
-  border-radius: 3px;
+  border-radius: 5px;
   position: absolute;
   top: 40%;
   left: 50%;
@@ -48,4 +48,8 @@
 .confirmModal form button {
   margin: 10px auto;
   width: 80%;
+}
+
+.confirmModal.help button {
+  background-color: var(--color-dark-green);
 }
