@@ -36,11 +36,11 @@ const ChartBar: React.FC<Props> = ({ data, task }) => {
       (t: Task | any) => t && t.name === task
     ) as Task | undefined;
     if (thisTask) {
-      const formattedDate = formatDate(day.date);
+      const formattedDate = formatDate(day.date, false);
       taskData[formattedDate] = parseInt(thisTask.count as string);
       unit = thisTask.unit as string; //
     } else {
-      const formattedDate = formatDate(day.date);
+      const formattedDate = formatDate(day.date, false);
       taskData[formattedDate] = 0;
     }
   });

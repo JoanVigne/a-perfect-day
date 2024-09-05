@@ -11,6 +11,8 @@ import { useAuthContext } from "@/context/AuthContext";
 import { removeFromWorkouts } from "@/firebase/db/workout";
 import IconOpen from "@/components/ui/IconOpen";
 import "./statspage.css";
+import { formatDate } from "@/utils/date";
+
 interface Exercise {
   name: string;
   equipment: string;
@@ -26,6 +28,15 @@ interface PerfData {
   [key: string]: string | number;
 }
 
+interface BestPerfData {
+  name: string;
+  maxWeight: { date: string; weight: number; reps: number };
+  maxReps: { date: string; weight: number; reps: number };
+}
+
+interface BestPerf {
+  [exerciseId: string]: BestPerfData;
+}
 interface Workout {
   name: string;
   id: string;
@@ -70,6 +81,58 @@ const Page = () => {
       window.location.href = "/workout";
     }
   }
+  const [showRecord, setShowRecord] = useState<{
+    [exerciseId: string]: boolean;
+  }>({});
+  const getBestPerf = (workout: Workout): void => {
+    if (!workout.perf || !Object.entries(workout.perf).length) return;
+    const bestPerf: BestPerf = {};
+    Object.entries(workout.perf).forEach(([date, perfData]) => {
+      Object.entries(perfData)
+        .filter(([key]) => key !== "noteExo")
+        .forEach(([exerciseId, exerciseData]) => {
+          const exercise = workout.exercices[exerciseData.exoOrder];
+          if (!exercise) return;
+
+          Object.keys(exerciseData)
+            .filter((key) => key.startsWith("weight") || key.startsWith("reps"))
+            .forEach((key) => {
+              const type = key.startsWith("weight") ? "weight" : "reps";
+              const index = key.match(/\d+/)?.[0];
+              const weight = Number(exerciseData[`weight${index}`]);
+              const reps = Number(exerciseData[`reps${index}`]);
+
+              if (!bestPerf[exerciseId]) {
+                bestPerf[exerciseId] = {
+                  name: exercise.name,
+                  maxWeight: { date: "", weight: 0, reps: 0 },
+                  maxReps: { date: "", weight: 0, reps: 0 },
+                };
+              }
+
+              if (
+                type === "weight" &&
+                weight > bestPerf[exerciseId].maxWeight.weight
+              ) {
+                bestPerf[exerciseId].maxWeight = { date, weight, reps };
+              }
+              if (type === "reps" && reps > bestPerf[exerciseId].maxReps.reps) {
+                bestPerf[exerciseId].maxReps = { date, weight, reps };
+              }
+            });
+        });
+    });
+
+    console.log(bestPerf);
+    setBestPerf(bestPerf);
+  };
+  const [bestPerf, setBestPerf] = useState({});
+  useEffect(() => {
+    if (workout) {
+      getBestPerf(workout);
+      console.log(bestPerf);
+    }
+  }, [workout]);
 
   return (
     <div>
@@ -123,40 +186,76 @@ const Page = () => {
           </ul>
           <div className="container-performances">
             <h2>Performances:</h2>
+            <h3>Best Performance All Time</h3>
+            <div className="container-best-perf">
+              {workout.perf &&
+                Object.entries(bestPerf).map(
+                  ([exerciseId, data]: [string, any]) => (
+                    <div
+                      key={exerciseId}
+                      className={
+                        showRecord[exerciseId]
+                          ? "container-record opened"
+                          : "container-record"
+                      }
+                    >
+                      <div className="title">
+                        <IconOpen
+                          show={showRecord[exerciseId] || false}
+                          setShow={(show: boolean) =>
+                            setShowRecord((prev) => ({
+                              ...prev,
+                              [exerciseId]: show,
+                            }))
+                          }
+                        />
+                        <h4>{data.name} </h4>
+                      </div>
+
+                      <h5>
+                        Max Weight : <strong>{data.maxWeight.weight}</strong>
+                      </h5>
+
+                      <p>with {data.maxWeight.reps} reps</p>
+                      <i>the {formatDate(data.maxWeight.date, false)}</i>
+
+                      <h5>Max Reps</h5>
+
+                      <p>
+                        <strong>{data.maxReps.reps}</strong> with weight:{" "}
+                        {data.maxReps.weight}
+                      </p>
+                      <i>the {formatDate(data.maxReps.date, false)}</i>
+                    </div>
+                  )
+                )}
+            </div>
             {workout.perf ? (
               Object.entries(workout.perf)
                 .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
                 .map(([date, perfData], index) => {
-                  const formattedDate = new Date(date).toLocaleDateString(
-                    "en-US",
-                    {
-                      weekday: "long",
-                      day: "2-digit",
-                      month: "2-digit",
-                    }
-                  );
+                  const formattedDate = formatDate(date, true);
                   return (
-                    <div
-                      key={index}
-                      className={
-                        showPerf[date]
-                          ? "container-date-perf opened"
-                          : "container-date-perf"
-                      }
-                    >
-                      <h3>
-                        <IconOpen
-                          show={showPerf[date] || false}
-                          setShow={(show: boolean) =>
-                            setShowPerf((prev) => ({ ...prev, [date]: show }))
-                          }
-                        />{" "}
-                        {formattedDate}{" "}
-                      </h3>
-                      <div className="container-perf">
-                        {
-                          /* showPerf[date] && */
-                          Object.entries(perfData)
+                    <>
+                      <div
+                        key={index}
+                        className={
+                          showPerf[date]
+                            ? "container-date-perf opened"
+                            : "container-date-perf"
+                        }
+                      >
+                        <h3>
+                          <IconOpen
+                            show={showPerf[date] || false}
+                            setShow={(show: boolean) =>
+                              setShowPerf((prev) => ({ ...prev, [date]: show }))
+                            }
+                          />{" "}
+                          {formattedDate}{" "}
+                        </h3>
+                        <div className="container-perf">
+                          {Object.entries(perfData)
                             .filter(([key]) => key !== "noteExo")
                             .sort((a, b) => a[1].exoOrder - b[1].exoOrder)
                             .map(([exerciseId, exerciseData], index) => {
@@ -202,10 +301,10 @@ const Page = () => {
                                     )}
                                 </div>
                               );
-                            })
-                        }
+                            })}
+                        </div>
                       </div>
-                    </div>
+                    </>
                   );
                 })
             ) : (
@@ -219,6 +318,7 @@ const Page = () => {
       ) : (
         <p>Workout not found</p>
       )}
+
       <Footer />
     </div>
   );

@@ -23,6 +23,38 @@
 .container-performances {
   margin: 40px 0;
 }
+/* BEST PERF */
+.container-best-perf {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.container-record {
+  margin: 3px;
+}
+.container-record .title {
+  display: flex;
+  justify-content: flex-start;
+}
+.container-record h5 {
+  text-align: center;
+}
+.container-record h5 strong {
+  font-size: 18px;
+}
+.container-record .title img {
+  margin: 0 !important;
+}
+.container-record {
+  max-height: 25px;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+.container-record.opened {
+  max-height: 800px;
+  transition: max-height 0.5s ease;
+}
+
+/* by date PERF */
 .container-date-perf {
   margin: 10px 15px;
   padding: 5px;
@@ -42,6 +74,7 @@
   max-height: 800px;
   transition: max-height 0.5s ease;
 }
+
 .container-date-perf h3 {
   margin-left: 35px;
   justify-content: flex-start;

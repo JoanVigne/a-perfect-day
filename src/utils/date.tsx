@@ -1,5 +1,15 @@
-export function formatDate(dateString: string) {
+export const formatDate = (
+  dateString: string,
+  includeWeekday: boolean
+): string => {
   const date = new Date(dateString);
-  const options = { month: "long" as const, day: "2-digit" as const };
-  return date.toLocaleDateString("fr-FR", options); // Vous pouvez ajuster le local selon vos besoins
-}
+  const userLocale = navigator.language || "en-US"; // Default to 'en-US' if navigator.language is not available
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "2-digit",
+  };
+  if (includeWeekday) {
+    options.weekday = "long";
+  }
+  return date.toLocaleDateString(userLocale, options);
+};
