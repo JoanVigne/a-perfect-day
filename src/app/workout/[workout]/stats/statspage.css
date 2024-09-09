@@ -1,57 +1,75 @@
+.container-stats-page h2 {
+  margin: 20px auto;
+}
 .container-stats-page .description {
   padding: 12px;
   margin: 2px 15px;
   border-radius: 5px;
   background-color: var(--color-grey);
 }
-.list-exos {
+.container-stats-page .list-exos {
   padding: 2px;
   margin: 5px 15px;
   border-radius: 5px;
   background-color: var(--color-light-grey-3);
 }
-.list-exos li {
+.container-stats-page .list-exos li {
   display: flex;
   align-items: center;
-  font-size: 20px;
+  font-size: 18px;
 }
-.list-exos li .index {
+.container-stats-page .list-exos li .index {
   padding: 1px 5px;
   margin: 1px 6px 1px 1px;
 }
-
 .container-performances {
   margin: 40px 0;
 }
 /* BEST PERF */
+
 .container-best-perf {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 .container-record {
+  max-height: 31px;
+  overflow: hidden;
+  transition: max-height 0.8s ease-out;
+}
+.container-record.opened {
+  max-height: 800px;
+  transition: max-height 0.8s ease-in;
+}
+.container-record {
   margin: 3px;
+  background-color: var(--color-light-grey-3);
+  border-radius: 12px;
+  padding: 3px;
 }
 .container-record .title {
   display: flex;
   justify-content: flex-start;
-}
-.container-record h5 {
-  text-align: center;
-}
-.container-record h5 strong {
-  font-size: 18px;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .container-record .title img {
   margin: 0 !important;
+  width: 22px;
+  height: 22px;
 }
-.container-record {
-  max-height: 25px;
-  overflow: hidden;
-  transition: max-height 0.5s ease;
+.container-record .title.opened {
+  white-space: normal;
+  align-items: flex-start;
 }
-.container-record.opened {
-  max-height: 800px;
-  transition: max-height 0.5s ease;
+.container-data {
+  margin: 3px;
+}
+.container-record h4 {
+  text-align: center;
+  background-color: var(--color-grey);
+  border-radius: 2px;
+  padding: 2px;
 }
 
 /* by date PERF */
@@ -61,7 +79,7 @@
   border-radius: 5px;
   max-height: 37px;
   overflow: hidden;
-  transition: max-height 0.5s ease;
+  transition: max-height 0.5s ease-out;
 }
 .container-date-perf:nth-child(odd) {
   background-color: var(--color-light-grey-3);
@@ -72,12 +90,19 @@
 }
 .container-date-perf.opened {
   max-height: 800px;
-  transition: max-height 0.5s ease;
+  transition: max-height 0.5s ease-in;
 }
 
 .container-date-perf h3 {
-  margin-left: 35px;
-  justify-content: flex-start;
+  margin-left: 20px;
+  justify-content: space-between;
+}
+.container-date-perf h3 div {
+  display: flex;
+  align-items: center;
+}
+.improvementContainer {
+  margin-right: 20px;
 }
 .container-date-perf h4 {
   display: flex;

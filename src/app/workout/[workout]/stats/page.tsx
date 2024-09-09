@@ -42,6 +42,7 @@ interface Workout {
   id: string;
   description: string;
   exercices: Exercise[];
+  numbImprovement: any;
   perf: {
     [date: string]: {
       [exerciseId: string]: PerfData;
@@ -59,6 +60,7 @@ const Page = () => {
       if (!workoutls) return;
       const workout = workoutls[pathslug];
       setWorkout(workout);
+      console.log(workout);
     }
   }, []);
   const [modalOpen, setModalOpen] = useState(false);
@@ -122,15 +124,12 @@ const Page = () => {
             });
         });
     });
-
-    console.log(bestPerf);
     setBestPerf(bestPerf);
   };
   const [bestPerf, setBestPerf] = useState({});
   useEffect(() => {
     if (workout) {
       getBestPerf(workout);
-      console.log(bestPerf);
     }
   }, [workout]);
 
@@ -172,10 +171,8 @@ const Page = () => {
           />
 
           <h2>Description :</h2>
-          <div className="description">
-            <h3>{workout.description}</h3>
-          </div>
-          <h2>Exercices :</h2>
+          <p className="description">{workout.description}</p>
+          <h2>Actual exercices :</h2>
           <ul className="list-exos">
             {workout.exercices &&
               workout.exercices.map((exo, index) => (
@@ -185,8 +182,7 @@ const Page = () => {
               ))}
           </ul>
           <div className="container-performances">
-            <h2>Performances:</h2>
-            <h3>Best Performance All Time</h3>
+            <h2>Personal records in this training</h2>
             <div className="container-best-perf">
               {workout.perf &&
                 Object.entries(bestPerf).map(
@@ -199,7 +195,11 @@ const Page = () => {
                           : "container-record"
                       }
                     >
-                      <div className="title">
+                      <div
+                        className={
+                          showRecord[exerciseId] ? "title opened" : "title"
+                        }
+                      >
                         <IconOpen
                           show={showRecord[exerciseId] || false}
                           setShow={(show: boolean) =>
@@ -209,27 +209,24 @@ const Page = () => {
                             }))
                           }
                         />
-                        <h4>{data.name} </h4>
+                        <h3>{data.name} </h3>
                       </div>
+                      <div className="container-data">
+                        <h4>Max Weight : {data.maxWeight.weight}</h4>
 
-                      <h5>
-                        Max Weight : <strong>{data.maxWeight.weight}</strong>
-                      </h5>
+                        <p>with {data.maxWeight.reps} reps</p>
+                        <i>the {formatDate(data.maxWeight.date, false)}</i>
 
-                      <p>with {data.maxWeight.reps} reps</p>
-                      <i>the {formatDate(data.maxWeight.date, false)}</i>
+                        <h4>Max Reps {data.maxReps.reps}</h4>
 
-                      <h5>Max Reps</h5>
-
-                      <p>
-                        <strong>{data.maxReps.reps}</strong> with weight:{" "}
-                        {data.maxReps.weight}
-                      </p>
-                      <i>the {formatDate(data.maxReps.date, false)}</i>
+                        <p>with weight: {data.maxReps.weight}</p>
+                        <i>the {formatDate(data.maxReps.date, false)}</i>
+                      </div>
                     </div>
                   )
                 )}
             </div>
+            <h2>By date</h2>
             {workout.perf ? (
               Object.entries(workout.perf)
                 .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
@@ -246,13 +243,24 @@ const Page = () => {
                         }
                       >
                         <h3>
-                          <IconOpen
-                            show={showPerf[date] || false}
-                            setShow={(show: boolean) =>
-                              setShowPerf((prev) => ({ ...prev, [date]: show }))
-                            }
-                          />{" "}
-                          {formattedDate}{" "}
+                          <div>
+                            <IconOpen
+                              show={showPerf[date] || false}
+                              setShow={(show: boolean) =>
+                                setShowPerf((prev) => ({
+                                  ...prev,
+                                  [date]: show,
+                                }))
+                              }
+                            />
+                            {formattedDate}
+                          </div>
+                          {workout.numbImprovement[date] > 0 && (
+                            <div className="improvementContainer">
+                              <Icon nameImg="fire" onClick={() => {}} />
+                              {workout.numbImprovement[date]}
+                            </div>
+                          )}
                         </h3>
                         <div className="container-perf">
                           {Object.entries(perfData)
