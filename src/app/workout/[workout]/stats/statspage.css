@@ -35,17 +35,19 @@
   max-height: 31px;
   overflow: hidden;
   transition: max-height 0.8s ease-out;
-}
-.container-record.opened {
-  max-height: 800px;
-  transition: max-height 0.8s ease-in;
-}
-.container-record {
   margin: 3px;
   background-color: var(--color-light-grey-3);
   border-radius: 12px;
   padding: 3px;
 }
+.container-record.opened {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-height: 800px;
+  transition: max-height 0.8s ease-in;
+}
+
 .container-record .title {
   display: flex;
   justify-content: flex-start;
@@ -65,8 +67,7 @@
 .container-data {
   margin: 3px;
 }
-.container-record h4 {
-  text-align: center;
+.container-record .container-data h4 {
   background-color: var(--color-grey);
   border-radius: 2px;
   padding: 2px;
