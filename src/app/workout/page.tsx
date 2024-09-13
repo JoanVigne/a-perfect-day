@@ -10,6 +10,7 @@ import CardWorkout from "../../components/cards/CardWorkout";
 import { useAuthContext } from "@/context/AuthContext";
 import Icon from "@/components/ui/Icon";
 import ModalHelp from "@/components/modals/ModalHelp";
+import Link from "next/link";
 interface UserData {
   email: string;
   uid: string;
@@ -100,6 +101,10 @@ export default function Page() {
           <p>No workout</p>
         )}
       </div>
+      <section>
+        <h2>TOUS LES RECORDS</h2>
+        <Link href={`/workout/records`}>Lien vers les records</Link>
+      </section>
       <FormWorkoutCreate />
       <Footer />
     </>

@@ -35,7 +35,11 @@ interface BestPerfData {
 }
 
 interface BestPerf {
-  [exerciseId: string]: BestPerfData;
+  [exerciseName: string]: {
+    name: string;
+    maxWeight: { date: string; weight: number; reps: number };
+    maxReps: { date: string; weight: number; reps: number };
+  };
 }
 interface Workout {
   name: string;
@@ -60,7 +64,6 @@ const Page = () => {
       if (!workoutls) return;
       const workout = workoutls[pathslug];
       setWorkout(workout);
-      console.log(workout);
     }
   }, []);
   const [modalOpen, setModalOpen] = useState(false);
@@ -104,8 +107,8 @@ const Page = () => {
               const weight = Number(exerciseData[`weight${index}`]);
               const reps = Number(exerciseData[`reps${index}`]);
 
-              if (!bestPerf[exerciseId]) {
-                bestPerf[exerciseId] = {
+              if (!bestPerf[exercise.name]) {
+                bestPerf[exercise.name] = {
                   name: exercise.name,
                   maxWeight: { date: "", weight: 0, reps: 0 },
                   maxReps: { date: "", weight: 0, reps: 0 },
@@ -114,12 +117,15 @@ const Page = () => {
 
               if (
                 type === "weight" &&
-                weight > bestPerf[exerciseId].maxWeight.weight
+                weight > bestPerf[exercise.name].maxWeight.weight
               ) {
-                bestPerf[exerciseId].maxWeight = { date, weight, reps };
+                bestPerf[exercise.name].maxWeight = { date, weight, reps };
               }
-              if (type === "reps" && reps > bestPerf[exerciseId].maxReps.reps) {
-                bestPerf[exerciseId].maxReps = { date, weight, reps };
+              if (
+                type === "reps" &&
+                reps > bestPerf[exercise.name].maxReps.reps
+              ) {
+                bestPerf[exercise.name].maxReps = { date, weight, reps };
               }
             });
         });
