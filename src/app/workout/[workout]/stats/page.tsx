@@ -280,7 +280,9 @@ const Page = () => {
                               }
                               return (
                                 <div key={index} className="container-exo">
-                                  <h4>{exercise.name}</h4>
+                                  <h4>
+                                    {index + 1} {exercise.name}
+                                  </h4>
                                   <table>
                                     <thead>
                                       <tr>
