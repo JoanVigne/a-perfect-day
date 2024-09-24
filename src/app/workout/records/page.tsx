@@ -4,6 +4,7 @@ import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
+import IconOpen from "@/components/ui/IconOpen";
 interface UserData {
   email: string;
   uid: string;
@@ -13,6 +14,7 @@ interface Workouts {
 }
 interface Exercice {
   name: string;
+  id: string;
 }
 interface WorkoutType {
   name: string;
@@ -26,7 +28,7 @@ interface WorkoutType {
 export default function Page() {
   const { user } = useAuthContext() as { user: UserData };
   const [workouts, setWorkouts] = useState<Workouts>({});
-  const [exercices, setExercices] = useState<string[]>([]);
+  const [exercices, setExercices] = useState<Exercice[]>([]);
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -43,7 +45,6 @@ export default function Page() {
     };
 
     fetchWorkouts();
-    console.log("workouts", workouts);
   }, [user.uid]);
 
   useEffect(() => {
@@ -53,68 +54,29 @@ export default function Page() {
   }, [workouts]);
 
   function getAllExercices() {
-    let allExercices: string[] = [];
+    let allExercices: any[] = [];
     for (let workout in workouts) {
       for (let exerciceId in workouts[workout].exercices) {
         if (!workouts[workout].perf) {
           // don't push those exercices because no perf
         } else {
-          const exercice = workouts[workout].exercices[exerciceId].name;
-          if (!allExercices.includes(exercice)) {
+          const exercice = workouts[workout].exercices[exerciceId];
+          if (!allExercices.some((e) => e.id === exerciceId)) {
             allExercices.push(exercice);
           }
         }
       }
     }
+    //! FIND DIRECTLY THE BEST PERF IN HERE
+    console.log("allExercices", allExercices);
     setExercices(allExercices);
   }
+
   const [showRecord, setShowRecord] = useState<{
     [exerciseId: string]: boolean;
   }>({});
-  /* const getBestPerf = (workout: any): void => {
-    if (!workout.perf || !Object.entries(workout.perf).length) return;
-    const bestPerf: any = {};
-    Object.entries(workout.perf).forEach(([date, perfData]) => {
-      Object.entries(perfData)
-        .filter(([key]) => key !== "noteExo")
-        .forEach(([exerciseId, exerciseData]) => {
-          const exercise = workout.exercices[exerciseData.exoOrder];
-          if (!exercise) return;
 
-          Object.keys(exerciseData)
-            .filter((key) => key.startsWith("weight") || key.startsWith("reps"))
-            .forEach((key) => {
-              const type = key.startsWith("weight") ? "weight" : "reps";
-              const index = key.match(/\d+/)?.[0];
-              const weight = Number(exerciseData[`weight${index}`]);
-              const reps = Number(exerciseData[`reps${index}`]);
-
-              if (!bestPerf[exercise.name]) {
-                bestPerf[exercise.name] = {
-                  name: exercise.name,
-                  maxWeight: { date: "", weight: 0, reps: 0 },
-                  maxReps: { date: "", weight: 0, reps: 0 },
-                };
-              }
-
-              if (
-                type === "weight" &&
-                weight > bestPerf[exercise.name].maxWeight.weight
-              ) {
-                bestPerf[exercise.name].maxWeight = { date, weight, reps };
-              }
-              if (
-                type === "reps" &&
-                reps > bestPerf[exercise.name].maxReps.reps
-              ) {
-                bestPerf[exercise.name].maxReps = { date, weight, reps };
-              }
-            });
-        });
-    });
-    setBestPerf(bestPerf);
-  }; */
-  const [bestPerf, setBestPerf] = useState({});
+  const [bestPerf, setBestPerf] = useState<any>({});
 
   return (
     <>
@@ -122,7 +84,18 @@ export default function Page() {
       <h1>PAGE DES RECORDS</h1>
       <ul>
         {exercices.map((exercice, index) => (
-          <li key={index}>{exercice}</li>
+          <li key={index} className={showRecord[exercice.name] ? "opened" : ""}>
+            {exercice.name}{" "}
+            <IconOpen
+              show={showRecord[exercice.name] || false}
+              setShow={(show: boolean) =>
+                setShowRecord((prev) => ({
+                  ...prev,
+                  [exercice.name]: show,
+                }))
+              }
+            />
+          </li>
         ))}
       </ul>
     </>

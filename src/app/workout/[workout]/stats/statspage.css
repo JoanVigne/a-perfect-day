@@ -76,9 +76,8 @@
 /* by date PERF */
 .container-date-perf {
   margin: 10px 15px;
-  padding: 5px;
   border-radius: 5px;
-  max-height: 34px; /* Adjusted to fit two rows */
+  max-height: 30px; /* Adjusted to fit two rows */
   overflow: hidden;
   transition: max-height 0.5s ease-out;
   background-color: var(--color-grey);
@@ -92,6 +91,7 @@
 
 .container-date-perf h3 {
   margin-left: 20px;
+  margin-top: 3px;
   justify-content: space-between;
 }
 .container-date-perf h3 div {
@@ -102,16 +102,14 @@
   margin-right: 20px;
 }
 .container-date-perf h4 {
-  display: flex;
-  align-items: center;
-  margin-left: 25px;
+  min-height: 40px;
 }
 .container-date-perf .container-perf {
   display: flex;
   overflow-x: auto;
 }
 .container-perf h4 {
-  margin: 5px;
+  text-align: center;
 }
 
 .container-date-perf .container-exo {
@@ -121,12 +119,9 @@
   margin: 5px;
   padding: 4px;
   border-radius: 12px;
-  background-color: var(--color-light-grey-3);
+  background-color: var(--color-dark-grey);
 }
 
-.container-exo h4 {
-  font-weight: bold;
-}
 .container-exo table {
   width: 100%;
 }
