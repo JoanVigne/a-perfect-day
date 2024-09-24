@@ -84,6 +84,12 @@ const FormTrain: React.FC<Props> = ({
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!navigator.onLine) {
+      alert(
+        "No internet connection. Please check your connection and try again."
+      );
+      return;
+    }
     const form = event.currentTarget;
     let data: { [key: string]: any } = {};
     let exoId = "";
