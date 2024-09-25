@@ -1,0 +1,7 @@
+.record-page ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.record-page ul li {
+  text-align: center;
+}

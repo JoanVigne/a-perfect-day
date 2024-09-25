@@ -4,32 +4,45 @@ import { fetchOnlyThisIdToLocalStorage } from "@/firebase/db/db";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
+import "./recordPage.css";
 import IconOpen from "@/components/ui/IconOpen";
+import { Libre_Caslon_Display } from "next/font/google";
 interface UserData {
   email: string;
   uid: string;
 }
-interface Workouts {
-  [key: string]: WorkoutType;
-}
 interface Exercice {
   name: string;
-  id: string;
+  exoOrder: number;
 }
+
+interface PerfData {
+  [key: string]: string | number;
+}
+
 interface WorkoutType {
-  name: string;
-  id: string;
-  description: string;
-  duration: { [date: string]: any };
-  creationDate: string;
   exercices: Record<string, Exercice>;
-  perf?: Array<any> | null;
+  perf?: Record<string, Record<string, PerfData>>;
+}
+
+interface BestPerf {
+  [exerciseName: string]: {
+    name: string;
+    maxWeight: { date: string; weight: number; reps: number };
+    maxReps: { date: string; weight: number; reps: number };
+  };
+}
+
+interface Workouts {
+  [key: string]: WorkoutType;
 }
 export default function Page() {
   const { user } = useAuthContext() as { user: UserData };
   const [workouts, setWorkouts] = useState<Workouts>({});
-  const [exercices, setExercices] = useState<Exercice[]>([]);
-
+  const [bestPerf, setBestPerf] = useState<BestPerf>({});
+  const [showRecord, setShowRecord] = useState<{
+    [exerciseId: string]: boolean;
+  }>({});
   useEffect(() => {
     const fetchWorkouts = async () => {
       const localstorage = getItemFromLocalStorage("workouts");
@@ -48,56 +61,81 @@ export default function Page() {
   }, [user.uid]);
 
   useEffect(() => {
-    if (workouts) {
-      getAllExercices();
+    for (let workoutKey in workouts) {
+      const workout = workouts[workoutKey];
+      if (workout) {
+        getBestPerf(workout);
+      }
     }
   }, [workouts]);
 
-  function getAllExercices() {
-    let allExercices: any[] = [];
-    for (let workout in workouts) {
-      for (let exerciceId in workouts[workout].exercices) {
-        if (!workouts[workout].perf) {
-          // don't push those exercices because no perf
-        } else {
-          const exercice = workouts[workout].exercices[exerciceId];
-          if (!allExercices.some((e) => e.id === exerciceId)) {
-            allExercices.push(exercice);
-          }
-        }
-      }
-    }
-    //! FIND DIRECTLY THE BEST PERF IN HERE
-    console.log("allExercices", allExercices);
-    setExercices(allExercices);
-  }
+  const getBestPerf = (workout: WorkoutType): void => {
+    if (!workout.perf || !Object.entries(workout.perf).length) return;
+    const bestPerf: BestPerf = {};
 
-  const [showRecord, setShowRecord] = useState<{
-    [exerciseId: string]: boolean;
-  }>({});
+    Object.entries(workout.perf).forEach(([date, perfData]) => {
+      Object.entries(perfData)
+        .filter(([key]) => key !== "noteExo")
+        .forEach(([exerciseId, exerciseData]) => {
+          const exercise = workout.exercices[exerciseData.exoOrder];
+          if (!exercise) return;
 
-  const [bestPerf, setBestPerf] = useState<any>({});
+          Object.keys(exerciseData)
+            .filter((key) => key.startsWith("weight") || key.startsWith("reps"))
+            .forEach((key) => {
+              const type = key.startsWith("weight") ? "weight" : "reps";
+              const index = key.match(/\d+/)?.[0];
+              const weight = Number(exerciseData[`weight${index}`]);
+              const reps = Number(exerciseData[`reps${index}`]);
+
+              if (!bestPerf[exercise.name]) {
+                bestPerf[exercise.name] = {
+                  name: exercise.name,
+                  maxWeight: { date: "", weight: 0, reps: 0 },
+                  maxReps: { date: "", weight: 0, reps: 0 },
+                };
+              }
+
+              if (
+                type === "weight" &&
+                weight > bestPerf[exercise.name].maxWeight.weight
+              ) {
+                bestPerf[exercise.name].maxWeight = { date, weight, reps };
+              }
+              if (
+                type === "reps" &&
+                reps > bestPerf[exercise.name].maxReps.reps
+              ) {
+                bestPerf[exercise.name].maxReps = { date, weight, reps };
+              }
+            });
+        });
+    });
+
+    setBestPerf((prevBestPerf) => ({ ...prevBestPerf, ...bestPerf }));
+  };
 
   return (
-    <>
+    <div className="record-page">
       <Header />
       <h1>PAGE DES RECORDS</h1>
       <ul>
-        {exercices.map((exercice, index) => (
-          <li key={index} className={showRecord[exercice.name] ? "opened" : ""}>
-            {exercice.name}{" "}
-            <IconOpen
-              show={showRecord[exercice.name] || false}
-              setShow={(show: boolean) =>
-                setShowRecord((prev) => ({
-                  ...prev,
-                  [exercice.name]: show,
-                }))
-              }
-            />
+        {Object.entries(bestPerf).map(([exerciseName, data]) => (
+          <li key={exerciseName}>
+            <h2>{data.name}</h2>
+            <h3> Max Weight:</h3>
+            <p>
+              {data.maxWeight.weight} kg for {data.maxWeight.reps} reps
+            </p>
+            <small>{data.maxWeight.date}</small>
+            <h3> Max Reps:</h3>
+            <p>
+              {data.maxReps.reps} reps with {data.maxReps.weight} kg
+            </p>
+            <small>{data.maxReps.date}</small>
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
