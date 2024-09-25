@@ -4,7 +4,7 @@
 
 .record-page ul {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   margin: 12px;
 }
 .record-page ul li {
@@ -12,5 +12,40 @@
   text-align: center;
   background-color: var(--color-grey);
   margin: 10px;
-  padding-bottom: 10px;
+  padding: 0 10px 10px;
+  max-height: 35px;
+  overflow: hidden;
+}
+.record-page ul li.opened {
+  max-height: 200px;
+}
+.record-page ul li .container-weight-reps {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.record-page ul li .weight-reps {
+  background-color: var(--color-dark-grey);
+  border-radius: var(--border-radius);
+  padding: 8px;
+  width: 45%;
+  min-height: 120px;
+}
+.record-page ul li h2 {
+  font-size: 21px;
+  display: flex;
+  justify-content: space-between;
+}
+.record-page ul li .container-weight-reps img {
+  margin: 5px 2px 0;
+}
+.record-page ul li p {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.record-page ul li p strong {
+  font-size: 20px;
+  margin: 5px;
 }

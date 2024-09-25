@@ -7,6 +7,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import "./recordPage.css";
 import IconOpen from "@/components/ui/IconOpen";
 import { Libre_Caslon_Display } from "next/font/google";
+import Image from "next/image";
 interface UserData {
   email: string;
   uid: string;
@@ -41,7 +42,7 @@ export default function Page() {
   const [workouts, setWorkouts] = useState<Workouts>({});
   const [bestPerf, setBestPerf] = useState<BestPerf>({});
   const [showRecord, setShowRecord] = useState<{
-    [exerciseId: string]: boolean;
+    [exerciseName: string]: boolean;
   }>({});
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -98,13 +99,17 @@ export default function Page() {
 
               if (
                 type === "weight" &&
-                weight > bestPerf[exercise.name].maxWeight.weight
+                (weight > bestPerf[exercise.name].maxWeight.weight ||
+                  (weight === bestPerf[exercise.name].maxWeight.weight &&
+                    reps >= bestPerf[exercise.name].maxWeight.reps))
               ) {
                 bestPerf[exercise.name].maxWeight = { date, weight, reps };
               }
               if (
                 type === "reps" &&
-                reps > bestPerf[exercise.name].maxReps.reps
+                (reps > bestPerf[exercise.name].maxReps.reps ||
+                  (reps === bestPerf[exercise.name].maxReps.reps &&
+                    weight >= bestPerf[exercise.name].maxReps.weight))
               ) {
                 bestPerf[exercise.name].maxReps = { date, weight, reps };
               }
@@ -121,31 +126,77 @@ export default function Page() {
       <h1>PAGE DES RECORDS</h1>
       <ul>
         {Object.entries(bestPerf).map(([exerciseName, data]) => (
-          <li key={exerciseName}>
-            <h2>{data.name}</h2>
-            <h3> Max Weight:</h3>
-            <p>
-              {isNaN(data.maxWeight.weight) || data.maxWeight.weight === 0
-                ? "no weight"
-                : `${data.maxWeight.weight} kg`}{" "}
-              for{" "}
-              {isNaN(data.maxWeight.reps) || data.maxWeight.reps === 0
-                ? "nothing"
-                : `${data.maxWeight.reps} reps`}
-            </p>
-            <small>
-              {data.maxWeight.date === "" ? "nothing" : data.maxWeight.date}
-            </small>
-            <h3> Max Reps:</h3>
-            <p>
-              {isNaN(data.maxReps.reps) || data.maxReps.reps === 0
-                ? "nothing"
-                : `${data.maxReps.reps} reps`}{" "}
-              {isNaN(data.maxReps.weight) || data.maxReps.weight === 0
-                ? "no weight"
-                : `with ${data.maxReps.weight} kg`}
-            </p>
-            <small>{data.maxReps.date}</small>
+          <li
+            className={showRecord[exerciseName] ? "opened" : ""}
+            key={exerciseName}
+          >
+            <h2>
+              {data.name}{" "}
+              <IconOpen
+                show={showRecord[exerciseName] || false}
+                setShow={(show: boolean) =>
+                  setShowRecord((prev) => ({
+                    ...prev,
+                    [exerciseName]: show,
+                  }))
+                }
+              />
+            </h2>
+            <div className="container-weight-reps">
+              <div className="weight-reps">
+                <h3>Weight:</h3>
+                <p>
+                  {isNaN(data.maxWeight.weight) ||
+                  data.maxWeight.weight === 0 ? (
+                    "no weight"
+                  ) : (
+                    <strong>
+                      {data.maxWeight.weight}{" "}
+                      <Image
+                        src="/icon/kettlebell2.png"
+                        alt="kettlebell Icon"
+                        width={17}
+                        height={17}
+                      />
+                    </strong>
+                  )}{" "}
+                  <small>
+                    with{" "}
+                    {isNaN(data.maxWeight.reps) || data.maxWeight.reps === 0
+                      ? "nothing"
+                      : `${data.maxWeight.reps} reps`}
+                  </small>
+                </p>
+                <small>
+                  {data.maxWeight.date === "" ? "nothing" : data.maxWeight.date}
+                </small>
+              </div>
+              <div className="weight-reps">
+                <h3>Reps:</h3>
+                <p>
+                  {isNaN(data.maxReps.reps) || data.maxReps.reps === 0 ? (
+                    "nothing"
+                  ) : (
+                    <strong>{data.maxReps.reps} reps </strong>
+                  )}{" "}
+                  {isNaN(data.maxReps.weight) || data.maxReps.weight === 0 ? (
+                    "no weight"
+                  ) : (
+                    <small>
+                      {" "}
+                      with {data.maxReps.weight}
+                      <Image
+                        src="/icon/kettlebell2.png"
+                        alt="kettlebell Icon"
+                        width={17}
+                        height={17}
+                      />
+                    </small>
+                  )}
+                </p>
+                <small>{data.maxReps.date} </small>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
