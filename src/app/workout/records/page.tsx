@@ -125,12 +125,25 @@ export default function Page() {
             <h2>{data.name}</h2>
             <h3> Max Weight:</h3>
             <p>
-              {data.maxWeight.weight} kg for {data.maxWeight.reps} reps
+              {isNaN(data.maxWeight.weight) || data.maxWeight.weight === 0
+                ? "no weight"
+                : `${data.maxWeight.weight} kg`}{" "}
+              for{" "}
+              {isNaN(data.maxWeight.reps) || data.maxWeight.reps === 0
+                ? "nothing"
+                : `${data.maxWeight.reps} reps`}
             </p>
-            <small>{data.maxWeight.date}</small>
+            <small>
+              {data.maxWeight.date === "" ? "nothing" : data.maxWeight.date}
+            </small>
             <h3> Max Reps:</h3>
             <p>
-              {data.maxReps.reps} reps with {data.maxReps.weight} kg
+              {isNaN(data.maxReps.reps) || data.maxReps.reps === 0
+                ? "nothing"
+                : `${data.maxReps.reps} reps`}{" "}
+              {isNaN(data.maxReps.weight) || data.maxReps.weight === 0
+                ? "no weight"
+                : `with ${data.maxReps.weight} kg`}
             </p>
             <small>{data.maxReps.date}</small>
           </li>

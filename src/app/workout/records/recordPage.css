@@ -1,7 +1,16 @@
+.record-page h2 {
+  margin: 5px;
+}
+
 .record-page ul {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  margin: 12px;
 }
 .record-page ul li {
+  border-radius: var(--border-radius);
   text-align: center;
+  background-color: var(--color-grey);
+  margin: 10px;
+  padding-bottom: 10px;
 }
