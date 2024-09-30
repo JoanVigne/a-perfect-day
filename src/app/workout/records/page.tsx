@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
 import "./recordPage.css";
 import IconOpen from "@/components/ui/IconOpen";
-import { Libre_Caslon_Display } from "next/font/google";
 import Image from "next/image";
 interface UserData {
   email: string;
