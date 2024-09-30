@@ -169,6 +169,7 @@ header.workout-header {
 .container-finish {
   display: flex;
   justify-content: space-around;
+  padding-top: 30px;
 }
 .finish {
   background-color: var(--color-dark-green);

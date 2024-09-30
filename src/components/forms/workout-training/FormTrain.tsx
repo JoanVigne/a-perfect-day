@@ -300,6 +300,23 @@ const FormTrain: React.FC<Props> = ({
                 <input type="hidden" name="exoId" value={exercise.id} />
                 <input type="hidden" name="exoOrder" value={index} />
               </h3>
+              <div className="container-cleannote-note">
+                <Icon
+                  nameImg="clean"
+                  onClick={() => {
+                    setNoteExo((prevNoteExo) => ({
+                      ...prevNoteExo,
+                      [exercise.id]: "",
+                    }));
+                  }}
+                />
+                <TextAreaNoteExo
+                  exercise={exercise}
+                  noteExo={noteExo}
+                  lastPerf={lastPerf}
+                  handleNoteChange={handleNoteChange}
+                />
+              </div>
               <table>
                 <thead>
                   <tr>
@@ -529,23 +546,6 @@ const FormTrain: React.FC<Props> = ({
                   )}
                 </tbody>
               </table>
-              <div className="container-cleannote-note">
-                <Icon
-                  nameImg="clean"
-                  onClick={() => {
-                    setNoteExo((prevNoteExo) => ({
-                      ...prevNoteExo,
-                      [exercise.id]: "",
-                    }));
-                  }}
-                />
-                <TextAreaNoteExo
-                  exercise={exercise}
-                  noteExo={noteExo}
-                  lastPerf={lastPerf}
-                  handleNoteChange={handleNoteChange}
-                />
-              </div>
             </div>
           );
         })}

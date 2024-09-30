@@ -8,9 +8,12 @@
   border: 2px var(--color-active-link) solid;
   border-radius: 2px;
 }
-.page-workouts h2 {
-  margin: 50px 10px 20px;
+
+.page-workouts section {
+  border-bottom: 1px var(--color-white) solid;
+  padding: 30px 10px 50px;
 }
+
 .input-and-icon {
   display: flex;
   align-items: center;

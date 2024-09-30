@@ -39,10 +39,13 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
       console.log(propsWorkout);
 
       let workouts;
-      let thisWorkoutNumbOfImp = "";
+      let thisWorkoutNumbOfImp;
 
       // Retry mechanism
-      while (!thisWorkoutNumbOfImp) {
+      while (
+        thisWorkoutNumbOfImp === undefined ||
+        thisWorkoutNumbOfImp === null
+      ) {
         workouts = await getItemFromLocalStorage("workouts");
 
         if (!workouts || !propsWorkout || !propsWorkout.id) {
@@ -52,14 +55,20 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
         }
 
         thisWorkoutNumbOfImp =
-          workouts?.[propsWorkout.id]?.numbImprovement?.[currentDate] || "";
+          workouts?.[propsWorkout.id]?.numbImprovement?.[currentDate];
 
-        if (!thisWorkoutNumbOfImp) {
+        if (
+          thisWorkoutNumbOfImp === undefined ||
+          thisWorkoutNumbOfImp === null
+        ) {
           console.log("Retrying to fetch thisWorkoutNumbOfImp...");
-          await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 1 second before retrying
+          await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 0.5 second before retrying
         }
       }
-
+      // If still undefined or null after retries, set to 0
+      if (thisWorkoutNumbOfImp === undefined || thisWorkoutNumbOfImp === null) {
+        thisWorkoutNumbOfImp = 0;
+      }
       setNumberOfImprovementsToday(thisWorkoutNumbOfImp);
       setLoading(false);
     };
@@ -92,11 +101,13 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
           );
         })}
       </ul>
-      {numberOfImprovementsToday && (
+      {numberOfImprovementsToday && Number(numberOfImprovementsToday) !== 0 ? (
         <h3>
           And you improved {numberOfImprovementsToday} things
           <Icon nameImg="fire" onClick={() => console.log("fire")} />
         </h3>
+      ) : (
+        "See you soon!"
       )}
       <h3>Well done !</h3>
       <div className="container-gif">
