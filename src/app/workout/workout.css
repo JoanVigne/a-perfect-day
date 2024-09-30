@@ -1,3 +1,16 @@
+.personal-record-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-dark-green);
+  margin: 25px;
+  padding: 7px;
+  border: 2px var(--color-active-link) solid;
+  border-radius: 2px;
+}
+.page-workouts h2 {
+  margin: 50px 10px 20px;
+}
 .input-and-icon {
   display: flex;
   align-items: center;

@@ -72,7 +72,7 @@ export default function Page() {
       )
     : [];
   return (
-    <>
+    <div className="page-workouts">
       <Header />
       <h1>
         My workouts{" "}
@@ -102,11 +102,29 @@ export default function Page() {
         )}
       </div>
       <section>
-        <h2>TOUS LES RECORDS</h2>
-        <Link href={`/workout/records`}>Lien vers les records</Link>
+        <h2>Check all your exercice personal records down bellow!</h2>
+        <Link href={`/workout/records`}>
+          <div className="personal-record-link">
+            <Icon
+              nameImg="kettlebell2"
+              onClick={() => {
+                console.log("kettlebell!");
+              }}
+            />
+
+            <h3>All my records</h3>
+
+            <Icon
+              nameImg="kettlebell2"
+              onClick={() => {
+                console.log("kettlebell!");
+              }}
+            />
+          </div>
+        </Link>
       </section>
       <FormWorkoutCreate />
       <Footer />
-    </>
+    </div>
   );
 }

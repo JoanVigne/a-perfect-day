@@ -100,7 +100,7 @@ const ModalCheckPerf: React.FC<Props> = ({
                           <>-{data[`reps-unilateral${i}`]}</>
                         )}
                       </td>
-                      <td>{data[`int${i}`]}</td>
+                      <td>{data[`interval${i}`]}</td>
                     </tr>
                   ))}
               </tbody>
