@@ -107,7 +107,7 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
           <Icon nameImg="fire" onClick={() => console.log("fire")} />
         </h3>
       ) : (
-        "See you soon!"
+        <h3>See you soon!</h3>
       )}
       <h3>Well done !</h3>
       <div className="container-gif">
