@@ -11,6 +11,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import Icon from "@/components/ui/Icon";
 import ModalHelp from "@/components/modals/ModalHelp";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 interface UserData {
   email: string;
   uid: string;
@@ -31,7 +32,11 @@ export default function Page() {
   const { user } = useAuthContext() as { user: UserData };
   const [workouts, setWorkouts] = useState<Workouts>({});
   const [openHelp, setOpenHelp] = useState(false);
+  const router = useRouter();
   useEffect(() => {
+    if (!user || !user.uid) {
+      router.push("/connect");
+    }
     const fetchWorkouts = async () => {
       const localstorage = getItemFromLocalStorage("workouts");
       if (!localstorage) {

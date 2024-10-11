@@ -37,6 +37,8 @@ interface Task {
   count: any;
   unit: any;
 }
+
+// LANDING PAGE
 export default function Home() {
   const { user } = useAuthContext() as { user: UserData };
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -46,34 +48,37 @@ export default function Home() {
   const [todayList, setTodayList] = useState<{ [key: string]: any }>({});
   const [messagelist, setMessagelist] = useState<string | null>(null);
   const [openHelpModal, setOpenHelpModal] = useState(false);
+
   useEffect(() => {
-    async function checkFBInit() {
+    const fetchData = async () => {
+      try {
+        const fetching = await fetchOnlyThisIdToLocalStorage("users", user.uid);
+        setUserInfo(fetching);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    const checkFBInit = async () => {
       try {
         await firebaseApp;
         setFirebaseInitialized(true);
       } catch (error) {
-        console.error("Error set firebase initiialized", error);
+        console.error("Error set firebase initialized", error);
       }
-    }
-    if (user == null || user?.uid == null || user?.uid == undefined) {
-      return router.push("/connect");
+    };
+
+    if (!user || !user.uid) {
+      router.push("/connect");
     } else {
-      const fetchData = async () => {
-        try {
-          const fetching = await fetchOnlyThisIdToLocalStorage(
-            "users",
-            user.uid
-          );
-          setUserInfo(fetching);
-        } catch (error) {
-          console.error("Error fetching users:", error);
-        }
-      };
       checkFBInit();
       fetchData();
-      whichList();
+      // whichList();
+      router.push("/workout");
     }
-  }, [user]);
+  }, [user, router]);
+
+  return <Loading />;
 
   async function checkDBForTodayList() {
     const { snapShot } = await checkDB("users", user.uid);
@@ -192,9 +197,9 @@ export default function Home() {
     return copyData;
   }
 
-  if (!user || !firebaseInitialized) {
+  /*  if (!user || !firebaseInitialized) {
     return <Loading />;
-  }
+  } */
   return (
     <>
       <Header />
