@@ -40,11 +40,13 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
 
       let workouts;
       let thisWorkoutNumbOfImp;
+      let retryCount = 0;
+      const maxRetries = 4;
 
       // Retry mechanism
       while (
-        thisWorkoutNumbOfImp === undefined ||
-        thisWorkoutNumbOfImp === null
+        (thisWorkoutNumbOfImp === undefined || thisWorkoutNumbOfImp === null) &&
+        retryCount < maxRetries
       ) {
         workouts = await getItemFromLocalStorage("workouts");
 
@@ -61,7 +63,7 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
           thisWorkoutNumbOfImp === undefined ||
           thisWorkoutNumbOfImp === null
         ) {
-          console.log("Retrying to fetch thisWorkoutNumbOfImp...");
+          retryCount++;
           await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 0.5 second before retrying
         }
       }
