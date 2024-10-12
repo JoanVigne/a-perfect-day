@@ -49,7 +49,6 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
         retryCount < maxRetries
       ) {
         workouts = await getItemFromLocalStorage("workouts");
-
         if (!workouts || !propsWorkout || !propsWorkout.id) {
           console.error("Invalid workouts data or propsWorkout");
           setLoading(false);
@@ -78,6 +77,10 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
     fetchData();
   }, [propsWorkout]);
 
+  useEffect(() => {
+    console.log("numberOfImprovementsToday", numberOfImprovementsToday);
+  }, []);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -85,7 +88,7 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
   return (
     <div className="container-end-of-training">
       <h2>Performances are saved ! </h2>
-      <h3>You did all those exercices : </h3>
+      <h3>All the exercices : </h3>
       <ul className="list-of-done-exercices">
         {propsWorkout.exercices.map((exercice: any, index: number) => {
           const isLast = index === propsWorkout.exercices.length - 1;
@@ -104,12 +107,34 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
         })}
       </ul>
       {numberOfImprovementsToday && Number(numberOfImprovementsToday) !== 0 ? (
-        <h3>
-          And you improved {numberOfImprovementsToday} things
-          <Icon nameImg="fire" onClick={() => console.log("fire")} />
-        </h3>
+        <>
+          <h3>Number of improvement today </h3>
+          <h3>
+            {[...Array(Math.min(Number(numberOfImprovementsToday), 6))].map(
+              (_, index) => (
+                <Icon
+                  key={index}
+                  nameImg="fire"
+                  onClick={() => console.log("fire")}
+                />
+              )
+            )}
+
+            {numberOfImprovementsToday}
+
+            {[...Array(Math.min(Number(numberOfImprovementsToday), 6))].map(
+              (_, index) => (
+                <Icon
+                  key={index}
+                  nameImg="fire"
+                  onClick={() => console.log("fire")}
+                />
+              )
+            )}
+          </h3>
+        </>
       ) : (
-        <h3>See you soon!</h3>
+        <h3>See you soon.</h3>
       )}
       <h3>Well done !</h3>
       <div className="container-gif">

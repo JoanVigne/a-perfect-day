@@ -5,6 +5,9 @@
   margin: -60px auto 20px;
   color: var(--color-red);
 }
+.container-end-of-training h3 {
+  margin: 5px auto;
+}
 
 .container-end-of-training .separator {
   margin-right: 5px;
@@ -13,6 +16,7 @@
   display: flex;
   margin: 10px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .container-end-of-training .container-gif {
