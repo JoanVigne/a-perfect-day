@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/app/workout/records/bestperf.js"  ],
   "exclude": [
     "node_modules"
   ]

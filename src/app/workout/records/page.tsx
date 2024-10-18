@@ -36,6 +36,87 @@ interface BestPerf {
 interface Workouts {
   [key: string]: WorkoutType;
 }
+const exerciseNameGroups = [
+  [
+    "bench",
+    "bench press",
+    "benchpress",
+    "bp",
+    "développé couché barre",
+    "développé couché",
+    "dc",
+  ],
+  ["squat", "squats"],
+  [
+    "overhead press",
+    "overheadpress",
+    "overhead press barre",
+    "overheadpress barre",
+    "développé militaire barre",
+    "ohp",
+  ],
+  [
+    "développé militaire dumbell",
+    "développé militaire haltères",
+    "développé militaire haltère",
+    "overheadpress dumbell",
+    "overhead press dumbell",
+    "overheadpress dumbell",
+    "overheadpress haltères",
+    "overhead press haltères",
+    "overheadpress haltères",
+    "overheadpress haltère",
+    "overhead press haltère",
+    "overheadpress haltère",
+    "ohp",
+  ],
+  [
+    "deadlift",
+    "dead lift",
+    "dl",
+    "soulevé de terre",
+    "deadlift barre",
+    "dead lift barre",
+    "dl barre",
+    "soulevé de terre barre",
+  ],
+  ["shoulder press", "shoulderpress", "sp"],
+  ["pull-up", "pullup", "pull up"],
+  ["dip", "dips"],
+  ["curl"],
+  ["tricep extension", "tricepextension", "tricep ext"],
+  ["leg press", "legpress", "lp"],
+  ["leg curl", "legcurl", "lc"],
+  ["leg extension", "legextension", "le"],
+  ["leg raise", "legraise", "lr"],
+  ["calf raise", "calfraise", "cr"],
+  ["lateral raise", "lateralraise", "lr"],
+  ["front raise", "frontraise", "fr"],
+  ["rear delt raise", "reardeltraise", "rdr"],
+  ["shrug"],
+  ["bent-over row", "bentoverrow", "bor"],
+  ["row"],
+  ["pull-over", "pullover", "po"],
+  ["pulldown", "pull down", "pd"],
+  ["lat pulldown", "latpulldown", "lat pd"],
+  ["seated row", "seatedrow", "sr"],
+  ["face pull", "facepull", "fp"],
+  ["reverse fly", "reversefly", "rf"],
+  ["chest fly", "chestfly", "cf"],
+  ["pec fly", "pecfly", "pf"],
+  ["cable fly", "cablefly", "cf"],
+  ["cable crossover", "cablecrossover", "cc"],
+  ["push-up", "pushup", "push up", "pompe", "pompes"],
+  ["dumbbell press", "dumbbellpress", "dbp"],
+  ["dumbbell fly", "dumbbellfly", "dbf"],
+  ["dumbbell bench press", "dumbbellbenchpress", "dbbp"],
+  ["dumbbell curl", "dumbbellcurl", "dbc"],
+  ["dumbbell tricep extension", "dumbbelltricepextension", "dbte"],
+  ["dumbbell row", "dumbbellrow", "dbr"],
+  ["dumbbell pullover", "dumbbellpullover", "dbpo"],
+  ["dumbbell lateral raise", "dumbbelllateralraise", "dblr"],
+  ["dumbbell front raise", "dumbbellfrontraise", "dbfr"],
+];
 export default function Page() {
   const { user } = useAuthContext() as { user: UserData };
   const [workouts, setWorkouts] = useState<Workouts>({});
@@ -43,6 +124,7 @@ export default function Page() {
   const [showRecord, setShowRecord] = useState<{
     [exerciseName: string]: boolean;
   }>({});
+
   useEffect(() => {
     const fetchWorkouts = async () => {
       const localstorage = getItemFromLocalStorage("workouts");
@@ -118,13 +200,18 @@ export default function Page() {
 
     setBestPerf((prevBestPerf) => ({ ...prevBestPerf, ...bestPerf }));
   };
-
+  const sortByDate = (a: any, b: any) => {
+    const dateA = new Date(a[1].maxWeight.date || a[1].maxReps.date).getTime();
+    const dateB = new Date(b[1].maxWeight.date || b[1].maxReps.date).getTime();
+    return dateB - dateA;
+  };
+  const sortedBestPerf = Object.entries(bestPerf).sort(sortByDate);
   return (
     <div className="record-page">
       <Header />
       <h1>PAGE DES RECORDS</h1>
       <ul>
-        {Object.entries(bestPerf).map(([exerciseName, data]) => (
+        {sortedBestPerf.map(([exerciseName, data]) => (
           <li
             className={showRecord[exerciseName] ? "opened" : ""}
             key={exerciseName}
