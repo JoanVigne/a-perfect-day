@@ -7,6 +7,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import "./recordPage.css";
 import IconOpen from "@/components/ui/IconOpen";
 import Image from "next/image";
+import { exerciseNameGroups } from "./exercices";
 interface UserData {
   email: string;
   uid: string;
@@ -36,87 +37,7 @@ interface BestPerf {
 interface Workouts {
   [key: string]: WorkoutType;
 }
-const exerciseNameGroups = [
-  [
-    "bench",
-    "bench press",
-    "benchpress",
-    "bp",
-    "développé couché barre",
-    "développé couché",
-    "dc",
-  ],
-  ["squat", "squats"],
-  [
-    "overhead press",
-    "overheadpress",
-    "overhead press barre",
-    "overheadpress barre",
-    "développé militaire barre",
-    "ohp",
-  ],
-  [
-    "développé militaire dumbell",
-    "développé militaire haltères",
-    "développé militaire haltère",
-    "overheadpress dumbell",
-    "overhead press dumbell",
-    "overheadpress dumbell",
-    "overheadpress haltères",
-    "overhead press haltères",
-    "overheadpress haltères",
-    "overheadpress haltère",
-    "overhead press haltère",
-    "overheadpress haltère",
-    "ohp",
-  ],
-  [
-    "deadlift",
-    "dead lift",
-    "dl",
-    "soulevé de terre",
-    "deadlift barre",
-    "dead lift barre",
-    "dl barre",
-    "soulevé de terre barre",
-  ],
-  ["shoulder press", "shoulderpress", "sp"],
-  ["pull-up", "pullup", "pull up"],
-  ["dip", "dips"],
-  ["curl"],
-  ["tricep extension", "tricepextension", "tricep ext"],
-  ["leg press", "legpress", "lp"],
-  ["leg curl", "legcurl", "lc"],
-  ["leg extension", "legextension", "le"],
-  ["leg raise", "legraise", "lr"],
-  ["calf raise", "calfraise", "cr"],
-  ["lateral raise", "lateralraise", "lr"],
-  ["front raise", "frontraise", "fr"],
-  ["rear delt raise", "reardeltraise", "rdr"],
-  ["shrug"],
-  ["bent-over row", "bentoverrow", "bor"],
-  ["row"],
-  ["pull-over", "pullover", "po"],
-  ["pulldown", "pull down", "pd"],
-  ["lat pulldown", "latpulldown", "lat pd"],
-  ["seated row", "seatedrow", "sr"],
-  ["face pull", "facepull", "fp"],
-  ["reverse fly", "reversefly", "rf"],
-  ["chest fly", "chestfly", "cf"],
-  ["pec fly", "pecfly", "pf"],
-  ["cable fly", "cablefly", "cf"],
-  ["cable crossover", "cablecrossover", "cc"],
-  ["push-up", "pushup", "push up", "pompe", "pompes"],
-  ["dumbbell press", "dumbbellpress", "dbp"],
-  ["dumbbell fly", "dumbbellfly", "dbf"],
-  ["dumbbell bench press", "dumbbellbenchpress", "dbbp"],
-  ["dumbbell curl", "dumbbellcurl", "dbc"],
-  ["dumbbell tricep extension", "dumbbelltricepextension", "dbte"],
-  ["dumbbell row", "dumbbellrow", "dbr"],
-  ["dumbbell pullover", "dumbbellpullover", "dbpo"],
-  ["dumbbell lateral raise", "dumbbelllateralraise", "dblr"],
-  ["dumbbell front raise", "dumbbellfrontraise", "dbfr"],
-];
+
 export default function Page() {
   const { user } = useAuthContext() as { user: UserData };
   const [workouts, setWorkouts] = useState<Workouts>({});
@@ -146,60 +67,155 @@ export default function Page() {
     for (let workoutKey in workouts) {
       const workout = workouts[workoutKey];
       if (workout) {
-        getBestPerf(workout);
+        getBestPerformance(workout);
       }
     }
   }, [workouts]);
 
-  const getBestPerf = (workout: WorkoutType): void => {
-    if (!workout.perf || !Object.entries(workout.perf).length) return;
-    const bestPerf: BestPerf = {};
+  const updateBestPerf = (
+    exercise: PerfData,
+    exerciseData: PerfData,
+    date: string,
+    bestPerf: BestPerf
+  ) => {
+    const best = bestPerf[exercise.name] || {
+      name: exercise.name,
+      maxWeight: { date: "", weight: 0, reps: 0 },
+      maxReps: { date: "", weight: 0, reps: 0 },
+    };
 
-    Object.entries(workout.perf).forEach(([date, perfData]) => {
-      Object.entries(perfData)
-        .filter(([key]) => key !== "noteExo")
-        .forEach(([exerciseId, exerciseData]) => {
-          const exercise = workout.exercices[exerciseData.exoOrder];
-          if (!exercise) return;
+    Object.keys(exerciseData).forEach((key) => {
+      const index = key.match(/\d+/)?.[0];
+      if (!index) return;
 
-          Object.keys(exerciseData)
-            .filter((key) => key.startsWith("weight") || key.startsWith("reps"))
-            .forEach((key) => {
-              const type = key.startsWith("weight") ? "weight" : "reps";
-              const index = key.match(/\d+/)?.[0];
-              const weight = Number(exerciseData[`weight${index}`]);
-              const reps = Number(exerciseData[`reps${index}`]);
+      const weight = Number(exerciseData[`weight${index}`]);
+      const reps = Number(exerciseData[`reps${index}`]);
 
-              if (!bestPerf[exercise.name]) {
-                bestPerf[exercise.name] = {
-                  name: exercise.name,
-                  maxWeight: { date: "", weight: 0, reps: 0 },
-                  maxReps: { date: "", weight: 0, reps: 0 },
-                };
-              }
+      if (
+        weight > best.maxWeight.weight ||
+        (weight === best.maxWeight.weight && reps > best.maxWeight.reps)
+      ) {
+        best.maxWeight = { date, weight, reps };
+      }
 
-              if (
-                type === "weight" &&
-                (weight > bestPerf[exercise.name].maxWeight.weight ||
-                  (weight === bestPerf[exercise.name].maxWeight.weight &&
-                    reps >= bestPerf[exercise.name].maxWeight.reps))
-              ) {
-                bestPerf[exercise.name].maxWeight = { date, weight, reps };
-              }
-              if (
-                type === "reps" &&
-                (reps > bestPerf[exercise.name].maxReps.reps ||
-                  (reps === bestPerf[exercise.name].maxReps.reps &&
-                    weight >= bestPerf[exercise.name].maxReps.weight))
-              ) {
-                bestPerf[exercise.name].maxReps = { date, weight, reps };
-              }
-            });
-        });
+      if (
+        reps > best.maxReps.reps ||
+        (reps === best.maxReps.reps && weight > best.maxReps.weight)
+      ) {
+        best.maxReps = { date, weight, reps };
+      }
     });
 
-    setBestPerf((prevBestPerf) => ({ ...prevBestPerf, ...bestPerf }));
+    bestPerf[exercise.name] = best;
   };
+
+  const mergeExercisesPerf = (
+    sameExercises: string[][],
+    bestPerf: BestPerf,
+    originalNamesMap: Record<string, string>
+  ) => {
+    sameExercises.forEach((group) => {
+      const mergedName = group
+        .map((name) => originalNamesMap[name])
+        .join(" / "); // Merged name using original names
+      let mergedPerf = {
+        name: mergedName,
+        maxWeight: { date: "", weight: 0, reps: 0 },
+        maxReps: { date: "", weight: 0, reps: 0 },
+      };
+
+      // Loop through each exercise in the group and find the best maxWeight and maxReps
+      group.forEach((normalizedName) => {
+        const originalName = originalNamesMap[normalizedName];
+        const perf = bestPerf[originalName];
+        if (!perf) return;
+
+        // Update the merged maxWeight
+        if (
+          perf.maxWeight.weight > mergedPerf.maxWeight.weight ||
+          (perf.maxWeight.weight === mergedPerf.maxWeight.weight &&
+            perf.maxWeight.reps > mergedPerf.maxWeight.reps)
+        ) {
+          mergedPerf.maxWeight = perf.maxWeight;
+        }
+
+        // Update the merged maxReps
+        if (
+          perf.maxReps.reps > mergedPerf.maxReps.reps ||
+          (perf.maxReps.reps === mergedPerf.maxReps.reps &&
+            perf.maxReps.weight > mergedPerf.maxReps.weight)
+        ) {
+          mergedPerf.maxReps = perf.maxReps;
+        }
+
+        // Remove individual exercises after merging
+        delete bestPerf[originalName];
+      });
+
+      // Add the merged performance to bestPerf
+      bestPerf[mergedName] = mergedPerf;
+    });
+  };
+
+  const getBestPerformance = (workout: WorkoutType): void => {
+    if (!workout.perf) return;
+
+    const bestPerf: BestPerf = {};
+    const originalNamesMap: Record<string, string> = {}; // Map normalized name to original name
+
+    // Step 1: Calculate the best performance for individual exercises
+    Object.entries(workout.perf).forEach(([date, perfData]) => {
+      Object.values(perfData).forEach((exerciseData: PerfData) => {
+        const exercise: any = workout.exercices[exerciseData.exoOrder];
+        if (exercise) {
+          const normalizedName = normalizeString(exercise.name);
+          originalNamesMap[normalizedName] = exercise.name; // Store the original name
+          updateBestPerf(exercise, exerciseData, date, bestPerf);
+        }
+      });
+    });
+
+    // Step 2: Find exercises that belong to the same group
+    const sameExercises = findExercisesInSameGroup(
+      bestPerf,
+      exerciseNameGroups,
+      originalNamesMap
+    );
+
+    // Step 3: Merge exercises in the same group and remove individual entries
+    if (sameExercises) {
+      mergeExercisesPerf(sameExercises, bestPerf, originalNamesMap);
+    }
+
+    // Step 4: Update the state with the new bestPerf including merged exercises
+    setBestPerf((prev) => ({ ...prev, ...bestPerf }));
+  };
+
+  const normalizeString = (str: string) =>
+    str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[éèê]/g, "e")
+      .replace(/[à]/g, "a")
+      .toLowerCase();
+
+  const findExercisesInSameGroup = (
+    bestPerf: BestPerf,
+    groups: string[][],
+    originalNamesMap: Record<string, string>
+  ) => {
+    const normalizedBestPerf = Object.keys(bestPerf).map(normalizeString);
+
+    return groups
+      .map((group) => group.map(normalizeString))
+      .flatMap((group) => {
+        const matchingExercises = normalizedBestPerf.filter((exo) =>
+          group.includes(exo)
+        );
+        return matchingExercises.length > 1 ? [matchingExercises] : [];
+      });
+  };
+
   const sortByDate = (a: any, b: any) => {
     const dateA = new Date(a[1].maxWeight.date || a[1].maxReps.date).getTime();
     const dateB = new Date(b[1].maxWeight.date || b[1].maxReps.date).getTime();
