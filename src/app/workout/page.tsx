@@ -107,7 +107,7 @@ export default function Page() {
         )}
       </div>
       <section>
-        <h2>Check all your exercice personal records down bellow!</h2>
+        <h2>Personal records.</h2>
         <Link href={`/workout/records`}>
           <div className="personal-record-link">
             <Icon

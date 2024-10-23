@@ -26,14 +26,15 @@ interface WorkoutType {
   perf?: Record<string, Record<string, PerfData>>;
 }
 
-interface BestPerf {
-  [exerciseName: string]: {
-    name: string;
-    maxWeight: { date: string; weight: number; reps: number };
-    maxReps: { date: string; weight: number; reps: number };
-  };
+interface BestPerfEntry {
+  name: string;
+  maxWeight: { date: string; weight: number; reps: number };
+  maxReps: { date: string; weight: number; reps: number };
 }
 
+interface BestPerf {
+  [exerciseName: string]: BestPerfEntry;
+}
 interface Workouts {
   [key: string]: WorkoutType;
 }
@@ -45,7 +46,31 @@ export default function Page() {
   const [showRecord, setShowRecord] = useState<{
     [exerciseName: string]: boolean;
   }>({});
+  const [sortedBestPerf, setSortedBestPerf] = useState<
+    [string, BestPerfEntry][]
+  >([]);
+  const [sortOption, setSortOption] = useState("date");
+  useEffect(() => {
+    const sortedData = Object.entries(bestPerf)
+      .filter(([exerciseName, data]) => {
+        // Filter out entries with no data
+        return (
+          (data.maxWeight.date &&
+            data.maxWeight.weight &&
+            data.maxWeight.reps) ||
+          (data.maxReps.date && data.maxReps.weight && data.maxReps.reps)
+        );
+      })
+      .sort(
+        sortOption === "date"
+          ? sortByDate
+          : sortOption === "weight"
+          ? sortByMaxWeight
+          : sortByMaxReps
+      );
 
+    setSortedBestPerf(sortedData as any);
+  }, [bestPerf, sortOption]);
   useEffect(() => {
     const fetchWorkouts = async () => {
       const localstorage = getItemFromLocalStorage("workouts");
@@ -222,12 +247,28 @@ export default function Page() {
     const dateB = new Date(b[1].maxWeight.date || b[1].maxReps.date).getTime();
     return dateB - dateA;
   };
-  const sortedBestPerf = Object.entries(bestPerf).sort(sortByDate);
+  const sortByMaxWeight = (a: any, b: any) => {
+    return b[1].maxWeight.weight - a[1].maxWeight.weight;
+  };
 
+  const sortByMaxReps = (a: any, b: any) => {
+    return b[1].maxReps.reps - a[1].maxReps.reps;
+  };
+  const handleSortChange = (e: any) => {
+    setSortOption(e.target.value);
+  };
   return (
     <div className="record-page">
       <Header />
-      <h1>PAGE DES RECORDS</h1>
+      <h1>Personal records</h1>
+      <div className="sort-filter">
+        <label htmlFor="sort">Order: </label>
+        <select id="sort" value={sortOption} onChange={handleSortChange}>
+          <option value="date">Date</option>
+          <option value="weight">Max Weight</option>
+          <option value="reps">Max Reps</option>
+        </select>
+      </div>
       <ul>
         {sortedBestPerf.map(([exerciseName, data]) => (
           <li
@@ -248,35 +289,25 @@ export default function Page() {
             </h2>
             <div className="container-weight-reps">
               <div className="weight-reps">
-                <h3>Weight:</h3>
+                <h3>Max Weight:</h3>
                 <p>
-                  {isNaN(data.maxWeight.weight) ||
-                  data.maxWeight.weight === 0 ? (
-                    "no weight"
-                  ) : (
-                    <strong>
-                      {data.maxWeight.weight}{" "}
-                      <Image
-                        src="/icon/kettlebell2.png"
-                        alt="kettlebell Icon"
-                        width={17}
-                        height={17}
-                      />
-                    </strong>
-                  )}{" "}
-                  <small>
-                    with{" "}
-                    {isNaN(data.maxWeight.reps) || data.maxWeight.reps === 0
-                      ? "nothing"
-                      : `${data.maxWeight.reps} reps`}
-                  </small>
+                  <strong>
+                    {data.maxWeight.weight}{" "}
+                    <Image
+                      src="/icon/kettlebell2.png"
+                      alt="kettlebell Icon"
+                      width={17}
+                      height={17}
+                    />
+                  </strong>
+                  <small>with {data.maxWeight.reps} reps</small>
                 </p>
                 <small>
                   {data.maxWeight.date === "" ? "nothing" : data.maxWeight.date}
                 </small>
               </div>
               <div className="weight-reps">
-                <h3>Reps:</h3>
+                <h3>Max Reps:</h3>
                 <p>
                   {isNaN(data.maxReps.reps) || data.maxReps.reps === 0 ? (
                     "nothing"

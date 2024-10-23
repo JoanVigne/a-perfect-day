@@ -7,8 +7,3 @@ export function getItemFromLocalStorage(thisLocal: string) {
     return null;
   }
 }
-
-/* export function setItemInLocalStorage(thisLocal: string, newData: any) {
-  localStorage.setItem(thisLocal, newData);
-}
- */

@@ -7,7 +7,7 @@ import "@/components/header.css";
 import "@/app/workout/workout.css";
 import FormTrain from "@/components/forms/workout-training/FormTrain";
 import nosleep from "nosleep.js";
-import ContainerEndWorkout from "@/components/ContainerEndWorkout";
+import ContainerEndWorkout from "@/components/forms/workout-training/ContainerEndWorkout";
 
 const Page = () => {
   const [slug, setSlug] = useState<string | null>(null);

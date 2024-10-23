@@ -11,7 +11,7 @@
 
 .page-workouts section {
   border-bottom: 1px var(--color-white) solid;
-  padding: 30px 10px 50px;
+  padding: 0 10px 20px;
 }
 
 .input-and-icon {

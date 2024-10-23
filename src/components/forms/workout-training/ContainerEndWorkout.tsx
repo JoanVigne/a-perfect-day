@@ -1,9 +1,9 @@
 import Link from "next/link";
-import Footer from "./Footer";
+import Footer from "../../Footer";
 import "./containerEndWorkout.css";
 import { useEffect, useState } from "react";
 import { getItemFromLocalStorage } from "@/utils/localstorage";
-import Icon from "./ui/Icon";
+import Icon from "../../ui/Icon";
 interface WorkoutType {
   name: string;
   id: string;
@@ -66,7 +66,16 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
           await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 0.5 second before retrying
         }
       }
-      // If still undefined or null after retries, set to 0
+      // If still undefined or null after retries, try to get it from local storage
+      if (thisWorkoutNumbOfImp === undefined || thisWorkoutNumbOfImp === null) {
+        const numbOfImpInLocalStorage =
+          getItemFromLocalStorage("NumbImprovement");
+        if (numbOfImpInLocalStorage) {
+          thisWorkoutNumbOfImp = numbOfImpInLocalStorage[currentDate];
+        }
+      }
+
+      // If still undefined or null, set to 0
       if (thisWorkoutNumbOfImp === undefined || thisWorkoutNumbOfImp === null) {
         thisWorkoutNumbOfImp = 0;
       }
