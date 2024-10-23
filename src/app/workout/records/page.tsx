@@ -9,9 +9,9 @@ import IconOpen from "@/components/ui/IconOpen";
 import Image from "next/image";
 import { exerciseNameGroups } from "./exercices";
 interface UserData {
-  email: string;
   uid: string;
 }
+
 interface Exercice {
   name: string;
   exoOrder: number;
@@ -72,13 +72,22 @@ export default function Page() {
     }
   }, [workouts]);
 
+  const normalizeString = (str: string) =>
+    str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[éèê]/g, "e")
+      .replace(/[à]/g, "a")
+      .toLowerCase();
+
   const updateBestPerf = (
-    exercise: PerfData,
+    exercise: Exercice,
     exerciseData: PerfData,
     date: string,
     bestPerf: BestPerf
   ) => {
-    const best = bestPerf[exercise.name] || {
+    const normalizedName = normalizeString(exercise.name);
+    const best = bestPerf[normalizedName] || {
       name: exercise.name,
       maxWeight: { date: "", weight: 0, reps: 0 },
       maxReps: { date: "", weight: 0, reps: 0 },
@@ -106,7 +115,7 @@ export default function Page() {
       }
     });
 
-    bestPerf[exercise.name] = best;
+    bestPerf[normalizedName] = best;
   };
 
   const mergeExercisesPerf = (
@@ -127,7 +136,7 @@ export default function Page() {
       // Loop through each exercise in the group and find the best maxWeight and maxReps
       group.forEach((normalizedName) => {
         const originalName = originalNamesMap[normalizedName];
-        const perf = bestPerf[originalName];
+        const perf = bestPerf[normalizedName];
         if (!perf) return;
 
         // Update the merged maxWeight
@@ -149,11 +158,11 @@ export default function Page() {
         }
 
         // Remove individual exercises after merging
-        delete bestPerf[originalName];
+        delete bestPerf[normalizedName];
       });
 
       // Add the merged performance to bestPerf
-      bestPerf[mergedName] = mergedPerf;
+      bestPerf[normalizeString(mergedName)] = mergedPerf;
     });
   };
 
@@ -166,7 +175,7 @@ export default function Page() {
     // Step 1: Calculate the best performance for individual exercises
     Object.entries(workout.perf).forEach(([date, perfData]) => {
       Object.values(perfData).forEach((exerciseData: PerfData) => {
-        const exercise: any = workout.exercices[exerciseData.exoOrder];
+        const exercise = workout.exercices[exerciseData.exoOrder as number];
         if (exercise) {
           const normalizedName = normalizeString(exercise.name);
           originalNamesMap[normalizedName] = exercise.name; // Store the original name
@@ -191,14 +200,6 @@ export default function Page() {
     setBestPerf((prev) => ({ ...prev, ...bestPerf }));
   };
 
-  const normalizeString = (str: string) =>
-    str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[éèê]/g, "e")
-      .replace(/[à]/g, "a")
-      .toLowerCase();
-
   const findExercisesInSameGroup = (
     bestPerf: BestPerf,
     groups: string[][],
@@ -222,6 +223,7 @@ export default function Page() {
     return dateB - dateA;
   };
   const sortedBestPerf = Object.entries(bestPerf).sort(sortByDate);
+
   return (
     <div className="record-page">
       <Header />
