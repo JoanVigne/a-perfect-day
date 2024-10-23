@@ -5,6 +5,7 @@ export const exerciseNameGroups = [
     "bench press",
     "benchpress",
     "bench barre",
+    "Bench barre",
     "bp",
     "développé couché barre",
     "développé couché",
