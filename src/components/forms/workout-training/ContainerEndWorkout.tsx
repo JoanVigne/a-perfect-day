@@ -29,11 +29,9 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
   const [numberOfImprovementsToday, setNumberOfImprovementsToday] = useState<
     string | null
   >(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       const currentDate = getCurrentDateFormatted();
       console.log(currentDate);
       console.log(propsWorkout);
@@ -51,7 +49,6 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
         workouts = await getItemFromLocalStorage("workouts");
         if (!workouts || !propsWorkout || !propsWorkout.id) {
           console.error("Invalid workouts data or propsWorkout");
-          setLoading(false);
           return;
         }
 
@@ -80,17 +77,15 @@ const ContainerEndWorkout: React.FC<ContainerEndWorkoutProps> = ({
         thisWorkoutNumbOfImp = 0;
       }
       setNumberOfImprovementsToday(thisWorkoutNumbOfImp);
-      setLoading(false);
     };
 
     fetchData();
   }, [propsWorkout]);
-
   useEffect(() => {
     console.log("numberOfImprovementsToday", numberOfImprovementsToday);
-  }, []);
+  }, [numberOfImprovementsToday]);
 
-  if (loading) {
+  if (numberOfImprovementsToday === null) {
     return <div>Loading...</div>;
   }
 
