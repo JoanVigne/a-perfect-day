@@ -8,8 +8,9 @@ import "@/app/workout/workout.css";
 import FormTrain from "@/components/forms/workout-training/FormTrain";
 import nosleep from "nosleep.js";
 import ContainerEndWorkout from "@/components/forms/workout-training/ContainerEndWorkout";
-
+import { useRouter } from "next/navigation";
 const Page = () => {
+  const router = useRouter();
   const [slug, setSlug] = useState<string | null>(null);
   const [thisWorkout, setThisWorkout] = useState<any>(null);
   const [chornoTimer, setChronoTimer] = useState(false);

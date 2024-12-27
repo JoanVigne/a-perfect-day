@@ -12,6 +12,8 @@ import Icon from "@/components/ui/Icon";
 import ModalHelp from "@/components/modals/ModalHelp";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Loading from "../loading";
+import Load from "@/components/ui/Load";
 interface UserData {
   email: string;
   uid: string;
@@ -32,12 +34,13 @@ export default function Page() {
   const { user } = useAuthContext() as { user: UserData };
   const [workouts, setWorkouts] = useState<Workouts>({});
   const [openHelp, setOpenHelp] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   useEffect(() => {
     if (!user || !user.uid) {
       router.push("/connect");
     }
-    const fetchWorkouts = async () => {
+    /* const fetchWorkouts = async () => {
       const localstorage = getItemFromLocalStorage("workouts");
       if (!localstorage) {
         let dbworkouts = await fetchOnlyThisIdToLocalStorage(
@@ -48,11 +51,23 @@ export default function Page() {
       } else {
         setWorkouts(localstorage);
       }
-    };
+    }; */
     workouts;
-
+    console.log("C EST PSASE PAR LE USEEFFECT:");
     fetchWorkouts();
   }, [setWorkouts]);
+  const fetchWorkouts = async () => {
+    const localstorage = getItemFromLocalStorage("workouts");
+    if (!localstorage) {
+      let dbworkouts = await fetchOnlyThisIdToLocalStorage(
+        "workouts",
+        user.uid
+      );
+      setWorkouts(dbworkouts as unknown as Workouts);
+    } else {
+      setWorkouts(localstorage);
+    }
+  };
   const getMostRecentDate = (duration: { [date: string]: any }) => {
     const dates = Object.keys(duration);
     return dates.length > 0 ? dates.reduce((a, b) => (a > b ? a : b)) : null;
@@ -90,10 +105,25 @@ export default function Page() {
       </h1>
       <div className="container">
         <div className="container-titles">
+          <button
+            onClick={async () => {
+              // Clear local storage workouts
+              localStorage.removeItem("workouts");
+              setWorkouts({});
+              setLoading(true);
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+              fetchWorkouts();
+              setLoading(false);
+            }}
+          >
+            Refresh Data
+          </button>
           <h2>Last time</h2>
         </div>
         {workouts && Object.values(workouts as Workouts).length > 0 ? (
           <>
+            {console.log("Workouts:", workouts)}
+            {console.log("Sorted Workouts:", sortedWorkouts)}
             {Object.values(sortedWorkouts).map(
               (workout: WorkoutType, index) => (
                 <div key={workout.id}>
@@ -102,8 +132,10 @@ export default function Page() {
               )
             )}
           </>
+        ) : loading ? (
+          <Load />
         ) : (
-          <p>No workout</p>
+          <h2>No workouts yet</h2>
         )}
       </div>
       <section>

@@ -76,7 +76,7 @@ const page = () => {
       .then(() => {
         // Sign-out successful.
         console.log("LOGGED OUT");
-        /*   localStorage.clear(); */
+        localStorage.clear();
         return router.push("/connect");
       })
       .catch((error) => {
