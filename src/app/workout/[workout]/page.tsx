@@ -150,7 +150,7 @@ const Page = () => {
         {thisWorkout && (
           <>
             {finished ? (
-              <ContainerEndWorkout propsWorkout={thisWorkout} />
+              <p>Training not found </p>
             ) : (
               <>
                 <h2>{thisWorkout.description}</h2>

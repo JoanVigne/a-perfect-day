@@ -151,6 +151,7 @@ const FormTrain: React.FC<Props> = ({
       const dataWorkouts = getItemFromLocalStorage("workouts");
       if (!dataWorkouts) return console.log("no workouts in LS");
       dataWorkouts[updatedWorkout.id] = updatedWorkout;
+      localStorage.setItem("workouts", JSON.stringify(dataWorkouts));
       sendToWorkout(updatedWorkout, user.uid);
     });
   }
