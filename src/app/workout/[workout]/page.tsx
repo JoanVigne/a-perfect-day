@@ -29,9 +29,13 @@ const Page = () => {
       updateDataFromLocalStorage();
     }
   }, [slug, modalModify]);
+
   // to ensure screen doesn't sleep
   const noSleep = new nosleep();
   useEffect(() => {
+    if (finished) {
+      router.push(`/workout/${slug}/finished`);
+    }
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible" && !finished) {
         noSleep.enable();
