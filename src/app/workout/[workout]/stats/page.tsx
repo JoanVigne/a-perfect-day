@@ -261,12 +261,13 @@ const Page = () => {
                             />
                             {formattedDate}
                           </div>
-                          {workout.numbImprovement[date] > 0 && (
-                            <div className="improvementContainer">
-                              <Icon nameImg="fire" onClick={() => {}} />
-                              {workout.numbImprovement[date]}
-                            </div>
-                          )}
+                          {workout.numbImprovement &&
+                            workout.numbImprovement[date] > 0 && (
+                              <div className="improvementContainer">
+                                <Icon nameImg="fire" onClick={() => {}} />
+                                {workout.numbImprovement[date]}
+                              </div>
+                            )}
                         </h3>
                         <div className="container-perf">
                           {Object.entries(perfData)
