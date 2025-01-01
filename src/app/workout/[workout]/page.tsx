@@ -7,8 +7,8 @@ import "@/components/header.css";
 import "@/app/workout/workout.css";
 import FormTrain from "@/components/forms/workout-training/FormTrain";
 import nosleep from "nosleep.js";
-import ContainerEndWorkout from "@/components/forms/workout-training/ContainerEndWorkout";
 import { useRouter } from "next/navigation";
+import Load from "@/components/ui/Load";
 const Page = () => {
   const router = useRouter();
   const [slug, setSlug] = useState<string | null>(null);
@@ -150,7 +150,7 @@ const Page = () => {
         {thisWorkout && (
           <>
             {finished ? (
-              <p>Training not found </p>
+              <Load />
             ) : (
               <>
                 <h2>{thisWorkout.description}</h2>

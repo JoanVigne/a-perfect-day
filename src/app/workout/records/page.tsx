@@ -289,7 +289,7 @@ export default function Page() {
             </h2>
             <div className="container-weight-reps">
               <div className="weight-reps">
-                <h3>Max Weight:</h3>
+                <h3>max weight</h3>
                 <p>
                   <strong>
                     {data.maxWeight.weight}{" "}
@@ -300,14 +300,15 @@ export default function Page() {
                       height={17}
                     />
                   </strong>
-                  <small>with {data.maxWeight.reps} reps</small>
+                  <small className="with">{data.maxWeight.reps} reps</small>
                 </p>
-                <small>
+                <small className="date">
+                  the{" "}
                   {data.maxWeight.date === "" ? "nothing" : data.maxWeight.date}
                 </small>
               </div>
               <div className="weight-reps">
-                <h3>Max Reps:</h3>
+                <h3>max reps</h3>
                 <p>
                   {isNaN(data.maxReps.reps) || data.maxReps.reps === 0 ? (
                     "nothing"
@@ -317,7 +318,7 @@ export default function Page() {
                   {isNaN(data.maxReps.weight) || data.maxReps.weight === 0 ? (
                     "no weight"
                   ) : (
-                    <small>
+                    <small className="with">
                       {" "}
                       with {data.maxReps.weight}
                       <Image
@@ -329,7 +330,7 @@ export default function Page() {
                     </small>
                   )}
                 </p>
-                <small>{data.maxReps.date} </small>
+                <small className="date">the {data.maxReps.date} </small>
               </div>
             </div>
           </li>
